@@ -13,6 +13,32 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
+        /// <summary>
+        /// Inserta un nuevo empleado o edita un empleado existente en el sistema.
+        /// </summary>
+        /// <param name="input">Objeto de tipo Data_input_employee que contiene la información del empleado:
+        /// - employee_id
+        /// - full_name
+        /// - province
+        /// - canton
+        /// - district
+        /// - position
+        /// - branch
+        /// - payroll_type
+        /// - salary
+        /// - email
+        /// - password
+        /// </param>
+        /// <returns>
+        /// Devuelve un objeto Data_response con la información del empleado insertado o actualizado.
+        /// - status = true si la operación es exitosa.
+        /// - data = objeto Data_output_employee con la información del empleado.
+        /// </returns>
+        /// <remarks>
+        /// Restricciones:
+        /// - El employee_id debe ser único al insertar.
+        /// - Para editar, el employee_id debe existir previamente.
+        /// </remarks>
         [HttpPost("insert_or_edit")]
         public ActionResult<Data_response<Data_output_employee>> InsertOrEditEmployee([FromBody] Data_input_employee input)
         {
@@ -42,6 +68,21 @@ namespace GymTEC.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Elimina un empleado del sistema.
+        /// </summary>
+        /// <param name="input">Objeto de tipo Data_input_employee que contiene:
+        /// - employee_id del empleado a eliminar.
+        /// </param>
+        /// <returns>
+        /// Devuelve un objeto Data_response con un mensaje de confirmación.
+        /// - status = true si la operación es exitosa.
+        /// - data = mensaje de texto.
+        /// </returns>
+        /// <remarks>
+        /// Restricciones:
+        /// - El employee_id debe existir previamente en el sistema.
+        /// </remarks>
         [HttpPost("delete")]
         public ActionResult<Data_response<string>> DeleteEmployee([FromBody] Data_input_employee input)
         {
@@ -56,6 +97,22 @@ namespace GymTEC.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Consulta la información de un empleado específico.
+        /// </summary>
+        /// <param name="input">Objeto de tipo Data_input_employee que contiene:
+        /// - employee_id del empleado a consultar.
+        /// </param>
+        /// <returns>
+        /// Devuelve un objeto Data_response con la información del empleado.
+        /// - status = true si la operación es exitosa.
+        /// - data = objeto Data_output_employee con la información del empleado.
+        /// </returns>
+        /// <remarks>
+        /// Restricciones:
+        /// - El employee_id debe existir previamente en el sistema.
+        /// - Si no existe, se debería devolver status = false (no implementado aquí porque es un mock).
+        /// </remarks>
         [HttpPost("get")]
         public ActionResult<Data_response<Data_output_employee>> GetEmployee([FromBody] Data_input_employee input)
         {

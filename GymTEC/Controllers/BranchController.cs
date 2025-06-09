@@ -11,6 +11,7 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class BranchController : ControllerBase
     {
+        // Inyección de dependencia del logger
         private readonly ILogger<BranchController> _logger;
 
         public BranchController(ILogger<BranchController> logger)
@@ -18,6 +19,31 @@ namespace GymTEC.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Inserta una nueva sucursal en el sistema.
+        /// </summary>
+        /// <param name="input">Objeto de tipo Data_input_manage_branch que contiene la información de la sucursal a insertar:
+        /// - name
+        /// - province
+        /// - canton
+        /// - district
+        /// - opening_date
+        /// - attention_schedule
+        /// - admin_employee
+        /// - max_capacity
+        /// - phone_numbers
+        /// - spa
+        /// - store
+        /// </param>
+        /// <returns>
+        /// Devuelve un objeto Data_response con la información de la sucursal insertada.
+        /// - status = true si la operación es exitosa.
+        /// - data = objeto Data_output_manage_branch con la información de la sucursal.
+        /// </returns>
+        /// <remarks>
+        /// Restricciones:
+        /// - El nombre de la sucursal no debe repetirse.
+        /// </remarks>
         [HttpPost("insert_branch")]
         public ActionResult<Data_response<Data_output_manage_branch>> InsertBranch([FromBody] Data_input_manage_branch input)
         {
@@ -48,6 +74,19 @@ namespace GymTEC.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Edita la información de una sucursal existente en el sistema.
+        /// </summary>
+        /// <param name="input">Objeto de tipo Data_input_manage_branch con los nuevos datos de la sucursal a editar.</param>
+        /// <returns>
+        /// Devuelve un objeto Data_response con la información de la sucursal actualizada.
+        /// - status = true si la operación es exitosa.
+        /// - data = objeto Data_output_manage_branch con la información actualizada.
+        /// </returns>
+        /// <remarks>
+        /// Restricciones:
+        /// - La sucursal debe existir previamente en el sistema.
+        /// </remarks>
         [HttpPost("edit_branch")]
         public ActionResult<Data_response<Data_output_manage_branch>> EditBranch([FromBody] Data_input_manage_branch input)
         {
@@ -78,6 +117,21 @@ namespace GymTEC.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Elimina una sucursal del sistema.
+        /// </summary>
+        /// <param name="input">Objeto de tipo Data_input_delete_branch que contiene:
+        /// - name: nombre de la sucursal a eliminar.
+        /// </param>
+        /// <returns>
+        /// Devuelve un objeto Data_response con un mensaje de confirmación.
+        /// - status = true si la operación es exitosa.
+        /// - data = mensaje de texto.
+        /// </returns>
+        /// <remarks>
+        /// Restricciones:
+        /// - La sucursal debe existir previamente en el sistema.
+        /// </remarks>
         [HttpPost("delete_branch")]
         public ActionResult<Data_response<string>> DeleteBranch([FromBody] Data_input_delete_branch input)
         {
@@ -93,6 +147,22 @@ namespace GymTEC.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Consulta la información de una sucursal específica.
+        /// </summary>
+        /// <param name="input">Objeto de tipo Data_input_consult_branch que contiene:
+        /// - name: nombre de la sucursal a consultar.
+        /// </param>
+        /// <returns>
+        /// Devuelve un objeto Data_response con la información de la sucursal.
+        /// - status = true si la operación es exitosa.
+        /// - data = objeto Data_output_manage_branch con la información de la sucursal.
+        /// </returns>
+        /// <remarks>
+        /// Restricciones:
+        /// - La sucursal debe existir previamente en el sistema.
+        /// - Si no existe, se debería devolver status = false (no implementado aquí porque es un mock).
+        /// </remarks>
         [HttpPost("consult_branch")]
         public ActionResult<Data_response<Data_output_manage_branch>> ConsultBranch([FromBody] Data_input_consult_branch input)
         {
