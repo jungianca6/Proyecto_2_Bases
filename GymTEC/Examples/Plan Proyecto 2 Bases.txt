@@ -177,7 +177,7 @@ Administrador:
 					}
 				}
 
-
+	##### ----------------------- ######
 
 	Gestión de tratamientos de Spa: 
 	
@@ -185,9 +185,40 @@ Administrador:
 				
 						Yo mando: nombre del tratamiento a añadir, identificador del tratamiento
 
+					###
+					Ejemplo de entrada:
+					{
+						"treatment_name": "Masaje relajante",
+						"treatment_id": "SPA123"
+					}
+
+					###
+					Ejemplo de salida:
+
+					{
+						"status": true,
+						"data": {
+							"treatment_name": "Masaje relajante",
+							"treatment_id": "SPA123"
+						}
+					}
+
 					Eliminar: 
 		
 						Yo mando: identificador del tratamiento
+
+					###
+					Ejemplo de entrada:
+					{
+						"treatment_id": "SPA123"
+					}
+
+					###
+					Ejemplo de salida:
+					{
+						"status": true,
+						"data": "Treatment deleted successfully"
+					}
 
 					Consultar: 
 
@@ -195,125 +226,464 @@ Administrador:
 
 						Ud manda: nombre del tratamiento, identificador del tratamiento
 
+					###
+					Ejemplo de entrada:
+					{
+						"treatment_id": "SPA123"
+					}
 
-	Gestión de puestos:
+					###
+					Ejemplo de salida:
 
-				Insertar y editar: 
-		
-					Yo mando: nombre del puesto, descripción, identificador único
+					{
+						"status": true,
+						"data": {
+							"treatment_name": "Masaje relajante",
+							"treatment_id": "SPA123"
+						}
+					}
 
-				Eliminar:
+			##### ----------------------- ######
 
-					Yo mando: identificador único
+			Gestión de puestos:
 
-				Consultar:
+			Insertar y editar:  
+			Yo mando: nombre del puesto, descripción, identificador único
 
-					Yo mando: identificador único
+			###  
+			Ejemplo de entrada:  
+			{
+			  "position_name": "Entrenador Personal",
+			  "description": "Responsable de guiar a los clientes en sus rutinas",
+			  "position_id": "POS001"
+			}
 
-					Ud manda: nombre del puesto, descripción, identificador único
+			###  
+			Ejemplo de salida:  
+			{
+			  "status": true,
+			  "data": {
+				"position_name": "Entrenador Personal",
+				"description": "Responsable de guiar a los clientes en sus rutinas",
+				"position_id": "POS001"
+			  }
+			}
 
-	Gestión de tipos de planilla:
+			Eliminar:  
+			Yo mando: identificador único
 
-					Insertar y editar:
+			###  
+			Ejemplo de entrada:  
+			{
+			  "position_id": "POS001"
+			}
 
-						Yo mando: descripción, identificador, pago mensual, pago por horas y pago por clase (Grupal)
+			###  
+			Ejemplo de salida:  
+			{
+			  "status": true,
+			  "data": "Position deleted successfully"
+			}
 
-					Eliminar:
+			Consultar:  
+			Yo mando: identificador único
 
-						Yo mando: identificador único
+			Ud manda: nombre del puesto, descripción, identificador único
 
-					Consultar:
+			###  
+			Ejemplo de entrada:  
+			{
+			  "position_id": "POS001"
+			}
 
-						Yo mando: identificador único
+			###  
+			Ejemplo de salida:  
+			{
+			  "status": true,
+			  "data": {
+				"position_name": "Entrenador Personal",
+				"description": "Responsable de guiar a los clientes en sus rutinas",
+				"position_id": "POS001"
+			  }
+			}
 
-						Ud manda: descripción, identificador, pago mensual, pago por horas y pago por clase (Grupal)
+			##### ----------------------- ######
 
-	
-	Gestión de empleados:
+			Gestión de empleados:
 
-				Insertar y editar:
+			Insertar y editar:
 
-						Yo mando: número de cedula, nombre completo, dirección (Provincia, Cantón, Distrito), puesto que desempeña, 
-						sucursal en la que trabaja (si ha sido asignado a un gimnasio), tipo de planilla, salario, correo electrónico y contraseña
+			Yo mando: número de cedula, nombre completo, dirección (Provincia, Cantón, Distrito), puesto que desempeña, 
+			sucursal en la que trabaja (si ha sido asignado a un gimnasio), tipo de planilla, salario, correo electrónico y contraseña
 
-				Eliminar:
+			###
+			Ejemplo de entrada:
+			{
+				"employee_id": "123456789",
+				"full_name": "Juan Pérez González",
+				"province": "San José",
+				"canton": "Escazú",
+				"district": "San Rafael"
+				"position": "Entrenador Personal",
+				"branch": "Sucursal Escazú",
+				"payroll_type": "Mensual",
+				"salary": 650000,
+				"email": "juan.perez@example.com",
+				"password": "contraseñaSegura123"
+			}
 
-					Yo mando: número de cedula
+			###
+			Ejemplo de salida:
+			{
+			  "status": true,
+			  "data": {
+				"employee_id": "123456789",
+				"full_name": "Juan Pérez González",
+				"province": "San José",
+				"canton": "Escazú",
+				"district": "San Rafael"
+				"position": "Entrenador Personal",
+				"branch": "Sucursal Escazú",
+				"payroll_type": "Mensual",
+				"salary": 650000,
+				"email": "juan.perez@example.com",
+				"password": "contraseñaSegura123"
+			  }
+			}
 
-				Consultar:
+			Eliminar:
 
-					Yo mando: número de cedula
+			Yo mando: número de cedula
 
-					Ud manda: número de cedula, nombre completo, dirección (Provincia, Cantón, Distrito), puesto que desempeña, 
-						  sucursal en la que trabaja (si ha sido asignado a un gimnasio), tipo de planilla, salario, correo electrónico y contraseña
+			###
+			Ejemplo de entrada:
+			{
+			  "employee_id": "123456789"
+			}
 
-	Gestión de Servicios:
-		
-	
-				Insertar y editar:
+			###
+			Ejemplo de salida:
+			{
+			  "status": true,
+			  "data": "Empleado eliminado exitosamente"
+			}
 
-						Yo mando: identificador único y descripción
+			Consultar:
 
-				Eliminar:
+			Yo mando: número de cedula
 
-					Yo mando: identificador único
+			Ud manda: número de cedula, nombre completo, dirección (Provincia, Cantón, Distrito), puesto que desempeña, 
+			sucursal en la que trabaja (si ha sido asignado a un gimnasio), tipo de planilla, salario, correo electrónico y contraseña
 
-				Consultar:
+			###
+			Ejemplo de entrada:
+			{
+			  "employee_id": "123456789"
+			}
 
-					Yo mando: identificador único
+			###
+			Ejemplo de salida:
+			{
+			  "status": true,
+			  "data": {
+				"employee_id": "123456789",
+				"full_name": "Juan Pérez González",
+				"address": {
+				  "province": "San José",
+				  "canton": "Escazú",
+				  "district": "San Rafael"
+				},
+				"position": "Entrenador Personal",
+				"branch": "Sucursal Escazú",
+				"payroll_type": "Mensual",
+				"salary": 650000,
+				"email": "juan.perez@example.com",
+				"password": "contraseñaSegura123"
+			  }
+			}
+##### ----------------------- ######
 
-					Ud manda: identificador único y descripción
+Gestión de Servicios:
 
-	
-	Gestión de Tipos Equipo:
+        Insertar y editar:
 
-				Insertar y editar:
+                Yo mando: identificador único y descripción
 
-						Yo mando: identificador único y descripción del tipo
+        ###
+        Ejemplo de entrada:
+        {
+            "service_id": "SERV001",
+            "description": "Servicio de limpieza y mantenimiento"
+        }
 
-				Eliminar:
+        ###
+        Ejemplo de salida:
 
-					Yo mando: identificador único
+        {
+            "status": true,
+            "data": {
+                "service_id": "SERV001",
+                "description": "Servicio de limpieza y mantenimiento"
+            }
+        }
 
-				Consultar:
+        Eliminar:
 
-					Yo mando: identificador único
+                Yo mando: identificador único
 
-					Ud manda: identificador único y descripción del tipo
+        ###
+        Ejemplo de entrada:
+        {
+            "service_id": "SERV001"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Servicio eliminado exitosamente"
+        }
+
+        Consultar:
+
+                Yo mando: identificador único
+
+                Ud manda: identificador único y descripción
+
+        ###
+        Ejemplo de entrada:
+        {
+            "service_id": "SERV001"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "service_id": "SERV001",
+                "description": "Servicio de limpieza y mantenimiento"
+            }
+        }
 
 
-	Gestión de inventario:
+##### ----------------------- ######
 
-				Insertar y editar:
+Gestión de Tipos Equipo:
 
-						Yo mando: tipo de equipo, marca, número de serie, costo, nombre de sucursal
+        Insertar y editar:
 
-				Eliminar:
+                Yo mando: identificador único y descripción del tipo
 
-					Yo mando: número de serie
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type_id": "EQTYPE001",
+            "description": "Equipo de cardio"
+        }
 
-				Consultar:
+        ###
+        Ejemplo de salida:
 
-					Yo mando: número de serie
+        {
+            "status": true,
+            "data": {
+                "equipment_type_id": "EQTYPE001",
+                "description": "Equipo de cardio"
+            }
+        }
 
-					Ud manda: tipo de equipo, marca, número de serie, costo, nombre de sucursal
+        Eliminar:
 
-	
-	Gestión de productos:
-	
-				Insertar y editar:
+                Yo mando: identificador único
 
-						Yo mando:  nombre, código de barras, descripción y costo
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type_id": "EQTYPE001"
+        }
 
-				Eliminar:
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Tipo de equipo eliminado exitosamente"
+        }
 
-					Yo mando: código de barras
+        Consultar:
 
-				Consultar:
+                Yo mando: identificador único
 
-					Yo mando: código de barras
+                Ud manda: identificador único y descripción del tipo
 
-					Ud manda: nombre, código de barras, descripción y costo	
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type_id": "EQTYPE001"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "equipment_type_id": "EQTYPE001",
+                "description": "Equipo de cardio"
+            }
+        }
+
+
+	##### ----------------------- ######
+
+Gestión de inventario:
+
+        Insertar y editar:
+
+                Yo mando: tipo de equipo, marca, número de serie, costo, nombre de sucursal
+
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type": "Equipo de pesas",
+            "brand": "BrandX",
+            "serial_number": "SN123456",
+            "cost": 2500.00,
+            "branch_name": "Sucursal Central"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "equipment_type": "Equipo de pesas",
+                "brand": "BrandX",
+                "serial_number": "SN123456",
+                "cost": 2500.00,
+                "branch_name": "Sucursal Central"
+            }
+        }
+
+        Eliminar:
+
+                Yo mando: número de serie
+
+        ###
+        Ejemplo de entrada:
+        {
+            "serial_number": "SN123456"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Equipo eliminado exitosamente del inventario"
+        }
+
+        Consultar:
+
+                Yo mando: número de serie
+
+                Ud manda: tipo de equipo, marca, número de serie, costo, nombre de sucursal
+
+        ###
+        Ejemplo de entrada:
+        {
+            "serial_number": "SN123456"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "equipment_type": "Equipo de pesas",
+                "brand": "BrandX",
+                "serial_number": "SN123456",
+                "cost": 2500.00,
+                "branch_name": "Sucursal Central"
+            }
+        }
+
+##### ----------------------- ######
+
+Gestión de productos:
+
+        Insertar y editar:
+
+                Yo mando: nombre, código de barras, descripción y costo
+
+        ###
+        Ejemplo de entrada:
+        {
+            "product_name": "Proteína Whey",
+            "barcode": "BARC123456",
+            "description": "Suplemento alimenticio para ganancia muscular",
+            "cost": 45000.00
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "product_name": "Proteína Whey",
+                "barcode": "BARC123456",
+                "description": "Suplemento alimenticio para ganancia muscular",
+                "cost": 45000.00
+            }
+        }
+
+        Eliminar:
+
+                Yo mando: código de barras
+
+        ###
+        Ejemplo de entrada:
+        {
+            "barcode": "BARC123456"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Producto eliminado exitosamente"
+        }
+
+        Consultar:
+
+                Yo mando: código de barras
+
+                Ud manda: nombre, código de barras, descripción y costo
+
+        ###
+        Ejemplo de entrada:
+        {
+            "barcode": "BARC123456"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "product_name": "Proteína Whey",
+                "barcode": "BARC123456",
+                "description": "Suplemento alimenticio para ganancia muscular",
+                "cost": 45000.00
+            }
+        }
+
+	#################################### ----------------------- ####################################
+
 
 
 	Configuración de gimnasio:

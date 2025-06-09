@@ -1,4 +1,4 @@
-﻿namespace GymTEC.Data_output_models.manage_branch
+﻿namespace GymTEC.Data_input_models.manage_branch
 {
     public class Data_input_consult_branch
     {

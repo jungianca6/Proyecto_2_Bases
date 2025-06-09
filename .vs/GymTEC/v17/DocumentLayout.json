@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\space\\source\\repos\\GymTEC\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:GymTEC\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\controllers\\branchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\controllers\\branchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -83,31 +79,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\.gitignore",
-              "RelativeDocumentMoniker": "GymTEC\\.gitignore",
-              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\.gitignore",
-              "RelativeToolTip": "GymTEC\\.gitignore",
-              "ViewState": "AQIAACgAAAAAAAAAAAAQwC8AAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-06-09T02:34:44.731Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "BranchController.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\BranchController.cs",
               "RelativeDocumentMoniker": "GymTEC\\Controllers\\BranchController.cs",
               "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\BranchController.cs",
               "RelativeToolTip": "GymTEC\\Controllers\\BranchController.cs",
-              "ViewState": "AQIAAGsAAAAAAAAAAAAswBsAAAANAAAA",
+              "ViewState": "AQIAAGsAAAAAAAAAAAAswHsAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-09T02:25:53.604Z"
+              "WhenOpened": "2025-06-09T02:25:53.604Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "Data_input_consult_branch.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_input_consult_branch.cs",
               "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\manage_branch\\Data_input_consult_branch.cs",
@@ -119,7 +103,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "Data_input_delete_branch.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_input_delete_branch.cs",
               "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\manage_branch\\Data_input_delete_branch.cs",
@@ -131,7 +115,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Data_output_manage_branch.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_output_manage_branch.cs",
               "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\manage_branch\\Data_output_manage_branch.cs",
@@ -143,7 +127,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 5,
               "Title": "Data_input_manage_branch.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\manage_branch\\Data_input_manage_branch.cs",
               "RelativeDocumentMoniker": "GymTEC\\Data_input_models\\manage_branch\\Data_input_manage_branch.cs",
@@ -155,7 +139,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "RegisterController.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\RegisterController.cs",
               "RelativeDocumentMoniker": "GymTEC\\Controllers\\RegisterController.cs",
@@ -167,7 +151,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 8,
               "Title": "Data_output_register_client.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\Data_output_register_client.cs",
               "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\Data_output_register_client.cs",
@@ -179,7 +163,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 9,
               "Title": "Data_input_register_client.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\Data_input_register_client.cs",
               "RelativeDocumentMoniker": "GymTEC\\Data_input_models\\Data_input_register_client.cs",
@@ -191,7 +175,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 7,
               "Title": "LoginController.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\LoginController.cs",
               "RelativeDocumentMoniker": "GymTEC\\Controllers\\LoginController.cs",
@@ -203,7 +187,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 10,
               "Title": "WeatherForecastController.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "GymTEC\\Controllers\\WeatherForecastController.cs",
@@ -215,7 +199,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 11,
               "Title": "Data_response.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Utilities\\Data_response.cs",
               "RelativeDocumentMoniker": "GymTEC\\Utilities\\Data_response.cs",
@@ -227,7 +211,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 12,
               "Title": "Data_output_log_in.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\Data_output_log_in.cs",
               "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\Data_output_log_in.cs",
@@ -239,7 +223,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 13,
               "Title": "Data_input_log_in.cs",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\Data_input_log_in.cs",
               "RelativeDocumentMoniker": "GymTEC\\Data_input_models\\Data_input_log_in.cs",
@@ -251,7 +235,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Plan Proyecto 2 Bases.txt",
               "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Examples\\Plan Proyecto 2 Bases.txt",
               "RelativeDocumentMoniker": "GymTEC\\Examples\\Plan Proyecto 2 Bases.txt",
