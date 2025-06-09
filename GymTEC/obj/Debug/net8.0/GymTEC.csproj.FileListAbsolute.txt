@@ -30,3 +30,4 @@ C:\Users\space\source\repos\GymTEC\GymTEC\obj\Debug\net8.0\refint\GymTEC.dll
 C:\Users\space\source\repos\GymTEC\GymTEC\obj\Debug\net8.0\GymTEC.pdb
 C:\Users\space\source\repos\GymTEC\GymTEC\obj\Debug\net8.0\GymTEC.genruntimeconfig.cache
 C:\Users\space\source\repos\GymTEC\GymTEC\obj\Debug\net8.0\ref\GymTEC.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\obj\Debug\net8.0\GymTEC.sourcelink.json
