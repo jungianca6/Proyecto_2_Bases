@@ -1,0 +1,266 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\space\\source\\repos\\GymTEC\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\controllers\\branchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\controllers\\branchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_output_models\\manage_branch\\data_output_manage_branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_output_models\\manage_branch\\data_output_manage_branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\examples\\plan proyecto 2 bases.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\examples\\plan proyecto 2 bases.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_output_models\\manage_branch\\data_input_consult_branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_output_models\\manage_branch\\data_input_consult_branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_output_models\\manage_branch\\data_input_delete_branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_output_models\\manage_branch\\data_input_delete_branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_input_models\\manage_branch\\data_input_manage_branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_input_models\\manage_branch\\data_input_manage_branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\controllers\\registercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\controllers\\registercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_output_models\\data_output_register_client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_output_models\\data_output_register_client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_input_models\\data_input_register_client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_input_models\\data_input_register_client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\utilities\\data_response.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\utilities\\data_response.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_output_models\\data_output_log_in.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_output_models\\data_output_log_in.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_input_models\\data_input_log_in.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_input_models\\data_input_log_in.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BranchController.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\BranchController.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Controllers\\BranchController.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\BranchController.cs",
+              "RelativeToolTip": "GymTEC\\Controllers\\BranchController.cs",
+              "ViewState": "AQIAAGsAAAAAAAAAAAAswBsAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:25:53.604Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Data_input_consult_branch.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_input_consult_branch.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\manage_branch\\Data_input_consult_branch.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_input_consult_branch.cs",
+              "RelativeToolTip": "GymTEC\\Data_output_models\\manage_branch\\Data_input_consult_branch.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:24:44.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Data_input_delete_branch.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_input_delete_branch.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\manage_branch\\Data_input_delete_branch.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_input_delete_branch.cs",
+              "RelativeToolTip": "GymTEC\\Data_output_models\\manage_branch\\Data_input_delete_branch.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:23:14.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Data_output_manage_branch.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_output_manage_branch.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\manage_branch\\Data_output_manage_branch.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\manage_branch\\Data_output_manage_branch.cs",
+              "RelativeToolTip": "GymTEC\\Data_output_models\\manage_branch\\Data_output_manage_branch.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:21:24.339Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Data_input_manage_branch.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\manage_branch\\Data_input_manage_branch.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Data_input_models\\manage_branch\\Data_input_manage_branch.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\manage_branch\\Data_input_manage_branch.cs",
+              "RelativeToolTip": "GymTEC\\Data_input_models\\manage_branch\\Data_input_manage_branch.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:21:07.227Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RegisterController.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\RegisterController.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Controllers\\RegisterController.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\RegisterController.cs",
+              "RelativeToolTip": "GymTEC\\Controllers\\RegisterController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:18:02.571Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Data_output_register_client.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\Data_output_register_client.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\Data_output_register_client.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\Data_output_register_client.cs",
+              "RelativeToolTip": "GymTEC\\Data_output_models\\Data_output_register_client.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:17:04.027Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Data_input_register_client.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\Data_input_register_client.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Data_input_models\\Data_input_register_client.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\Data_input_register_client.cs",
+              "RelativeToolTip": "GymTEC\\Data_input_models\\Data_input_register_client.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:16:47.745Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "GymTEC\\Controllers\\LoginController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:11:38.136Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "GymTEC\\Controllers\\WeatherForecastController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:11:06.748Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Data_response.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Utilities\\Data_response.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Utilities\\Data_response.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Utilities\\Data_response.cs",
+              "RelativeToolTip": "GymTEC\\Utilities\\Data_response.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:10:36.274Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Data_output_log_in.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\Data_output_log_in.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Data_output_models\\Data_output_log_in.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_output_models\\Data_output_log_in.cs",
+              "RelativeToolTip": "GymTEC\\Data_output_models\\Data_output_log_in.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:08:39.077Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Data_input_log_in.cs",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\Data_input_log_in.cs",
+              "RelativeDocumentMoniker": "GymTEC\\Data_input_models\\Data_input_log_in.cs",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Data_input_models\\Data_input_log_in.cs",
+              "RelativeToolTip": "GymTEC\\Data_input_models\\Data_input_log_in.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T02:08:19.293Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Plan Proyecto 2 Bases.txt",
+              "DocumentMoniker": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Examples\\Plan Proyecto 2 Bases.txt",
+              "RelativeDocumentMoniker": "GymTEC\\Examples\\Plan Proyecto 2 Bases.txt",
+              "ToolTip": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\Examples\\Plan Proyecto 2 Bases.txt",
+              "RelativeToolTip": "GymTEC\\Examples\\Plan Proyecto 2 Bases.txt",
+              "ViewState": "AQIAAJIAAAAAAAAAAAAgwJ4AAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-06-09T02:01:22.481Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

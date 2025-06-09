@@ -1,0 +1,423 @@
+Log In: 
+	Yo mando: Usuario, contraseña
+	
+	Ud manda: Usuario, rol (Admin, Cliente, Instructor), número de cédula
+
+###
+Ejemplo de entrada:
+
+{
+  "user_name": "juan_perez",
+  "password": "1234abcd"
+}
+
+
+###
+Ejemplo de Salida:
+
+{
+  "status": true,
+  "data": {
+    "user_name": "juan_perez",
+    "role": "Admin",
+    "id_number": "123456789"
+  }
+}
+
+
+#################################### ----------------------- ####################################
+
+Registro (SOLO DE CLIENTES):
+
+				Yo mando:  número de cédula, nombre, usuario, apellido1, apellido2, edad, fecha de nacimiento, peso, IMC, dirección, correo electrónico, contraseña y rol = "Cliente".
+		
+###
+Ejemplo de entrada:
+{
+    "id_number": "123456789",
+    "first_name": "Juan",
+    "user_name": "juan_perez",
+    "last_name_1": "Perez",
+    "last_name_2": "Gomez",
+    "age": 30,
+    "birth_date": "08/06/1995 00:00",
+    "weight": 70.5,
+    "imc": 22.5,
+    "address": "San José, Costa Rica",
+    "email": "juan.perez@example.com",
+    "password": "mypassword123",
+    "role": "Cliente"
+}
+
+###
+Ejemplo de Salida:
+
+{
+    "status": true,
+    "data": {
+        "id_number": "123456789",
+        "first_name": "Juan",
+        "user_name": "juan_perez",
+        "last_name_1": "Perez",
+        "last_name_2": "Gomez",
+        "age": 30,
+        "birth_date": "08/06/1995 00:00",
+        "weight": 70.5,
+        "imc": 22.5,
+        "address": "San José, Costa Rica",
+        "email": "juan.perez@example.com",
+        "role": "Cliente"
+    }
+}
+
+
+
+
+#################################### ----------------------- ####################################
+
+Administrador: 
+	
+	Gestión de sucursales: (No se pueden repetir los nombres de sucursales para que lo regulen)
+				
+				Insertar y editar:
+				
+					Yo mando: nombre, dirección (Provincia, Cantón, Distrito), fecha de apertura, horario de
+					atención, empleado administrador, capacidad máxima, números de teléfono, Spa (desactivado por default entonces es un false), Tienda (desactivado por default entonces es un false) 
+
+
+				###
+				Ejemplo de entrada:
+				{
+					"name": "Sucursal Central",
+					"province": "San José",
+					"canton": "Central",
+					"district": "Carmen",
+					"opening_date": "08/06/2025 09:00",
+					"attention_schedule": "08:00-18:00",
+					"admin_employee": "Carlos López",
+					"max_capacity": 150,
+					"phone_numbers": ["2222-3333", "8888-9999"],
+					"spa": false,
+					"store": false
+				}
+
+
+				###
+				Ejemplo de salida:
+
+				{
+					"status": true,
+					"data": {
+						"name": "Sucursal Central",
+						"province": "San José",
+						"canton": "Central",
+						"district": "Carmen",
+						"opening_date": "08/06/2025 09:00",
+						"attention_schedule": "08:00-18:00",
+						"admin_employee": "Carlos López",
+						"max_capacity": 150,
+						"phone_numbers": ["2222-3333", "8888-9999"],
+						"spa": false,
+						"store": false
+					}
+				}
+
+				##### ----------------------- ######
+
+				Eliminar: 
+		
+					Yo mando: nombre 
+
+				###
+				Ejemplo de entrada:
+					{
+						"name": "Sucursal Central"
+					}
+				###
+				Ejemplo de salida:
+				{
+					"status": true,
+					"data": "Branch deleted successfully"
+				}
+
+				##### ----------------------- ######
+
+				###
+				Ejemplo de entrada:
+
+				###
+				Consultar: 
+
+					Yo mando: nombre
+
+					Ud manda: nombre, dirección (Provincia, Cantón, Distrito), fecha de apertura, horario de
+					atención, empleado administrador, capacidad máxima, números de teléfono, Spa (desactivado por default entonces es un false), Tienda (desactivado por default entonces es un false)
+
+				###
+				Ejemplo de entrada:
+					{
+						"name": "Sucursal Central"
+					}
+				###
+				Ejemplo de salida:
+				{
+					"status": true,
+					"data": {
+						"name": "Sucursal Central",
+						"province": "San José",
+						"canton": "Central",
+						"district": "Carmen",
+						"opening_date": "08/06/2025 09:00",
+						"attention_schedule": "08:00-18:00",
+						"admin_employee": "Carlos López",
+						"max_capacity": 150,
+						"phone_numbers": ["2222-3333", "8888-9999"],
+						"spa": false,
+						"store": false
+					}
+				}
+
+
+
+	Gestión de tratamientos de Spa: 
+	
+					Insertar y editar:
+				
+						Yo mando: nombre del tratamiento a añadir, identificador del tratamiento
+
+					Eliminar: 
+		
+						Yo mando: identificador del tratamiento
+
+					Consultar: 
+
+						Yo mando: identificador del tratamiento
+
+						Ud manda: nombre del tratamiento, identificador del tratamiento
+
+
+	Gestión de puestos:
+
+				Insertar y editar: 
+		
+					Yo mando: nombre del puesto, descripción, identificador único
+
+				Eliminar:
+
+					Yo mando: identificador único
+
+				Consultar:
+
+					Yo mando: identificador único
+
+					Ud manda: nombre del puesto, descripción, identificador único
+
+	Gestión de tipos de planilla:
+
+					Insertar y editar:
+
+						Yo mando: descripción, identificador, pago mensual, pago por horas y pago por clase (Grupal)
+
+					Eliminar:
+
+						Yo mando: identificador único
+
+					Consultar:
+
+						Yo mando: identificador único
+
+						Ud manda: descripción, identificador, pago mensual, pago por horas y pago por clase (Grupal)
+
+	
+	Gestión de empleados:
+
+				Insertar y editar:
+
+						Yo mando: número de cedula, nombre completo, dirección (Provincia, Cantón, Distrito), puesto que desempeña, 
+						sucursal en la que trabaja (si ha sido asignado a un gimnasio), tipo de planilla, salario, correo electrónico y contraseña
+
+				Eliminar:
+
+					Yo mando: número de cedula
+
+				Consultar:
+
+					Yo mando: número de cedula
+
+					Ud manda: número de cedula, nombre completo, dirección (Provincia, Cantón, Distrito), puesto que desempeña, 
+						  sucursal en la que trabaja (si ha sido asignado a un gimnasio), tipo de planilla, salario, correo electrónico y contraseña
+
+	Gestión de Servicios:
+		
+	
+				Insertar y editar:
+
+						Yo mando: identificador único y descripción
+
+				Eliminar:
+
+					Yo mando: identificador único
+
+				Consultar:
+
+					Yo mando: identificador único
+
+					Ud manda: identificador único y descripción
+
+	
+	Gestión de Tipos Equipo:
+
+				Insertar y editar:
+
+						Yo mando: identificador único y descripción del tipo
+
+				Eliminar:
+
+					Yo mando: identificador único
+
+				Consultar:
+
+					Yo mando: identificador único
+
+					Ud manda: identificador único y descripción del tipo
+
+
+	Gestión de inventario:
+
+				Insertar y editar:
+
+						Yo mando: tipo de equipo, marca, número de serie, costo, nombre de sucursal
+
+				Eliminar:
+
+					Yo mando: número de serie
+
+				Consultar:
+
+					Yo mando: número de serie
+
+					Ud manda: tipo de equipo, marca, número de serie, costo, nombre de sucursal
+
+	
+	Gestión de productos:
+	
+				Insertar y editar:
+
+						Yo mando:  nombre, código de barras, descripción y costo
+
+				Eliminar:
+
+					Yo mando: código de barras
+
+				Consultar:
+
+					Yo mando: código de barras
+
+					Ud manda: nombre, código de barras, descripción y costo	
+
+
+	Configuración de gimnasio:
+
+					Asociación de tratamientos al Spa del gimnasio:
+												Agregar tratamiento:
+															Yo mando: identificador del tratamiento, nombre de sucursal
+
+												Ver tratamientos disponibles y ya asociados:
+																		Yo mando: nombre de sucursal
+
+																		Ud manda: tratamientos ya asociados al spa y los no asociados a spa (por separado)
+
+					Asociación de productos a la tienda del gimnasio:
+
+												Agregar producto:
+															Yo mando: código de barras, nombre de sucursal
+
+												Ver productos disponibles y ya asociados:
+																		Yo mando: nombre de sucursal
+
+																		Ud manda: productos ya asociados a la tienda y los no asociados a la tienda (por separado)
+
+					Asociación de inventario:
+
+									Agregar máquina: 
+												Yo mando: número de serie, nombre de sucursal
+
+									
+									Ver máquinas disponibles y ya asociadas:
+															Yo mando: nombre de sucursal
+
+															Ud manda: máquinas ya asociadas al la sucursal de gimnasio y las máquinas no asociadas que NO ESTÁN ASOCIADAS TAMPOCO A OTROS GYMS
+
+					Crear clases:	
+
+							Agregar clase:
+
+									Yo mando: tipo de clase (Indoor Cycling, Pilates, Yoga, Zumba y Natación), instructor, si es grupal (booleano), capacidad, fecha, hora de inicio y hora de finalización	
+
+
+	Generación de planilla:	
+
+					Yo mando: nombre de sucursal
+
+					Ud manda: número de cedula, nombre completo del empleado, número de clases impartidas/horas laboradas (según corresponda) y monto a pagar. ESTO POR CADA EMPLEADO DE LA EMPRESA.
+
+
+
+	Copiar calendario de actividades:
+
+						Yo mando: nombre de sucursal, fecha de inicio de semana a copiar, fecha de final de semana a copiar
+
+
+	Copiar gimnasio:
+
+				Tengo dudas, le tengo que preguntar al profe sobre este
+
+
+#################################### ----------------------- ####################################
+
+Cliente:
+
+	
+	Visualización de mi plan de trabajo:
+
+						Yo mando: número de cédula
+
+						Ud manda: plan de trabajo del cliente
+
+
+	Búsqueda de una clase:
+
+				Yo mando: tipo de clase (Indoor Cycling, Pilates, Yoga, Zumba, Natación), fecha de inicio de búsqueda y fecha de finalización de búsqueda
+
+				Ud manda: Lista de clases que cumpla las fechas puestas. Cada clase tiene: cuando se realizará la clase, fecha de inicio, fecha de finalización, instructor, cupos disponibles.
+
+
+	Registro en una clase:
+						
+				Yo mando: cuando se realizará la clase, fecha de inicio, fecha de finalización, instructor, cupos disponibles
+
+
+#################################### ----------------------- ####################################
+
+Instructor:
+
+		Búsqueda de clientes sin entrenador: 
+							Ud manda: lista de clientes sin instructor. Cada cliente con sus datos, mínimo con el nombre completo y la cédula.
+
+		
+		Asignar instructor:
+
+					Yo mando: número de cédula de instructor, número de cédula de cliente
+
+
+		Creación de plan de trabajo: 
+
+						Yo mando: Tengo que preguntarle al profe que debe de tener esto porque no dice.
+
+		
+		Registro de clase: 
+	
+					Tengo dudas, le tengo que preguntar al profe	
+				
+
+	
