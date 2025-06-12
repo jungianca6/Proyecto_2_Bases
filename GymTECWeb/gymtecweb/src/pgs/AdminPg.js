@@ -1,12 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "./AdminPg.module.css";
 
 function AdminPg() {
     const opciones = [
-        "Sucursales", "Tratamientos de spa", "Puestos", "Tipos de planilla",
-        "Empleados", "Servicios", "Tipos de equipo", "Inventario",
-        "Productos", "Configuración de gimnasio", "Generación de planilla",
-        "Copiar calendario de actividades", "Copiar gimnasio"
+        { nombre: "Sucursales", ruta: "/admin/sucursal" },
+        { nombre: "Tratamientos de spa" },
+        { nombre: "Puestos" },
+        { nombre: "Tipos de planilla" },
+        { nombre: "Empleados" },
+        { nombre: "Servicios" },
+        { nombre: "Tipos de equipo" },
+        { nombre: "Inventario" },
+        { nombre: "Productos" },
+        { nombre: "Configuración de gimnasio" },
+        { nombre: "Generación de planilla" },
+        { nombre: "Copiar calendario de actividades" },
+        { nombre: "Copiar gimnasio" }
     ];
 
     return (
@@ -16,9 +26,13 @@ function AdminPg() {
                 <ul className={styles.navList}>
                     {opciones.map((opcion, index) => (
                         <li key={index} className={styles.navItem}>
-                            <a href="#" className={styles.navLink}>
-                                {opcion}
-                            </a>
+                            {opcion.ruta ? (
+                                <Link to={opcion.ruta} className={styles.navLink}>
+                                    {opcion.nombre}
+                                </Link>
+                            ) : (
+                                <span className={styles.navLink}>{opcion.nombre}</span>
+                            )}
                         </li>
                     ))}
                 </ul>
