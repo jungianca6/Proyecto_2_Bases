@@ -8,7 +8,7 @@ function AdminPg() {
         { nombre: "Tratamientos de spa", ruta: "/admin/tratamiento" },
         { nombre: "Puestos", ruta: "/admin/puesto" },
         { nombre: "Tipos de planilla", ruta: "/admin/tipos-planilla" },
-        { nombre: "Empleados" },
+        { nombre: "Empleados", ruta: "/admin/empleado" },
         { nombre: "Servicios" },
         { nombre: "Tipos de equipo" },
         { nombre: "Inventario" },

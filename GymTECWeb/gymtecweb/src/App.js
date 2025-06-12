@@ -8,6 +8,8 @@ import AdminSucursal from "./pgs/AdminSucursal";
 import AdminTratamiento from "./pgs/AdminTratamiento";
 import AdminPuesto from "./pgs/AdminPuesto";
 import AdminTiposP from "./pgs/AdminTiposP";
+import AdminEmpleado from "./pgs/AdminEmpleado";
+
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -25,6 +27,7 @@ function App() {
                 <Route path="/admin/tratamiento" element={user?.rol === "Admin" ? <AdminTratamiento /> : <Navigate to="/login" />} />
                 <Route path="/admin/puesto" element={user?.rol === "Admin" ? <AdminPuesto /> : <Navigate to="/login" />} />
                 <Route path="/admin/tipos-planilla" element={user?.rol === "Admin" ? <AdminTiposP /> : <Navigate to="/login" />} /> 
+                <Route path="/admin/empleado" element={user?.rol === "Admin" ? <AdminEmpleado /> : <Navigate to="/login" />} />
 
                 <Route path="/cliente" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
                 <Route path="/instructor" element={user?.rol === "Instructor" ? <InstructorPg /> : <Navigate to="/login" />} />
