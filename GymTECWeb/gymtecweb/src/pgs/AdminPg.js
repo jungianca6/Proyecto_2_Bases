@@ -12,7 +12,7 @@ function AdminPg() {
         { nombre: "Servicios", ruta: "/admin/servicio" },
         { nombre: "Tipos de equipo", ruta: "/admin/equipo" },
         { nombre: "Inventario", ruta: "/admin/inventario" },
-        { nombre: "Productos" },
+        { nombre: "Productos", ruta: "/admin/producto" },
         { nombre: "Configuración de gimnasio" },
         { nombre: "Generación de planilla" },
         { nombre: "Copiar calendario de actividades" },
