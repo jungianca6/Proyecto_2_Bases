@@ -1,0 +1,73 @@
+.container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #6a0dad, #b266ff);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #7e3dbf;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.navList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem; /* espacio horizontal y vertical */
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0; /* espacio superior para separar del título */
+    justify-content: center;
+}
+
+.navItem {
+    flex: none;
+    margin-bottom: 0.5rem;
+}
+
+.navLink {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navLink:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.welcome {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.description {
+    font-size: 1.2rem;
+    opacity: 0.85;
+}
