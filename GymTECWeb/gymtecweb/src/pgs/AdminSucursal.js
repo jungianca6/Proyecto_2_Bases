@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
+
 
 function AdminSucursal() {
+    const [consultaData, setConsultaData] = useState(null);
     const [formData, setFormData] = useState({
         nombre: "",
         provincia: "",
@@ -21,10 +24,68 @@ function AdminSucursal() {
     };
 
     const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend según el tipo de acción
+        const fecha = new Date(formData.fechaApertura);
+        const fechaFormateada = fecha.toLocaleDateString("en-GB").replace(/\//g, "/") + " 09:00";
+
+        let data = {};
+        if (accion === "insertar" || accion === "editar") {
+            data = {
+                name: formData.nombre,
+                province: formData.provincia,
+                canton: formData.canton,
+                district: formData.distrito,
+                opening_date: fechaFormateada,
+                attention_schedule: formData.horario,
+                admin_employee: formData.administrador,
+                max_capacity: parseInt(formData.capacidad),
+                phone_numbers: [formData.telefono1, formData.telefono2],
+                spa: false,
+                store: false
+            };
+        } else if (accion === "eliminar" || accion === "consultar") {
+            data = { name: formData.nombre };
+        }
+
+        let url = "";
+        switch (accion) {
+            case "insertar":
+                url = "http://TU_BACKEND/sucursales/insertar";
+                break;
+            case "editar":
+                url = "http://TU_BACKEND/sucursales/editar";
+                break;
+            case "eliminar":
+                url = "http://TU_BACKEND/sucursales/eliminar";
+                break;
+            case "consultar":
+                url = "http://TU_BACKEND/sucursales/consultar";
+                break;
+            default:
+                console.error("Acción no válida");
+                return;
+        }
+
+        axios.post(url, data)
+        .then((res) => {
+            console.log(`Acción ${accion} exitosa:`, res.data);
+            if (accion === "consultar") {
+                if (res.data.status && res.data.data) {
+                    setConsultaData(res.data.data);
+                } else {
+                    setConsultaData(null);
+                    alert("Sucursal no encontrada");
+                }
+            } else {
+                alert(`Sucursal ${accion} correctamente`);
+            }
+        })
+        .catch((err) => {
+            console.error(`Error al ${accion}:`, err);
+            alert(`Error al ${accion} sucursal`);
+        });
+
     };
+
 
     return (
         <div className={styles.container}>
@@ -80,6 +141,22 @@ function AdminSucursal() {
                         <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
                     </div>
                     </form>
+                    {consultaData && (
+                        <div style={{ marginTop: "3rem", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px", backgroundColor: "#f9f9f9" }}>
+                            <h2>Resultado de Consulta</h2>
+                            <p><strong>Nombre:</strong> {consultaData.name}</p>
+                            <p><strong>Provincia:</strong> {consultaData.province}</p>
+                            <p><strong>Cantón:</strong> {consultaData.canton}</p>
+                            <p><strong>Distrito:</strong> {consultaData.district}</p>
+                            <p><strong>Fecha de Apertura:</strong> {consultaData.opening_date}</p>
+                            <p><strong>Horario:</strong> {consultaData.attention_schedule}</p>
+                            <p><strong>Administrador:</strong> {consultaData.admin_employee}</p>
+                            <p><strong>Capacidad Máxima:</strong> {consultaData.max_capacity}</p>
+                            <p><strong>Teléfonos:</strong> {consultaData.phone_numbers.join(" / ")}</p>
+                            <p><strong>Spa:</strong> {consultaData.spa ? "Activado" : "Desactivado"}</p>
+                            <p><strong>Tienda:</strong> {consultaData.store ? "Activado" : "Desactivado"}</p>
+                        </div>
+                    )}
 
             </main>
         </div>
