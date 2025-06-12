@@ -15,8 +15,8 @@ function AdminPg() {
         { nombre: "Productos", ruta: "/admin/producto" },
         { nombre: "Configuración de gimnasio" },
         { nombre: "Generación de planilla", ruta: "/admin/generacion" },
-        { nombre: "Copiar calendario de actividades" },
-        { nombre: "Copiar gimnasio" }
+        { nombre: "Copiar calendario de actividades", ruta: "/admin/calendario" },
+        { nombre: "Copiar gimnasio", ruta: "/admin/copiar-gimnasio" }
     ];
 
     return (
