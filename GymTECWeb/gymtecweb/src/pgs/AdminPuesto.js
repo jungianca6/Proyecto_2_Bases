@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
 
 function AdminPuesto() {
+    const [consultaData, setConsultaData] = useState(null);
     const [formData, setFormData] = useState({
         nombre: "",
         descripcion: "",
@@ -14,9 +16,56 @@ function AdminPuesto() {
     };
 
     const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend según la acción
+        let data = {};
+        if (accion === "insertar" || accion === "editar") {
+            data = {
+                position_name: formData.nombre,
+                description: formData.descripcion,
+                position_id: formData.identificador
+            };
+        } else if (accion === "eliminar" || accion === "consultar") {
+            data = {
+                position_id: formData.identificador
+            };
+        }
+
+        let url = "";
+        switch (accion) {
+            case "insertar":
+                url = "http://TU_BACKEND/puestos/insertar";
+                break;
+            case "editar":
+                url = "http://TU_BACKEND/puestos/editar";
+                break;
+            case "eliminar":
+                url = "http://TU_BACKEND/puestos/eliminar";
+                break;
+            case "consultar":
+                url = "http://TU_BACKEND/puestos/consultar";
+                break;
+            default:
+                console.error("Acción no válida");
+                return;
+        }
+
+        axios.post(url, data)
+            .then((res) => {
+                console.log(`Acción ${accion} exitosa:`, res.data);
+                if (accion === "consultar") {
+                    if (res.data.status && res.data.data) {
+                        setConsultaData(res.data.data);
+                    } else {
+                        setConsultaData(null);
+                        alert("Puesto no encontrado");
+                    }
+                } else {
+                    alert(`Puesto ${accion} correctamente`);
+                }
+            })
+            .catch((err) => {
+                console.error(`Error al ${accion}:`, err);
+                alert(`Error al ${accion} puesto`);
+            });
     };
 
     return (
@@ -27,6 +76,7 @@ function AdminPuesto() {
 
             <main className={styles.main}>
                 <h1 className={styles.welcome}>Gestión de Puestos</h1>
+
                 <form className={styles.form}>
                     <label htmlFor="nombre" className={styles.label}>Nombre del puesto</label>
                     <input
@@ -65,6 +115,27 @@ function AdminPuesto() {
                         <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
                     </div>
                 </form>
+
+                <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
+                    Para eliminar o consultar solo es necesario enviar el identificador del puesto.
+                </p>
+
+                {consultaData && (
+                    <div style={{
+                        marginTop: "2rem",
+                        backgroundColor: "white",
+                        padding: "1rem",
+                        borderRadius: "8px",
+                        color: "#333",
+                        maxWidth: "500px",
+                        width: "100%"
+                    }}>
+                        <h2>Resultado de Consulta</h2>
+                        <p><strong>Nombre del Puesto:</strong> {consultaData.position_name}</p>
+                        <p><strong>Descripción:</strong> {consultaData.description}</p>
+                        <p><strong>Identificador:</strong> {consultaData.position_id}</p>
+                    </div>
+                )}
             </main>
         </div>
     );
