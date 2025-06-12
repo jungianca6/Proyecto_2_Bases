@@ -6,7 +6,7 @@ function AdminPg() {
     const opciones = [
         { nombre: "Sucursales", ruta: "/admin/sucursal" },
         { nombre: "Tratamientos de spa", ruta: "/admin/tratamiento" },
-        { nombre: "Puestos" },
+        { nombre: "Puestos", ruta: "/admin/puesto" },
         { nombre: "Tipos de planilla" },
         { nombre: "Empleados" },
         { nombre: "Servicios" },
