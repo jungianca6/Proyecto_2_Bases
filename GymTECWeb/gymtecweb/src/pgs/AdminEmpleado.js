@@ -1,92 +1,177 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
 
 function AdminEmpleado() {
-    const [formData, setFormData] = useState({
-        cedula: "",
-        nombre: "",
-        provincia: "",
-        canton: "",
-        distrito: "",
-        puesto: "",
-        sucursal: "",
-        planilla: "",
-        salario: "",
-        correo: "",
-        contrasena: ""
-    });
+  const [consultaData, setConsultaData] = useState(null);
+  const [formData, setFormData] = useState({
+    cedula: "",
+    nombre: "",
+    provincia: "",
+    canton: "",
+    distrito: "",
+    puesto: "",
+    sucursal: "",
+    planilla: "",
+    salario: "",
+    correo: "",
+    contrasena: ""
+  });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend
-    };
+  const handleSubmit = (accion) => {
+    let data = {};
 
-    return (
-        <div className={styles.container}>
-            <nav className={styles.navbar}>
-                <div className={styles.logo}>GymTEC - Empleados</div>
-            </nav>
+    if (accion === "insertar" || accion === "editar") {
+      data = {
+        employee_id: formData.cedula,
+        full_name: formData.nombre,
+        province: formData.provincia,
+        canton: formData.canton,
+        district: formData.distrito,
+        position: formData.puesto,
+        branch: formData.sucursal,
+        payroll_type: formData.planilla,
+        salary: parseFloat(formData.salario),
+        email: formData.correo,
+        password: formData.contrasena
+      };
+    } else if (accion === "eliminar" || accion === "consultar") {
+      data = { employee_id: formData.cedula };
+    }
 
-            <main className={styles.main}>
-                <h1 className={styles.welcome}>Gestión de Empleados</h1>
-                <form className={styles.form}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
-                        {/* Columna izquierda */}
-                        <div>
-                            <label htmlFor="cedula" className={styles.label}>Número de cédula</label>
-                            <input type="text" id="cedula" name="cedula" value={formData.cedula} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+    let url = "";
+    switch (accion) {
+      case "insertar":
+        url = "http://TU_BACKEND/empleados/insertar";
+        break;
+      case "editar":
+        url = "http://TU_BACKEND/empleados/editar";
+        break;
+      case "eliminar":
+        url = "http://TU_BACKEND/empleados/eliminar";
+        break;
+      case "consultar":
+        url = "http://TU_BACKEND/empleados/consultar";
+        break;
+      default:
+        return;
+    }
 
-                            <label htmlFor="nombre" className={styles.label}>Nombre completo</label>
-                            <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+    axios.post(url, data)
+      .then((res) => {
+        console.log(`Acción ${accion} exitosa:`, res.data);
 
-                            <label htmlFor="provincia" className={styles.label}>Provincia</label>
-                            <input type="text" id="provincia" name="provincia" value={formData.provincia} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+        if (accion === "consultar") {
+          if (res.data.status && res.data.data) {
+            setConsultaData(res.data.data);
+          } else {
+            setConsultaData(null);
+            alert("Empleado no encontrado");
+          }
+        } else {
+          alert(`Empleado ${accion} correctamente`);
+        }
+      })
+      .catch((err) => {
+        console.error(`Error al ${accion}:`, err);
+        alert(`Error al ${accion} empleado`);
+      });
+  };
 
-                            <label htmlFor="canton" className={styles.label}>Cantón</label>
-                            <input type="text" id="canton" name="canton" value={formData.canton} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+  return (
+    <div className={styles.container}>
+      <nav className={styles.navbar}>
+        <div className={styles.logo}>GymTEC - Empleados</div>
+      </nav>
 
-                            <label htmlFor="distrito" className={styles.label}>Distrito</label>
-                            <input type="text" id="distrito" name="distrito" value={formData.distrito} onChange={handleChange} style={{ marginBottom: "1rem" }} />
-                        </div>
+      <main className={styles.main}>
+        <h1 className={styles.welcome}>Gestión de Empleados</h1>
 
-                        {/* Columna derecha */}
-                        <div>
-                            <label htmlFor="puesto" className={styles.label}>Puesto que desempeña</label>
-                            <input type="text" id="puesto" name="puesto" value={formData.puesto} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+        <form className={styles.form}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+            {/* Columna izquierda */}
+            <div>
+              <label htmlFor="cedula" className={styles.label}>Número de cédula</label>
+              <input id="cedula" name="cedula" value={formData.cedula} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
-                            <label htmlFor="sucursal" className={styles.label}>Sucursal asignada</label>
-                            <input type="text" id="sucursal" name="sucursal" value={formData.sucursal} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+              <label htmlFor="nombre" className={styles.label}>Nombre completo</label>
+              <input id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
-                            <label htmlFor="planilla" className={styles.label}>Tipo de planilla</label>
-                            <input type="text" id="planilla" name="planilla" value={formData.planilla} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+              <label htmlFor="provincia" className={styles.label}>Provincia</label>
+              <input id="provincia" name="provincia" value={formData.provincia} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
-                            <label htmlFor="salario" className={styles.label}>Salario</label>
-                            <input type="number" id="salario" name="salario" value={formData.salario} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+              <label htmlFor="canton" className={styles.label}>Cantón</label>
+              <input id="canton" name="canton" value={formData.canton} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
-                            <label htmlFor="correo" className={styles.label}>Correo electrónico</label>
-                            <input type="email" id="correo" name="correo" value={formData.correo} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+              <label htmlFor="distrito" className={styles.label}>Distrito</label>
+              <input id="distrito" name="distrito" value={formData.distrito} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+            </div>
 
-                            <label htmlFor="contrasena" className={styles.label}>Contraseña</label>
-                            <input type="password" id="contrasena" name="contrasena" value={formData.contrasena} onChange={handleChange} style={{ marginBottom: "1rem" }} />
-                        </div>
-                    </div>
+            {/* Columna derecha */}
+            <div>
+              <label htmlFor="puesto" className={styles.label}>Puesto que desempeña</label>
+              <input id="puesto" name="puesto" value={formData.puesto} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
-                    <div className={styles.buttonRow} style={{ marginTop: "2rem" }}>
-                        <button type="button" onClick={() => handleSubmit("insertar")}>Insertar</button>
-                        <button type="button" onClick={() => handleSubmit("editar")}>Editar</button>
-                        <button type="button" onClick={() => handleSubmit("eliminar")}>Eliminar</button>
-                        <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
-                    </div>
-                </form>
-            </main>
-        </div>
-    );
+              <label htmlFor="sucursal" className={styles.label}>Sucursal asignada</label>
+              <input id="sucursal" name="sucursal" value={formData.sucursal} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+
+              <label htmlFor="planilla" className={styles.label}>Tipo de planilla</label>
+              <input id="planilla" name="planilla" value={formData.planilla} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+
+              <label htmlFor="salario" className={styles.label}>Salario</label>
+              <input id="salario" name="salario" type="number" value={formData.salario} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+
+              <label htmlFor="correo" className={styles.label}>Correo electrónico</label>
+              <input id="correo" name="correo" type="email" value={formData.correo} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+
+              <label htmlFor="contrasena" className={styles.label}>Contraseña</label>
+              <input id="contrasena" name="contrasena" type="password" value={formData.contrasena} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+            </div>
+          </div>
+
+          <div className={styles.buttonRow} style={{ marginTop: "2rem" }}>
+            <button type="button" onClick={() => handleSubmit("insertar")}>Insertar</button>
+            <button type="button" onClick={() => handleSubmit("editar")}>Editar</button>
+            <button type="button" onClick={() => handleSubmit("eliminar")}>Eliminar</button>
+            <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
+          </div>
+        </form>
+
+        <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
+          Para eliminar o consultar solo se necesita ingresar la cédula del empleado.
+        </p>
+
+        {consultaData && (
+          <div style={{
+            marginTop: "2rem",
+            backgroundColor: "white",
+            padding: "1rem",
+            borderRadius: "8px",
+            color: "#333",
+            maxWidth: "600px",
+            width: "100%"
+          }}>
+            <h2>Resultado de Consulta</h2>
+            <p><strong>Cédula:</strong> {consultaData.employee_id}</p>
+            <p><strong>Nombre:</strong> {consultaData.full_name}</p>
+            <p><strong>Provincia:</strong> {consultaData.address.province}</p>
+            <p><strong>Cantón:</strong> {consultaData.address.canton}</p>
+            <p><strong>Distrito:</strong> {consultaData.address.district}</p>
+            <p><strong>Puesto:</strong> {consultaData.position}</p>
+            <p><strong>Sucursal:</strong> {consultaData.branch}</p>
+            <p><strong>Tipo de planilla:</strong> {consultaData.payroll_type}</p>
+            <p><strong>Salario:</strong> ₡{consultaData.salary.toLocaleString()}</p>
+            <p><strong>Correo:</strong> {consultaData.email}</p>
+          </div>
+        )}
+      </main>
+    </div>
+  );
 }
 
 export default AdminEmpleado;
