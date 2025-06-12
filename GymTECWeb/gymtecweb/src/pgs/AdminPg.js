@@ -7,7 +7,7 @@ function AdminPg() {
         { nombre: "Sucursales", ruta: "/admin/sucursal" },
         { nombre: "Tratamientos de spa", ruta: "/admin/tratamiento" },
         { nombre: "Puestos", ruta: "/admin/puesto" },
-        { nombre: "Tipos de planilla" },
+        { nombre: "Tipos de planilla", ruta: "/admin/tipos-planilla" },
         { nombre: "Empleados" },
         { nombre: "Servicios" },
         { nombre: "Tipos de equipo" },
