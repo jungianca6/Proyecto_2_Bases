@@ -11,7 +11,7 @@ function AdminPg() {
         { nombre: "Empleados", ruta: "/admin/empleado" },
         { nombre: "Servicios", ruta: "/admin/servicio" },
         { nombre: "Tipos de equipo", ruta: "/admin/equipo" },
-        { nombre: "Inventario" },
+        { nombre: "Inventario", ruta: "/admin/inventario" },
         { nombre: "Productos" },
         { nombre: "Configuración de gimnasio" },
         { nombre: "Generación de planilla" },
