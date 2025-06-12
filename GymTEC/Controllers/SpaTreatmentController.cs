@@ -110,5 +110,38 @@ namespace GymTEC.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("associate_spa_treatment")]
+        public ActionResult<Data_response<string>> AssociateSpaTreatment([FromBody] Data_input_associate_spa_treatment input)
+        {
+            // Simulamos la asociación del tratamiento spa a la sucursal
+            var response = new Data_response<string>
+            {
+                status = true,
+                data = $"Tratamiento con ID {input.treatment_id} asociado a la sucursal {input.branch_name} exitosamente"
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost("consult_spa_treatments")]
+        public ActionResult<Data_response<List<Data_output_associate_spa_treatment>>> ConsultSpaTreatments([FromBody] Data_input_consult_spa_treatment input)
+        {
+            // Simulamos la consulta devolviendo una lista de tratamientos asociados y no asociados
+            var treatments = new List<Data_output_associate_spa_treatment>
+            {
+                new Data_output_associate_spa_treatment { treatment_id = 1, treatment_name = "Masaje relajante" },
+                new Data_output_associate_spa_treatment { treatment_id = 2, treatment_name = "Aromaterapia" }
+            };
+
+            var response = new Data_response<List<Data_output_associate_spa_treatment>>
+            {
+                status = true,
+                data = treatments
+            };
+
+            return Ok(response);
+        }
+
     }
 }

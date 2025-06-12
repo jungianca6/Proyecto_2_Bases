@@ -123,5 +123,64 @@ namespace GymTEC.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("associate_machine")]
+        public ActionResult<Data_response<Data_output_associate_machine>> AssociateMachine([FromBody] Data_input_associate_machine input)
+        {
+            // Simulamos la asociación de la máquina con la sucursal
+            var dataOutput = new Data_output_associate_machine
+            {
+                serial_number = input.serial_number,
+                brand = "TechFit", // Ejemplo fijo
+                model = "X2000",   // Ejemplo fijo
+                branch_name = input.branch_name
+            };
+
+            var response = new Data_response<Data_output_associate_machine>
+            {
+                status = true,
+                data = dataOutput
+            };
+
+            return Ok(response);
+        }
+
+        [HttpPost("consult_machines_by_branch")]
+        public ActionResult<Data_response<Data_output_consult_machine_by_branch>> ConsultMachinesByBranch([FromBody] Data_input_consult_machine_by_branch input)
+        {
+            // Simulamos la consulta con datos de ejemplo
+            var dataOutput = new Data_output_consult_machine_by_branch
+            {
+                associated_machines = new List<Data_output_associate_machine>
+                {
+                    new Data_output_associate_machine
+                    {
+                        serial_number = "SN987654",
+                        brand = "TechFit",
+                        model = "X2000",
+                        branch_name = input.branch_name
+                    }
+                },
+                not_associated_machines = new List<Data_output_associate_machine>
+                {
+                    new Data_output_associate_machine
+                    {
+                        serial_number = "SN123321",
+                        brand = "GymPro",
+                        model = "Alpha5",
+                        branch_name = null
+                    }
+                }
+            };
+
+            var response = new Data_response<Data_output_consult_machine_by_branch>
+            {
+                status = true,
+                data = dataOutput
+            };
+
+            return Ok(response);
+        }
     }
+
 }
