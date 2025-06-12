@@ -95,6 +95,9 @@ function AdminSucursal() {
 
             <main className={styles.main}>
                 <h1 className={styles.welcome}>Gestión de Sucursales</h1>
+                <p style={{ marginBottom: "1.5rem", fontStyle: "italic", color: "white" }}>
+                * Para las acciones de <strong>Eliminar</strong> y <strong>Consultar</strong>, solo es necesario ingresar el <strong>nombre de la sucursal</strong>.
+                </p>
                 <form className={styles.form}>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
                         {/* Columna izquierda */}
