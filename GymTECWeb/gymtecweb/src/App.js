@@ -13,6 +13,7 @@ import AdminServicio from "./pgs/AdminServicio";
 import AdminEquipo from "./pgs/AdminEquipo";
 import AdminInventario from "./pgs/AdminInventario";
 import AdminProducto from "./pgs/AdminProducto";
+import AdminGeneracion from "./pgs/AdminGeneracion";
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/admin/equipo" element={user?.rol === "Admin" ? <AdminEquipo /> : <Navigate to="/login" />} />
                 <Route path="/admin/inventario" element={user?.rol === "Admin" ? <AdminInventario /> : <Navigate to="/login" />} />
                 <Route path="/admin/producto" element={user?.rol === "Admin" ? <AdminProducto /> : <Navigate to="/login" />} />
+                <Route path="/admin/generacion" element={user?.rol === "Admin" ? <AdminGeneracion /> : <Navigate to="/login" />} />
 
 
                 <Route path="/cliente" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
