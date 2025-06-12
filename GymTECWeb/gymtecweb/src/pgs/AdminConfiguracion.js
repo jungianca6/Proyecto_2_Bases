@@ -5,19 +5,10 @@ import styles from "./AdminPg.module.css";
 function AdminConfiguracion() {
 
     const opciones = [
-        {nombre: "Sucursales", ruta: "/admin/sucursal"},
-        {nombre: "Tratamientos de spa", ruta: "/admin/tratamiento"},
-        {nombre: "Puestos", ruta: "/admin/puesto"},
-        {nombre: "Tipos de planilla", ruta: "/admin/tipos-planilla"},
-        {nombre: "Empleados", ruta: "/admin/empleado"},
-        {nombre: "Servicios", ruta: "/admin/servicio"},
-        {nombre: "Tipos de equipo", ruta: "/admin/equipo"},
-        {nombre: "Inventario", ruta: "/admin/inventario"},
-        {nombre: "Productos", ruta: "/admin/producto"},
-        {nombre: "Configuración de gimnasio"},
-        {nombre: "Generación de planilla", ruta: "/admin/generacion"},
-        {nombre: "Copiar calendario de actividades"},
-        {nombre: "Copiar gimnasio"}
+        {nombre: "Asociación de tratamientos de spa", ruta: "/admin/configuracion/asociaciontratamiento"},
+        {nombre: "Asociación de inventario", ruta: "/admin/configuracion/asociacioninventario"},
+        {nombre: "Asociación de productos", ruta: "/admin/configuracion/asociacionproducto"},
+        {nombre: "Creación de clases", ruta: "/admin/configuracion/creacionclases"},
     ];
 
     return (
@@ -40,8 +31,8 @@ function AdminConfiguracion() {
             </nav>
 
             <main className={styles.main}>
-                <h1 className={styles.welcome}>Bienvenido, Administrador</h1>
-                <p className={styles.description}>Seleccione una opción del menú.</p>
+                <h1 className={styles.welcome}>Bienvenido, admin</h1>
+                <p className={styles.description}>Aquí se realiza la configuración del gimnasio.</p>
             </main>
         </div>
     );

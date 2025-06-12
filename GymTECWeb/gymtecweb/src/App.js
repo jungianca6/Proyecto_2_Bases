@@ -20,6 +20,10 @@ import AdminConfiguracion from "./pgs/AdminConfiguracion";
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AdminAsociacionTratamiento from "./pgs/AdminAsociacionTratamiento";
+import AdminAsociacionInventario from "./pgs/AdminAsociacionInventario";
+import AdminAsociacionProducto from "./pgs/AdminAsociacionProducto";
+import AdminCreacionClases from "./pgs/AdminCreacionClases";
 
 
 function App() {
@@ -45,6 +49,15 @@ function App() {
                 <Route path="/admin/calendario" element={user?.rol === "Admin" ? <AdminCalendario /> : <Navigate to="/login" />} />
                 <Route path="/admin/copiar-gimnasio" element={user?.rol === "Admin" ? <AdminCG /> : <Navigate to="/login" />} />
                 <Route path="/admin/configuracion" element={user?.rol === "Admin" ? <AdminConfiguracion /> : <Navigate to="/login" />} />
+
+                <Route path="/admin/configuracion/asociaciontratamiento"
+                       element={user?.rol === "Admin" ? <AdminAsociacionTratamiento /> : <Navigate to="/login" />} />
+                <Route path="/admin/configuracion/asociacioninventario"
+                       element={user?.rol === "Admin" ? <AdminAsociacionInventario /> : <Navigate to="/login" />} />
+                <Route path="/admin/configuracion/asociacionproducto"
+                       element={user?.rol === "Admin" ? <AdminAsociacionProducto /> : <Navigate to="/login" />} />
+                <Route path="/admin/configuracion/creacionclases"
+                       element={user?.rol === "Admin" ? <AdminCreacionClases /> : <Navigate to="/login" />} />
 
 
 
