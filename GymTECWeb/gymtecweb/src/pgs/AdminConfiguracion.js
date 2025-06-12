@@ -1,22 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./AdminPg.module.css";
 
-function AdminPg() {
+function AdminConfiguracion() {
+
     const opciones = [
-        { nombre: "Sucursales", ruta: "/admin/sucursal" },
-        { nombre: "Tratamientos de spa", ruta: "/admin/tratamiento" },
-        { nombre: "Puestos", ruta: "/admin/puesto" },
-        { nombre: "Tipos de planilla", ruta: "/admin/tipos-planilla" },
-        { nombre: "Empleados", ruta: "/admin/empleado" },
-        { nombre: "Servicios", ruta: "/admin/servicio" },
-        { nombre: "Tipos de equipo", ruta: "/admin/equipo" },
-        { nombre: "Inventario", ruta: "/admin/inventario" },
-        { nombre: "Productos", ruta: "/admin/producto" },
-        { nombre: "Configuración de gimnasio", ruta: "/admin/configuracion" },
-        { nombre: "Generación de planilla", ruta: "/admin/generacion" },
-        { nombre: "Copiar calendario de actividades", ruta: "/admin/calendario" },
-        { nombre: "Copiar gimnasio", ruta: "/admin/copiar-gimnasio" }
+        {nombre: "Sucursales", ruta: "/admin/sucursal"},
+        {nombre: "Tratamientos de spa", ruta: "/admin/tratamiento"},
+        {nombre: "Puestos", ruta: "/admin/puesto"},
+        {nombre: "Tipos de planilla", ruta: "/admin/tipos-planilla"},
+        {nombre: "Empleados", ruta: "/admin/empleado"},
+        {nombre: "Servicios", ruta: "/admin/servicio"},
+        {nombre: "Tipos de equipo", ruta: "/admin/equipo"},
+        {nombre: "Inventario", ruta: "/admin/inventario"},
+        {nombre: "Productos", ruta: "/admin/producto"},
+        {nombre: "Configuración de gimnasio"},
+        {nombre: "Generación de planilla", ruta: "/admin/generacion"},
+        {nombre: "Copiar calendario de actividades"},
+        {nombre: "Copiar gimnasio"}
     ];
 
     return (
@@ -45,5 +46,4 @@ function AdminPg() {
         </div>
     );
 }
-
-export default AdminPg;
+export default AdminConfiguracion;
