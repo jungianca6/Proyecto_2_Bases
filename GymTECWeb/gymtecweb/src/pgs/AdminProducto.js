@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
 
 function AdminProducto() {
+    const [consultaData, setConsultaData] = useState(null);
     const [formData, setFormData] = useState({
         nombre: "",
         codigoBarras: "",
@@ -15,9 +17,54 @@ function AdminProducto() {
     };
 
     const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend según la acción
+        let data = {};
+
+        if (accion === "insertar" || accion === "editar") {
+            data = {
+                product_name: formData.nombre,
+                barcode: formData.codigoBarras,
+                description: formData.descripcion,
+                cost: parseFloat(formData.costo)
+            };
+        } else if (accion === "eliminar" || accion === "consultar") {
+            data = { barcode: formData.codigoBarras };
+        }
+
+        let url = "";
+        switch (accion) {
+            case "insertar":
+                url = "http://TU_BACKEND/productos/insertar";
+                break;
+            case "editar":
+                url = "http://TU_BACKEND/productos/editar";
+                break;
+            case "eliminar":
+                url = "http://TU_BACKEND/productos/eliminar";
+                break;
+            case "consultar":
+                url = "http://TU_BACKEND/productos/consultar";
+                break;
+            default:
+                return;
+        }
+
+        axios.post(url, data)
+            .then((res) => {
+                if (accion === "consultar") {
+                    if (res.data.status && res.data.data) {
+                        setConsultaData(res.data.data);
+                    } else {
+                        setConsultaData(null);
+                        alert("Producto no encontrado");
+                    }
+                } else {
+                    alert(`Producto ${accion} correctamente`);
+                }
+            })
+            .catch((err) => {
+                console.error(`Error al ${accion}:`, err);
+                alert(`Error al ${accion} producto`);
+            });
     };
 
     return (
@@ -76,6 +123,28 @@ function AdminProducto() {
                         <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
                     </div>
                 </form>
+
+                <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
+                    Para eliminar o consultar solo se necesita el código de barras.
+                </p>
+
+                {consultaData && (
+                    <div style={{
+                        marginTop: "2rem",
+                        backgroundColor: "white",
+                        padding: "1rem",
+                        borderRadius: "8px",
+                        color: "#333",
+                        maxWidth: "600px",
+                        width: "100%"
+                    }}>
+                        <h2>Resultado de Consulta</h2>
+                        <p><strong>Nombre:</strong> {consultaData.product_name}</p>
+                        <p><strong>Código de barras:</strong> {consultaData.barcode}</p>
+                        <p><strong>Descripción:</strong> {consultaData.description}</p>
+                        <p><strong>Costo:</strong> ₡{consultaData.cost.toLocaleString()}</p>
+                    </div>
+                )}
             </main>
         </div>
     );
