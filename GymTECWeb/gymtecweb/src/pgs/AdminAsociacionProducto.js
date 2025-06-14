@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
 import styles from "./AdminPg.module.css";
 
 function AdminAsociacionProducto() {
@@ -8,15 +8,50 @@ function AdminAsociacionProducto() {
         codigoBarras: ""
     });
 
+    const [asociados, setAsociados] = useState([]);
+    const [noAsociados, setNoAsociados] = useState([]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend según la acción
+        if (accion === "Agregar") {
+            const data = {
+                barcode: formData.codigoBarras,
+                branch_name: formData.nombreSucursal
+            };
+
+            axios.post("http://TU_BACKEND/asociacion_producto/agregar", data)
+                .then(() => {
+                    alert("Producto agregado correctamente.");
+                })
+                .catch((err) => {
+                    console.error("Error al agregar:", err);
+                    alert("Error al agregar el producto.");
+                });
+        } else if (accion === "Productos asociados") {
+            const data = {
+                branch_name: formData.nombreSucursal
+            };
+
+            axios.post("http://TU_BACKEND/asociacion_producto/consultar", data)
+                .then((res) => {
+                    if (res.data.status && res.data.data) {
+                        setAsociados(res.data.data.associated_products || []);
+                        setNoAsociados(res.data.data.non_associated_products || []);
+                    } else {
+                        alert("No se encontraron productos.");
+                        setAsociados([]);
+                        setNoAsociados([]);
+                    }
+                })
+                .catch((err) => {
+                    console.error("Error al consultar productos:", err);
+                    alert("Error al consultar productos.");
+                });
+        }
     };
 
     return (
@@ -35,6 +70,7 @@ function AdminAsociacionProducto() {
                         name="nombreSucursal"
                         value={formData.nombreSucursal}
                         onChange={handleChange}
+                        style={{ marginBottom: "1rem" }}
                     />
 
                     <label htmlFor="codigoBarras" className={styles.label}>Código de barras</label>
@@ -44,17 +80,47 @@ function AdminAsociacionProducto() {
                         name="codigoBarras"
                         value={formData.codigoBarras}
                         onChange={handleChange}
+                        style={{ marginBottom: "1rem" }}
                     />
 
                     <div className={styles.buttonRow}>
                         <button type="button" onClick={() => handleSubmit("Agregar")}>Agregar</button>
-                        <button type="button" onClick={() => handleSubmit("Productos asociados")}>
-                            Ver productos asociados</button>
+                        <button type="button" onClick={() => handleSubmit("Productos asociados")}>Ver productos asociados</button>
                     </div>
                 </form>
+
+                {(asociados.length > 0 || noAsociados.length > 0) && (
+                    <div style={{ marginTop: "3rem", color: "white", textAlign: "left" }}>
+                        <h2>Productos Asociados</h2>
+                        {asociados.length > 0 ? (
+                            <ul>
+                                {asociados.map((producto) => (
+                                    <li key={producto.barcode}>
+                                        {producto.product_name} (Código: {producto.barcode})
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No hay productos asociados.</p>
+                        )}
+
+                        <h2>Productos No Asociados</h2>
+                        {noAsociados.length > 0 ? (
+                            <ul>
+                                {noAsociados.map((producto) => (
+                                    <li key={producto.barcode}>
+                                        {producto.product_name} (Código: {producto.barcode})
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No hay productos no asociados.</p>
+                        )}
+                    </div>
+                )}
             </main>
         </div>
     );
-
 }
+
 export default AdminAsociacionProducto;
