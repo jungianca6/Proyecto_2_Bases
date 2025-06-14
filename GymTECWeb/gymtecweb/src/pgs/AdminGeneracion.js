@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
 import styles from "./AdminPg.module.css";
 
 function AdminGeneracion() {
     const [formData, setFormData] = useState({
-        nombreSucursal: ""
+        nombreSucursal: "",
+        tipoPago: "Mensual"
     });
 
     const handleChange = (e) => {
@@ -12,9 +14,19 @@ function AdminGeneracion() {
     };
 
     const handleSubmit = () => {
-        console.log("Acción: generar");
-        console.log(formData);
-        // Aquí va el fetch al backend para generar la planilla
+        const data = {
+            branch_name: formData.nombreSucursal,
+            pay_type: formData.tipoPago
+        };
+
+        axios.post("http://TU_BACKEND_URL/planilla/generar", data)
+            .then(() => {
+                alert("Planilla generada exitosamente.");
+            })
+            .catch((err) => {
+                console.error("Error al generar planilla:", err);
+                alert("Hubo un error al generar la planilla.");
+            });
     };
 
     return (
@@ -35,6 +47,19 @@ function AdminGeneracion() {
                         onChange={handleChange}
                         style={{ marginBottom: "1rem" }}
                     />
+
+                    <label htmlFor="tipoPago" className={styles.label}>Tipo de pago</label>
+                    <select
+                        id="tipoPago"
+                        name="tipoPago"
+                        value={formData.tipoPago}
+                        onChange={handleChange}
+                        style={{ marginBottom: "1rem" }}
+                    >
+                        <option value="Mensual">Mensual</option>
+                        <option value="Por horas">Por horas</option>
+                        <option value="Por clase">Por clase</option>
+                    </select>
 
                     <div className={styles.buttonRow}>
                         <button type="button" onClick={handleSubmit}>Generar</button>
