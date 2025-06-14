@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
 
 function AdminCalendario() {
     const [formData, setFormData] = useState({
@@ -13,10 +14,23 @@ function AdminCalendario() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = () => {
-        console.log("Acción: copiar calendario");
-        console.log(formData);
-        // Aquí va el fetch al backend
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post("http://localhost:8000/copiar_calendario", {
+                branch_name: formData.nombreSucursal,
+                start_week_date: formData.fechaInicio,
+                end_week_date: formData.fechaFin
+            });
+
+            if (response.data.status) {
+                alert("Calendario copiado exitosamente.");
+            } else {
+                alert("Error al copiar calendario.");
+            }
+        } catch (error) {
+            alert("Error al comunicarse con el servidor.");
+            console.error(error);
+        }
     };
 
     return (
