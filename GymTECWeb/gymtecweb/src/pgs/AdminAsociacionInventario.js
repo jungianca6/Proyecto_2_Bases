@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
 import styles from "./AdminPg.module.css";
 
 function AdminAsociacionInventario() {
-
     const [formData, setFormData] = useState({
         nombreSucursal: "",
         numeroSerie: ""
     });
+
+    const [asociadas, setAsociadas] = useState([]);
+    const [noAsociadas, setNoAsociadas] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -15,9 +17,42 @@ function AdminAsociacionInventario() {
     };
 
     const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend según la acción
+        if (accion === "Agregar") {
+            const data = {
+                serial_number: formData.numeroSerie,
+                branch_name: formData.nombreSucursal
+            };
+
+            axios.post("http://TU_BACKEND/asociacion_inventario/agregar", data)
+                .then(() => {
+                    alert("Máquina asociada correctamente.");
+                })
+                .catch((err) => {
+                    console.error("Error al asociar máquina:", err);
+                    alert("Error al asociar la máquina.");
+                });
+
+        } else if (accion === "Máquinas asociadas") {
+            const data = {
+                branch_name: formData.nombreSucursal
+            };
+
+            axios.post("http://TU_BACKEND/asociacion_inventario/consultar", data)
+                .then((res) => {
+                    if (res.data.status && res.data.data) {
+                        setAsociadas(res.data.data.associated_machines || []);
+                        setNoAsociadas(res.data.data.not_associated_machines || []);
+                    } else {
+                        alert("No se encontraron máquinas.");
+                        setAsociadas([]);
+                        setNoAsociadas([]);
+                    }
+                })
+                .catch((err) => {
+                    console.error("Error al consultar inventario:", err);
+                    alert("Error al consultar el inventario.");
+                });
+        }
     };
 
     return (
@@ -36,6 +71,7 @@ function AdminAsociacionInventario() {
                         name="nombreSucursal"
                         value={formData.nombreSucursal}
                         onChange={handleChange}
+                        style={{ marginBottom: "1rem" }}
                     />
 
                     <label htmlFor="numeroSerie" className={styles.label}>Número de serie</label>
@@ -45,16 +81,47 @@ function AdminAsociacionInventario() {
                         name="numeroSerie"
                         value={formData.numeroSerie}
                         onChange={handleChange}
+                        style={{ marginBottom: "1rem" }}
                     />
 
                     <div className={styles.buttonRow}>
                         <button type="button" onClick={() => handleSubmit("Agregar")}>Agregar</button>
-                        <button type="button" onClick={() => handleSubmit("Máquinas asociadas")}>
-                            Ver máquinas asociadas</button>
+                        <button type="button" onClick={() => handleSubmit("Máquinas asociadas")}>Ver máquinas asociadas</button>
                     </div>
                 </form>
+
+                {(asociadas.length > 0 || noAsociadas.length > 0) && (
+                    <div style={{ marginTop: "2rem", color: "white", textAlign: "left" }}>
+                        <h2>Máquinas Asociadas</h2>
+                        {asociadas.length > 0 ? (
+                            <ul>
+                                {asociadas.map((maq) => (
+                                    <li key={maq.serial_number}>
+                                        {maq.brand} - {maq.model} (Serie: {maq.serial_number})
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No hay máquinas asociadas.</p>
+                        )}
+
+                        <h2>Máquinas No Asociadas</h2>
+                        {noAsociadas.length > 0 ? (
+                            <ul>
+                                {noAsociadas.map((maq) => (
+                                    <li key={maq.serial_number}>
+                                        {maq.brand} - {maq.model} (Serie: {maq.serial_number})
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No hay máquinas no asociadas.</p>
+                        )}
+                    </div>
+                )}
             </main>
         </div>
     );
 }
+
 export default AdminAsociacionInventario;
