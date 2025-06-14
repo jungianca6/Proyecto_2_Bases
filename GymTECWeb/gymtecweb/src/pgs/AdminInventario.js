@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
 
 function AdminInventario() {
+    const [consultaData, setConsultaData] = useState(null);
     const [formData, setFormData] = useState({
         tipoEquipo: "",
         marca: "",
@@ -16,9 +18,59 @@ function AdminInventario() {
     };
 
     const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend según la acción
+        let data = {};
+
+        if (accion === "insertar" || accion === "editar") {
+            data = {
+                equipment_type: formData.tipoEquipo,
+                brand: formData.marca,
+                serial_number: formData.numeroSerie,
+                cost: parseFloat(formData.costo),
+                branch_name: formData.nombreSucursal
+            };
+        } else if (accion === "eliminar" || accion === "consultar") {
+            data = {
+                serial_number: formData.numeroSerie
+            };
+        }
+
+        let url = "";
+        switch (accion) {
+            case "insertar":
+                url = "http://TU_BACKEND/inventario/insertar";
+                break;
+            case "editar":
+                url = "http://TU_BACKEND/inventario/editar";
+                break;
+            case "eliminar":
+                url = "http://TU_BACKEND/inventario/eliminar";
+                break;
+            case "consultar":
+                url = "http://TU_BACKEND/inventario/consultar";
+                break;
+            default:
+                return;
+        }
+
+        axios.post(url, data)
+            .then((res) => {
+                console.log(`Acción ${accion} exitosa:`, res.data);
+
+                if (accion === "consultar") {
+                    if (res.data.status && res.data.data) {
+                        setConsultaData(res.data.data);
+                    } else {
+                        setConsultaData(null);
+                        alert("Equipo no encontrado");
+                    }
+                } else {
+                    alert(`Equipo ${accion} correctamente`);
+                }
+            })
+            .catch((err) => {
+                console.error(`Error al ${accion}:`, err);
+                alert(`Error al ${accion} equipo`);
+            });
     };
 
     return (
@@ -87,6 +139,29 @@ function AdminInventario() {
                         <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
                     </div>
                 </form>
+
+                <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
+                    Para eliminar o consultar solo se necesita el número de serie del equipo.
+                </p>
+
+                {consultaData && (
+                    <div style={{
+                        marginTop: "2rem",
+                        backgroundColor: "white",
+                        padding: "1rem",
+                        borderRadius: "8px",
+                        color: "#333",
+                        maxWidth: "600px",
+                        width: "100%"
+                    }}>
+                        <h2>Resultado de Consulta</h2>
+                        <p><strong>Tipo de equipo:</strong> {consultaData.equipment_type}</p>
+                        <p><strong>Marca:</strong> {consultaData.brand}</p>
+                        <p><strong>Número de serie:</strong> {consultaData.serial_number}</p>
+                        <p><strong>Costo:</strong> ₡{consultaData.cost.toLocaleString()}</p>
+                        <p><strong>Sucursal:</strong> {consultaData.branch_name}</p>
+                    </div>
+                )}
             </main>
         </div>
     );
