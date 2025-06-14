@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
 
 function AdminServicio() {
+    const [consultaData, setConsultaData] = useState(null);
     const [formData, setFormData] = useState({
         identificador: "",
         descripcion: ""
@@ -13,9 +15,54 @@ function AdminServicio() {
     };
 
     const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend según la acción
+        let data = {};
+
+        if (accion === "insertar" || accion === "editar") {
+            data = {
+                service_id: formData.identificador,
+                description: formData.descripcion
+            };
+        } else if (accion === "eliminar" || accion === "consultar") {
+            data = { service_id: formData.identificador };
+        }
+
+        let url = "";
+        switch (accion) {
+            case "insertar":
+                url = "http://TU_BACKEND/servicios/insertar";
+                break;
+            case "editar":
+                url = "http://TU_BACKEND/servicios/editar";
+                break;
+            case "eliminar":
+                url = "http://TU_BACKEND/servicios/eliminar";
+                break;
+            case "consultar":
+                url = "http://TU_BACKEND/servicios/consultar";
+                break;
+            default:
+                return;
+        }
+
+        axios.post(url, data)
+            .then((res) => {
+                console.log(`Acción ${accion} exitosa:`, res.data);
+
+                if (accion === "consultar") {
+                    if (res.data.status && res.data.data) {
+                        setConsultaData(res.data.data);
+                    } else {
+                        setConsultaData(null);
+                        alert("Servicio no encontrado");
+                    }
+                } else {
+                    alert(`Servicio ${accion} correctamente`);
+                }
+            })
+            .catch((err) => {
+                console.error(`Error al ${accion}:`, err);
+                alert(`Error al ${accion} servicio`);
+            });
     };
 
     return (
@@ -54,6 +101,26 @@ function AdminServicio() {
                         <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
                     </div>
                 </form>
+
+                <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
+                    Para eliminar o consultar solo se necesita ingresar el identificador del servicio.
+                </p>
+
+                {consultaData && (
+                    <div style={{
+                        marginTop: "2rem",
+                        backgroundColor: "white",
+                        padding: "1rem",
+                        borderRadius: "8px",
+                        color: "#333",
+                        maxWidth: "600px",
+                        width: "100%"
+                    }}>
+                        <h2>Resultado de Consulta</h2>
+                        <p><strong>Identificador:</strong> {consultaData.service_id}</p>
+                        <p><strong>Descripción:</strong> {consultaData.description}</p>
+                    </div>
+                )}
             </main>
         </div>
     );
