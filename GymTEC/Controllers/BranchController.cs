@@ -257,6 +257,7 @@ namespace GymTEC.Controllers
 
             var row = result.Rows[0];
 
+
             var data_Output = new Data_output_manage_branch
             {
                 name = row["name"].ToString(),
