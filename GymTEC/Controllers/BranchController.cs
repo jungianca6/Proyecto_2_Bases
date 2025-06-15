@@ -13,10 +13,12 @@ namespace GymTEC.Controllers
     {
         // Inyección de dependencia del logger
         private readonly ILogger<BranchController> _logger;
+        private readonly DatabaseService _databaseService;
 
-        public BranchController(ILogger<BranchController> logger)
+        public BranchController(ILogger<BranchController> logger, DatabaseService databaseService)
         {
             _logger = logger;
+            _databaseService = databaseService;
         }
 
         /// <summary>
@@ -49,8 +51,38 @@ namespace GymTEC.Controllers
         {
             _logger.LogInformation("Received insert_branch request for branch: {Name}", input.name);
 
-            // Simulamos la inserción y devolvemos la misma data
-            Data_output_manage_branch data_Output = new Data_output_manage_branch
+            // Procesar datos
+            var phone1 = input.phone_numbers.Count > 0 ? input.phone_numbers[0] : "";
+            var phone2 = input.phone_numbers.Count > 1 ? input.phone_numbers[1] : "";
+            var parsedDate = DateTime.ParseExact(input.opening_date.Split(' ')[0], "dd/MM/yyyy", null);
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "in_name", input.name },
+                { "in_province", input.province },
+                { "in_canton", input.canton },
+                { "in_district", input.district },
+                { "in_email", $"{input.name.Replace(" ", "").ToLower()}@gymtec.com" }, // email autogenerado
+                { "in_phone1", phone1 },
+                { "in_phone2", phone2 },
+                { "in_opening_date", parsedDate },
+                { "in_opening_hours", input.attention_schedule },
+                { "in_spa", input.spa },
+                { "in_store", input.store }
+            };
+
+            var result = _databaseService.ExecuteFunction("SELECT sp_insert_branch(@in_name, @in_province, @in_canton, @in_district, @in_email, @in_phone1, @in_phone2, @in_opening_date, @in_opening_hours, @in_spa, @in_store)", parameters);
+
+            if (result.Rows.Count == 0)
+            {
+                return BadRequest(new Data_response<Data_output_manage_branch>
+                {
+                    status = false
+                });
+            }
+
+            // Construir la respuesta
+            var data_Output = new Data_output_manage_branch
             {
                 name = input.name,
                 province = input.province,
@@ -65,13 +97,11 @@ namespace GymTEC.Controllers
                 store = input.store
             };
 
-            var response = new Data_response<Data_output_manage_branch>
+            return Ok(new Data_response<Data_output_manage_branch>
             {
                 status = true,
                 data = data_Output
-            };
-
-            return Ok(response);
+            });
         }
 
         /// <summary>
@@ -92,8 +122,36 @@ namespace GymTEC.Controllers
         {
             _logger.LogInformation("Received edit_branch request for branch: {Name}", input.name);
 
-            // Simulamos la edición y devolvemos la misma data
-            Data_output_manage_branch data_Output = new Data_output_manage_branch
+            var phone1 = input.phone_numbers.Count > 0 ? input.phone_numbers[0] : "";
+            var phone2 = input.phone_numbers.Count > 1 ? input.phone_numbers[1] : "";
+            var parsedDate = DateTime.ParseExact(input.opening_date.Split(' ')[0], "dd/MM/yyyy", null);
+
+            var parameters = new Dictionary<string, object>
+                {
+                    { "in_name", input.name },
+                    { "in_province", input.province },
+                    { "in_canton", input.canton },
+                    { "in_district", input.district },
+                    { "in_phone1", phone1 },
+                    { "in_phone2", phone2 },
+                    { "in_opening_date", parsedDate },
+                    { "in_opening_hours", input.attention_schedule }
+                };
+
+            try
+            {
+                _databaseService.ExecuteFunction("SELECT sp_edit_branch(@in_name, @in_province, @in_canton, @in_district, @in_phone1, @in_phone2, @in_opening_date, @in_opening_hours)", parameters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al editar la sucursal");
+                return BadRequest(new Data_response<Data_output_manage_branch>
+                {
+                    status = false
+                });
+            }
+
+            var data_Output = new Data_output_manage_branch
             {
                 name = input.name,
                 province = input.province,
@@ -108,13 +166,11 @@ namespace GymTEC.Controllers
                 store = input.store
             };
 
-            var response = new Data_response<Data_output_manage_branch>
+            return Ok(new Data_response<Data_output_manage_branch>
             {
                 status = true,
                 data = data_Output
-            };
-
-            return Ok(response);
+            });
         }
 
         /// <summary>
@@ -137,14 +193,29 @@ namespace GymTEC.Controllers
         {
             _logger.LogInformation("Received delete_branch request for branch: {Name}", input.name);
 
-            // Simulamos la eliminación
-            var response = new Data_response<string>
+            var parameters = new Dictionary<string, object>
             {
-                status = true,
-                data = "Branch deleted successfully"
+                { "in_name", input.name }
             };
 
-            return Ok(response);
+            try
+            {
+                _databaseService.ExecuteFunction("SELECT sp_delete_branch(@in_name)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Sucursal eliminada exitosamente."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error eliminando sucursal");
+                return BadRequest(new Data_response<string>
+                {
+                    status = false
+                });
+            }
         }
 
         /// <summary>
@@ -168,29 +239,43 @@ namespace GymTEC.Controllers
         {
             _logger.LogInformation("Received consult_branch request for branch: {Name}", input.name);
 
-            // Simulamos la consulta (devolver data de ejemplo)
-            Data_output_manage_branch data_Output = new Data_output_manage_branch
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_name", input.name }
+    };
+
+            var result = _databaseService.ExecuteFunction("SELECT * FROM sp_consult_branch(@in_name)", parameters);
+
+            if (result.Rows.Count == 0)
             {
-                name = input.name,
-                province = "San José",
-                canton = "Central",
-                district = "Carmen",
-                opening_date = "08/06/2025 09:00",
-                attention_schedule = "08:00-18:00",
-                admin_employee = "Carlos López",
-                max_capacity = 150,
-                phone_numbers = new List<string> { "2222-3333", "8888-9999" },
-                spa = false,
-                store = false
+                return NotFound(new Data_response<Data_output_manage_branch>
+                {
+                    status = false
+                });
+            }
+
+            var row = result.Rows[0];
+
+            var data_Output = new Data_output_manage_branch
+            {
+                name = row["name"].ToString(),
+                province = row["province"].ToString(),
+                canton = row["canton"].ToString(),
+                district = row["district"].ToString(),
+                opening_date = ((DateTime)row["opening_date"]).ToString("dd/MM/yyyy HH:mm"),
+                attention_schedule = row["opening_hours"].ToString(),
+                phone_numbers = new List<string> { row["phone1"].ToString(), row["phone2"].ToString() },
+                spa = (bool)row["spa_exists"],
+                store = (bool)row["store_exists"],
+                admin_employee = "",
+                max_capacity = 0     
             };
 
-            var response = new Data_response<Data_output_manage_branch>
+            return Ok(new Data_response<Data_output_manage_branch>
             {
                 status = true,
                 data = data_Output
-            };
-
-            return Ok(response);
+            });
         }
     }
 }

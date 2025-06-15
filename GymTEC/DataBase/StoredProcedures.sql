@@ -25,3 +25,124 @@ BEGIN
         AND e.password = in_password;
 END;
 $$ LANGUAGE plpgsql;
+
+
+---------------------- Para insertar branch ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_branch(
+    in_name TEXT,
+    in_province TEXT,
+    in_canton TEXT,
+    in_district TEXT,
+    in_email TEXT,
+    in_phone1 TEXT,
+    in_phone2 TEXT,
+    in_opening_date TIMESTAMP,
+    in_opening_hours TEXT,
+    in_spa BOOLEAN,
+    in_store BOOLEAN
+)
+RETURNS INT AS $$
+DECLARE
+    new_branch_id INT;
+BEGIN
+    INSERT INTO Branch(name, province, canton, district, email, phone1, phone2, opening_date, opening_hours)
+    VALUES (in_name, in_province, in_canton, in_district, in_email, in_phone1, in_phone2, in_opening_date, in_opening_hours)
+    RETURNING branch_id INTO new_branch_id;
+
+    IF in_spa THEN
+        INSERT INTO Spa(name, is_active, branch_id)
+        VALUES (in_name || ' Spa', TRUE, new_branch_id);
+    END IF;
+
+    IF in_store THEN
+        INSERT INTO Store(name, is_active, branch_id)
+        VALUES (in_name || ' Store', TRUE, new_branch_id);
+    END IF;
+
+    RETURN new_branch_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+---------------------- Para editar branch ----------------------
+CREATE OR REPLACE FUNCTION sp_edit_branch(
+    in_name TEXT,
+    in_province TEXT,
+    in_canton TEXT,
+    in_district TEXT,
+    in_phone1 TEXT,
+    in_phone2 TEXT,
+    in_opening_date TIMESTAMP,
+    in_opening_hours TEXT
+)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE Branch
+    SET province = in_province,
+        canton = in_canton,
+        district = in_district,
+        phone1 = in_phone1,
+        phone2 = in_phone2,
+        opening_date = in_opening_date,
+        opening_hours = in_opening_hours
+    WHERE name = in_name;
+END;
+$$ LANGUAGE plpgsql;
+
+
+---------------------- Para eliminar branch ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_branch(in_name TEXT)
+RETURNS VOID AS $$
+DECLARE
+    branch_id_to_delete INT;
+BEGIN
+    -- Obtener branch_id
+    SELECT branch_id INTO branch_id_to_delete
+    FROM Branch
+    WHERE name = in_name;
+
+    IF branch_id_to_delete IS NULL THEN
+        RAISE EXCEPTION 'No existe una sucursal con el nombre %', in_name;
+    END IF;
+
+    -- Eliminar dependencias primero si las hay (Spa y Store relacionados)
+    DELETE FROM Spa WHERE branch_id = branch_id_to_delete;
+    DELETE FROM Store WHERE branch_id = branch_id_to_delete;
+
+    -- Finalmente eliminar la sucursal
+    DELETE FROM Branch WHERE branch_id = branch_id_to_delete;
+END;
+$$ LANGUAGE plpgsql;
+
+
+---------------------- Para consultar branch ----------------------
+CREATE OR REPLACE FUNCTION sp_consult_branch(in_name TEXT)
+RETURNS TABLE (
+    name VARCHAR(100),
+    province VARCHAR(200),
+    canton VARCHAR(200),
+    district VARCHAR(200),
+    opening_date DATE,
+    opening_hours VARCHAR(100),
+    phone1 VARCHAR(20),
+    phone2 VARCHAR(20),
+    spa_exists BOOLEAN,
+    store_exists BOOLEAN
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        b.name,
+        b.province,
+        b.canton,
+        b.district,
+        b.opening_date,
+        b.opening_hours,
+        b.phone1,
+        b.phone2,
+        EXISTS (SELECT 1 FROM Spa s WHERE s.branch_id = b.branch_id)::BOOLEAN,
+        EXISTS (SELECT 1 FROM Store st WHERE st.branch_id = b.branch_id)::BOOLEAN
+    FROM Branch b
+    WHERE b.name = in_name;
+END;
+$$ LANGUAGE plpgsql;

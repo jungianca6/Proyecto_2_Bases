@@ -11,7 +11,7 @@ namespace GymTEC.Utilities
 
         public DatabaseService(IConfiguration configuration)
         {
-            _connectionString = "Host=gymtec.postgres.database.azure.com;Port=5432;Database=GymTEC;Username=Darga1905;Password=Dagamo1905.";
+            _connectionString = "Host=gymtec.postgres.database.azure.com;Port=5432;Database=GymTEC;Username=Darga1905;Password=Dagamo1905.;Trust Server Certificate=true;Include Error Detail=true";
         }
 
         /// Ejecuta un procedimiento almacenado de PostgreSQL y devuelve un DataTable.
