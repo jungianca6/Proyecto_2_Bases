@@ -2,6 +2,8 @@ using GymTEC.Data_input_models;
 using GymTEC.Data_output_models;
 using GymTEC.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Data;
 
 namespace GymTEC.Controllers
 {
@@ -9,6 +11,15 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class LoginController : ControllerBase
     {
+
+        private readonly DatabaseService _databaseService;
+
+        public LoginController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
+
         /// <summary>
         /// Realiza la autenticación de un usuario (log in).
         /// </summary>
@@ -30,16 +41,37 @@ namespace GymTEC.Controllers
         [HttpPost("log_in")]
         public ActionResult<Data_response<Data_output_log_in>> LogIn([FromBody] Data_input_log_in input)
         {
-            // Simulamos respuesta (sin validar credenciales reales)
-            Data_output_log_in data_Output = new Data_output_log_in();
-
-            var response = new Data_response<Data_output_log_in>
+            var parameters = new Dictionary<string, object>
             {
-                status = true,
-                data = data_Output
+                { "in_username", input.user_name },
+                { "in_password", input.password }
             };
 
-            return Ok(response);
+            DataTable result = _databaseService.ExecuteFunction(
+                "SELECT * FROM sp_log_in_user(@in_username, @in_password)", parameters);
+
+            if (result.Rows.Count == 0)
+            {
+                return Unauthorized(new Data_response<Data_output_log_in>
+                {
+                    status = false
+                });
+            }
+
+            DataRow row = result.Rows[0];
+
+            var loginOutput = new Data_output_log_in
+            {
+                user_name = row["username"].ToString(),
+                role = row["role"].ToString(),
+                id_number = row["employee_id"].ToString()
+            };
+
+            return Ok(new Data_response<Data_output_log_in>
+            {
+                status = true,
+                data = loginOutput
+            });
         }
     }
 }
