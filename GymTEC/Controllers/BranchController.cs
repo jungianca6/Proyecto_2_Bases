@@ -137,7 +137,7 @@ namespace GymTEC.Controllers
                     { "in_opening_date", parsedDate },
                     { "in_opening_hours", input.attention_schedule }
                 };
-
+            //jiji
             try
             {
                 _databaseService.ExecuteFunction("SELECT sp_edit_branch(@in_name, @in_province, @in_canton, @in_district, @in_phone1, @in_phone2, @in_opening_date, @in_opening_hours)", parameters);
