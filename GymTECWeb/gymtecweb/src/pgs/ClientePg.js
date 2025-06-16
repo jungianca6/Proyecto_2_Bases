@@ -4,9 +4,8 @@ import styles from "./ClientePg.module.css";
 
 function ClientePg() {
     const opciones = [
-        { nombre: "Ver mi plan de trabajo", ruta: "/cliente/plantrabajo" },
-        { nombre: "Registro en una clase", ruta: "/cliente/registroclase" },
-        { nombre: "Búsqueda de clases", ruta: "/cliente/busquedaclase" }
+        { nombre: "Ver mi plan de trabajo", ruta: "/cliente/plantrabajo" }, ,
+        { nombre: "Unirse a una clase", ruta: "/cliente/" }
     ];
 
     return (

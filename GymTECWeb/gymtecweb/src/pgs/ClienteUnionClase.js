@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./ClientePg.module.css";
 
-function ClienteBusquedaClase() {
+function ClienteUnionClase() {
     const [formData, setFormData] = useState({
         tipoClase: "",
         fechaInicio: "",
@@ -67,4 +67,4 @@ function ClienteBusquedaClase() {
     );
 }
 
-export default ClienteBusquedaClase;
+export default ClienteUnionClase;

@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7124ebcb-41d3-4647-af49-6c241eba8589" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClienteBusquedaClase.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePlanTrabajo.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClienteRegistroClase.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePg.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePg.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePg.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePg.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClienteRegistroClase.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClienteRegistroClase.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +69,7 @@
       <updated>1749183702745</updated>
       <workItem from="1749183723181" duration="1633000" />
       <workItem from="1750040074389" duration="229000" />
-      <workItem from="1750040442629" duration="3460000" />
+      <workItem from="1750040442629" duration="3788000" />
     </task>
     <servers />
   </component>

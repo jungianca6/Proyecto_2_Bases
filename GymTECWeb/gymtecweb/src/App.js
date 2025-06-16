@@ -24,7 +24,7 @@ import AdminCreacionClases from "./pgs/Admin/AdminCreacionClases";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import ClienteBusquedaClase from "./pgs/ClienteBusquedaClase";
+import ClienteUnionClase from "./pgs/ClienteUnionClase";
 
 
 function App() {
@@ -63,8 +63,7 @@ function App() {
 
 
                 <Route path="/cliente" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
-                <Route path="/cliente/busquedaclase" element={user?.rol === "Cliente" ? <ClienteBusquedaClase /> : <Navigate to="/login" />} />
-                <Route path="/cliente/registroclase" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
+                <Route path="/cliente/unionclase" element={user?.rol === "Cliente" ? <ClienteUnionClase /> : <Navigate to="/login" />} />
                 <Route path="/cliente/plantrabajo" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
 
 
