@@ -17,13 +17,14 @@ import AdminGeneracion from "./pgs/Admin/AdminGeneracion";
 import AdminCalendario from "./pgs/Admin/AdminCalendario";
 import AdminCG from "./pgs/Admin/AdminCG";
 import AdminConfiguracion from "./pgs/Admin/AdminConfiguracion";
-
-
-import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminAsociacionTratamiento from "./pgs/Admin/AdminAsociacionTratamiento";
 import AdminAsociacionInventario from "./pgs/Admin/AdminAsociacionInventario";
 import AdminAsociacionProducto from "./pgs/Admin/AdminAsociacionProducto";
 import AdminCreacionClases from "./pgs/Admin/AdminCreacionClases";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import ClienteBusquedaClase from "./pgs/ClienteBusquedaClase";
 
 
 function App() {
@@ -62,6 +63,11 @@ function App() {
 
 
                 <Route path="/cliente" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
+                <Route path="/cliente/busquedaclase" element={user?.rol === "Cliente" ? <ClienteBusquedaClase /> : <Navigate to="/login" />} />
+                <Route path="/cliente/registroclase" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
+                <Route path="/cliente/plantrabajo" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
+
+
                 <Route path="/instructor" element={user?.rol === "Instructor" ? <InstructorPg /> : <Navigate to="/login" />} />
 
                 <Route path="*" element={<Navigate to="/login" />} />
