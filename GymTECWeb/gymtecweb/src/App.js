@@ -1,29 +1,29 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import Login from "./pgs/Login";
-import AdminPg from "./pgs/AdminPg";
+import AdminPg from "./pgs/Admin/AdminPg";
 import ClientePg from "./pgs/ClientePg";
 import InstructorPg from "./pgs/InstructorPg";
-import AdminSucursal from "./pgs/AdminSucursal";
-import AdminTratamiento from "./pgs/AdminTratamiento";
-import AdminPuesto from "./pgs/AdminPuesto";
-import AdminTiposP from "./pgs/AdminTiposP";
-import AdminEmpleado from "./pgs/AdminEmpleado";
-import AdminServicio from "./pgs/AdminServicio";
-import AdminEquipo from "./pgs/AdminEquipo";
-import AdminInventario from "./pgs/AdminInventario";
-import AdminProducto from "./pgs/AdminProducto";
-import AdminGeneracion from "./pgs/AdminGeneracion";
-import AdminCalendario from "./pgs/AdminCalendario";
-import AdminCG from "./pgs/AdminCG";
-import AdminConfiguracion from "./pgs/AdminConfiguracion";
+import AdminSucursal from "./pgs/Admin/AdminSucursal";
+import AdminTratamiento from "./pgs/Admin/AdminTratamiento";
+import AdminPuesto from "./pgs/Admin/AdminPuesto";
+import AdminTiposP from "./pgs/Admin/AdminTiposP";
+import AdminEmpleado from "./pgs/Admin/AdminEmpleado";
+import AdminServicio from "./pgs/Admin/AdminServicio";
+import AdminEquipo from "./pgs/Admin/AdminEquipo";
+import AdminInventario from "./pgs/Admin/AdminInventario";
+import AdminProducto from "./pgs/Admin/AdminProducto";
+import AdminGeneracion from "./pgs/Admin/AdminGeneracion";
+import AdminCalendario from "./pgs/Admin/AdminCalendario";
+import AdminCG from "./pgs/Admin/AdminCG";
+import AdminConfiguracion from "./pgs/Admin/AdminConfiguracion";
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AdminAsociacionTratamiento from "./pgs/AdminAsociacionTratamiento";
-import AdminAsociacionInventario from "./pgs/AdminAsociacionInventario";
-import AdminAsociacionProducto from "./pgs/AdminAsociacionProducto";
-import AdminCreacionClases from "./pgs/AdminCreacionClases";
+import AdminAsociacionTratamiento from "./pgs/Admin/AdminAsociacionTratamiento";
+import AdminAsociacionInventario from "./pgs/Admin/AdminAsociacionInventario";
+import AdminAsociacionProducto from "./pgs/Admin/AdminAsociacionProducto";
+import AdminCreacionClases from "./pgs/Admin/AdminCreacionClases";
 
 
 function App() {
