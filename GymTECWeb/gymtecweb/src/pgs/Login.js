@@ -55,7 +55,7 @@ function Login({ setUser }) {
                 nombre: "Cliente Prueba",
                 usuario: "cliente",
                 contrasena: "cliente123",
-                rol: "Client"
+                rol: "Cliente"
             };
             setUser(clienteUser);
             localStorage.setItem("usuario_actual", JSON.stringify(clienteUser));
