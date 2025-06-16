@@ -15,24 +15,28 @@ function AdminConfiguracion() {
         <div className={styles.container}>
             <nav className={styles.navbar}>
                 <div className={styles.logo}>GymTEC - Administrador</div>
-                <ul className={styles.navList}>
-                    {opciones.map((opcion, index) => (
-                        <li key={index} className={styles.navItem}>
-                            {opcion.ruta ? (
-                                <Link to={opcion.ruta} className={styles.navLink}>
-                                    {opcion.nombre}
-                                </Link>
-                            ) : (
-                                <span className={styles.navLink}>{opcion.nombre}</span>
-                            )}
-                        </li>
-                    ))}
-                </ul>
             </nav>
 
             <main className={styles.main}>
                 <h1 className={styles.welcome}>Bienvenido, admin</h1>
                 <p className={styles.description}>Aquí se realiza la configuración del gimnasio.</p>
+
+                {/* Nueva sección con los botones centrados */}
+                <div className={styles.centerButtons}>
+                    <ul className={styles.navList}>
+                        {opciones.map((opcion, index) => (
+                            <li key={index} className={styles.navItem}>
+                                {opcion.ruta ? (
+                                    <Link to={opcion.ruta} className={styles.navLink}>
+                                        {opcion.nombre}
+                                    </Link>
+                                ) : (
+                                    <span className={styles.navLink}>{opcion.nombre}</span>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </main>
         </div>
     );

@@ -120,3 +120,31 @@
     background-color: #ba68c8;
     transform: translateY(-2px);
 }
+
+/* AdminConfiguracion.module.css */
+.centerButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.centerButtons .navList {
+    flex-direction: column;
+    margin: 0;
+    width: 100%;
+    max-width: 400px;
+}
+
+.centerButtons .navItem {
+    width: 100%;
+}
+
+.centerButtons .navLink {
+    display: block;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.1rem;
+}
