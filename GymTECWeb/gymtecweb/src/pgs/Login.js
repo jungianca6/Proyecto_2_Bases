@@ -52,21 +52,20 @@ function Login({ setUser }) {
 
         try {
             const requestData = {
-                username: form.username,
-                password: form.password,
-                user_type: "",
-                primary_key: ""
+                user_name: form.username,  
+                password: form.password
             };
 
-            const response = await axios.post("https://localhost:7199/Login/user", requestData);
+            const response = await axios.post("http://localhost:8000/login_usuario", requestData);
 
-            if (response.data.status === "OK") {
-                const data = response.data.message;
+            if (response.data.status === true) {
+                const data = response.data.data;
+
                 const usuario = {
-                    nombre: data.username,
-                    usuario: data.username,
-                    contrasena: data.password,
-                    rol: data.user_type
+                    nombre: data.user_name,
+                    usuario: data.user_name,
+                    rol: data.role,
+                    cedula: data.id_number
                 };
 
                 setUser(usuario);
@@ -75,11 +74,11 @@ function Login({ setUser }) {
 
                 alert("Logeo exitoso");
 
-                switch (data.user_type) {
+                switch (data.role) {
                     case "Admin":
                         navigate("/admin");
                         break;
-                    case "Client":
+                    case "Cliente":
                         navigate("/cliente");
                         break;
                     case "Instructor":
@@ -90,7 +89,7 @@ function Login({ setUser }) {
                         break;
                 }
             } else {
-                alert("Login fallido: " + (response.data.message || "Respuesta no válida del servidor"));
+                alert("Login fallido: " + (response.data.message || "Credenciales inválidas"));
             }
         } catch (error) {
             console.error(error);

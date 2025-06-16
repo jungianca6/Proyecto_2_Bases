@@ -121,3 +121,33 @@
     transform: translateY(-2px);
 }
 
+.planContainer {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 700px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    backdrop-filter: blur(5px);
+    color: white;
+}
+
+.daySection {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 1rem;
+}
+
+.daySection h2 {
+    font-size: 1.5rem;
+    color: #ffd54f;
+    margin-bottom: 1rem;
+}
+
+.exerciseCard {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: left;
+}
