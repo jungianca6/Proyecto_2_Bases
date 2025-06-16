@@ -21,6 +21,7 @@ import AdminAsociacionTratamiento from "./pgs/Admin/AdminAsociacionTratamiento";
 import AdminAsociacionInventario from "./pgs/Admin/AdminAsociacionInventario";
 import AdminAsociacionProducto from "./pgs/Admin/AdminAsociacionProducto";
 import AdminCreacionClases from "./pgs/Admin/AdminCreacionClases";
+import InstructorCrearPlan from "./pgs/InstructorCrearPlan";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -74,6 +75,7 @@ function App() {
                 <Route path="/instructor" element={user?.rol === "Instructor" ? <InstructorPg /> : <Navigate to="/login" />} />
                 <Route path="/instructor/busqueda-clientes" element={user?.rol === "Instructor" ? <InstructorBusqueda /> : <Navigate to="/login" />} />
                 <Route path="/instructor/asignar-cliente" element={user?.rol === "Instructor" ? <InstructorAsignarCliente /> : <Navigate to="/login" />} />
+                <Route path="/instructor/crear-plan" element={user?.rol === "Instructor" ? <InstructorCrearPlan /> : <Navigate to="/login" />} />
 
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
