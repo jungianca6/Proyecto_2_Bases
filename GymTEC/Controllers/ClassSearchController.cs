@@ -2,6 +2,7 @@
 using GymTEC.Data_output_models.manage_search;
 using GymTEC.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GymTEC.Controllers
 {
@@ -9,37 +10,58 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class ClassSearchController : ControllerBase
     {
-        [HttpPost("search_class")]
-        public ActionResult<Data_response<Data_output_class_info>> SearchClass([FromBody] Data_input_search_class input)
+
+        private readonly DatabaseService _databaseService;
+
+        public ClassSearchController(DatabaseService databaseService)
         {
-            // Simulamos búsqueda de clases en las fechas indicadas
-            var classList = new List<Data_output_class_info>
+            _databaseService = databaseService;
+        }
+
+        [HttpPost("search_class")]
+        public ActionResult<Data_response<List<Data_output_class_info>>> SearchClass([FromBody] Data_input_search_class input)
+        {
+            var parameters = new Dictionary<string, object>
             {
-                new Data_output_class_info
+                { "in_type", input.class_type },
+                { "in_start_time", input.start_time },
+                { "in_end_time", input.end_time }
+            };
+
+            try
+            {
+                DataTable result = _databaseService.ExecuteFunction(
+                    "SELECT * FROM sp_search_class(@in_type, @in_start_time, @in_end_time)", parameters);
+
+                var classList = new List<Data_output_class_info>();
+
+                foreach (DataRow row in result.Rows)
                 {
-                    class_date = "2025-06-05",
-                    start_date = input.start_date,
-                    end_date = input.end_date,
-                    instructor = "María López",
-                    available_spots = 10
-                },
-                new Data_output_class_info
-                {
-                    class_date = "2025-06-12",
-                    start_date = input.start_date,
-                    end_date = input.end_date,
-                    instructor = "Carlos Pérez",
-                    available_spots = 5
+                    classList.Add(new Data_output_class_info
+                    {
+                        class_date = row["class_date"].ToString(),
+                        start_time = row["start_time"].ToString(),
+                        end_time = row["end_time"].ToString(),
+                        instructor = row["instructor"].ToString(),
+                        available_spots = Convert.ToInt32(row["available_spots"])
+                    });
                 }
-            };
 
-            var response = new Data_response<List<Data_output_class_info>>
+                return Ok(new Data_response<List<Data_output_class_info>>
+                {
+                    status = true,
+                    data = classList
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = classList
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
     }
 }
