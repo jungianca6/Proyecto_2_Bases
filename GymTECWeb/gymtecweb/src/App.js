@@ -25,7 +25,7 @@ import AdminCreacionClases from "./pgs/Admin/AdminCreacionClases";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import ClienteUnionClase from "./pgs/ClienteUnionClase";
-
+import ClientePlanTrabajo from "./pgs/ClientePlanTrabajo";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -64,7 +64,7 @@ function App() {
 
                 <Route path="/cliente" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
                 <Route path="/cliente/unionclase" element={user?.rol === "Cliente" ? <ClienteUnionClase /> : <Navigate to="/login" />} />
-                <Route path="/cliente/plantrabajo" element={user?.rol === "Cliente" ? <ClientePg /> : <Navigate to="/login" />} />
+                <Route path="/cliente/plantrabajo" element={user?.rol === "Cliente" ? <ClientePlanTrabajo /> : <Navigate to="/login" />} />
 
 
                 <Route path="/instructor" element={user?.rol === "Instructor" ? <InstructorPg /> : <Navigate to="/login" />} />
