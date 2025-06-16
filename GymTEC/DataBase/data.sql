@@ -127,7 +127,8 @@ CREATE TABLE Client (
     phone VARCHAR(20) NOT NULL,
     password VARCHAR(100) NOT NULL,
     birth_date DATE NOT NULL,
-    weight NUMERIC(5,2) NOT NULL
+    weight NUMERIC(5,2) NOT NULL,
+    username VARCHAR(100) NOT NULL
     -- Age and BMI are derived attributes, NOT stored
 );
 

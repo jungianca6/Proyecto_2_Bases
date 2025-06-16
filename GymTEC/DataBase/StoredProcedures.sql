@@ -146,3 +146,74 @@ BEGIN
     WHERE b.name = in_name;
 END;
 $$ LANGUAGE plpgsql;
+
+
+---------------------- Para insertar Clases ----------------------
+CREATE OR REPLACE FUNCTION sp_add_class(
+    in_type TEXT,
+    in_is_group BOOLEAN,
+    in_max_capacity INTEGER,
+    in_date TIMESTAMP,
+    in_start TEXT, -- cambia a TEXT
+    in_end TEXT,   -- cambia a TEXT
+    in_employee_name TEXT
+)
+RETURNS VOID AS
+$$
+DECLARE
+    emp_id INT;
+BEGIN
+    SELECT employee_id INTO emp_id FROM Employee WHERE name = in_employee_name;
+
+    INSERT INTO Class (type, is_group, max_capacity, date, start_time, end_time, plan_id, employee_id)
+    VALUES (
+        in_type,
+        in_is_group,
+        in_max_capacity,
+        CAST(in_date AS DATE),
+        in_start::TIME,
+        in_end::TIME,
+        1, -- plan_id dummy
+        emp_id
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para registrar Clases ----------------------
+CREATE OR REPLACE FUNCTION sp_register_class(
+    in_class_date DATE,
+    in_start TEXT,
+    in_end TEXT,
+    in_instructor_name TEXT,
+    in_available_spots INT
+)
+RETURNS VOID AS
+$$
+DECLARE
+    emp_id INT;
+    plan_id INT;
+BEGIN
+    -- Buscar el ID del instructor
+    SELECT employee_id INTO emp_id
+    FROM Employee
+    WHERE name = in_instructor_name;
+
+    IF emp_id IS NULL THEN
+        RAISE EXCEPTION 'Instructor no encontrado';
+    END IF;
+
+    -- Obtener plan de trabajo del instructor (ejemplo: usar el primero)
+    SELECT plan_id INTO plan_id
+    FROM Work_Plan
+    WHERE employee_id = emp_id
+    LIMIT 1;
+
+    IF plan_id IS NULL THEN
+        RAISE EXCEPTION 'No hay plan de trabajo asignado';
+    END IF;
+
+    -- Insertar en la tabla Class
+    INSERT INTO Class (type, is_group, max_capacity, date, start_time, end_time, plan_id, employee_id)
+    VALUES ('General', TRUE, in_available_spots, in_class_date, in_start, in_end, plan_id, emp_id);
+END;
+$$ LANGUAGE plpgsql;
