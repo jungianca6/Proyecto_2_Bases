@@ -27,6 +27,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ClienteUnionClase from "./pgs/ClienteUnionClase";
 import ClientePlanTrabajo from "./pgs/ClientePlanTrabajo";
 
+import InstructorBusqueda from "./pgs/InstructorBusqueda";
+
+
 function App() {
     const [user, setUser] = useState(null);
 
@@ -68,6 +71,7 @@ function App() {
 
 
                 <Route path="/instructor" element={user?.rol === "Instructor" ? <InstructorPg /> : <Navigate to="/login" />} />
+                <Route path="/instructor/busqueda-clientes" element={user?.rol === "Instructor" ? <InstructorBusqueda /> : <Navigate to="/login" />} />
 
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
