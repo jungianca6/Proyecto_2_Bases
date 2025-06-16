@@ -28,6 +28,7 @@ import ClienteUnionClase from "./pgs/ClienteUnionClase";
 import ClientePlanTrabajo from "./pgs/ClientePlanTrabajo";
 
 import InstructorBusqueda from "./pgs/InstructorBusqueda";
+import InstructorAsignarCliente from "./pgs/InstructorAsignarCliente";
 
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
 
                 <Route path="/instructor" element={user?.rol === "Instructor" ? <InstructorPg /> : <Navigate to="/login" />} />
                 <Route path="/instructor/busqueda-clientes" element={user?.rol === "Instructor" ? <InstructorBusqueda /> : <Navigate to="/login" />} />
+                <Route path="/instructor/asignar-cliente" element={user?.rol === "Instructor" ? <InstructorAsignarCliente /> : <Navigate to="/login" />} />
 
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
