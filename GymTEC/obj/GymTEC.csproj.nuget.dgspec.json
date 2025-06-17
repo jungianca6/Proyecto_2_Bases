@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\darig\\OneDrive\\Documentos\\TEC\\Semestre 5\\Bases de Datos\\Proyecto_2_Bases\\GymTEC\\GymTEC.csproj": {}
+    "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\GymTEC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\darig\\OneDrive\\Documentos\\TEC\\Semestre 5\\Bases de Datos\\Proyecto_2_Bases\\GymTEC\\GymTEC.csproj": {
+    "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\GymTEC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\darig\\OneDrive\\Documentos\\TEC\\Semestre 5\\Bases de Datos\\Proyecto_2_Bases\\GymTEC\\GymTEC.csproj",
+        "projectUniqueName": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\GymTEC.csproj",
         "projectName": "GymTEC",
-        "projectPath": "C:\\Users\\darig\\OneDrive\\Documentos\\TEC\\Semestre 5\\Bases de Datos\\Proyecto_2_Bases\\GymTEC\\GymTEC.csproj",
-        "packagesPath": "C:\\Users\\darig\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\darig\\OneDrive\\Documentos\\TEC\\Semestre 5\\Bases de Datos\\Proyecto_2_Bases\\GymTEC\\obj\\",
+        "projectPath": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\GymTEC.csproj",
+        "packagesPath": "C:\\Users\\space\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\space\\source\\repos\\GymTEC\\GymTEC\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\darig\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\space\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -69,7 +74,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
