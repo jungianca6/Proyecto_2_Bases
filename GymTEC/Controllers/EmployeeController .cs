@@ -13,6 +13,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public EmployeeController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         /// <summary>
         /// Inserta un nuevo empleado o edita un empleado existente en el sistema.
         /// </summary>

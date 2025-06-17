@@ -9,6 +9,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class ScheduleController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public ScheduleController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         [HttpPost("copy_schedule")]
         public ActionResult<Data_response<Data_output_copy_schedule>> CopySchedule([FromBody] Data_input_copy_schedule input)
         {

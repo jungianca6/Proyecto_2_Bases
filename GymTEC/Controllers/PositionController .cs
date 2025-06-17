@@ -13,6 +13,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class PositionController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public PositionController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         /// <summary>
         /// Inserta un nuevo puesto de trabajo.
         /// </summary>

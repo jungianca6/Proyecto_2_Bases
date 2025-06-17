@@ -13,6 +13,14 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class InventoryController : ControllerBase
     {
+
+        private readonly DatabaseService _databaseService;
+
+        public InventoryController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         /// <summary>
         /// Inserta un nuevo equipo en el inventario o edita un equipo existente.
         /// </summary>

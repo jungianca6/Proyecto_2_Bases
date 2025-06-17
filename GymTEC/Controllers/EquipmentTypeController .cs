@@ -13,6 +13,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class EquipmentTypeController : ControllerBase
     {
+
+        private readonly DatabaseService _databaseService;
+
+        public EquipmentTypeController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
         /// <summary>
         /// Inserta un nuevo tipo de equipo o edita un tipo de equipo existente en el sistema.
         /// </summary>
@@ -33,21 +40,36 @@ namespace GymTEC.Controllers
         [HttpPost("insert_or_edit")]
         public ActionResult<Data_response<Data_output_equipment_type>> InsertOrEditEquipmentType([FromBody] Data_input_equipment_type input)
         {
-            // Lógica para insertar o editar tipo de equipo
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_equipment_type_id", input.equipment_type_id },
+        { "in_description", input.description }
+    };
 
-            var data_output = new Data_output_equipment_type
+            try
             {
-                equipment_type_id = input.equipment_type_id,
-                description = input.description
-            };
+                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_equipment_type(@in_equipment_type_id, @in_description)", parameters);
 
-            var response = new Data_response<Data_output_equipment_type>
+                var data_output = new Data_output_equipment_type
+                {
+                    equipment_type_id = input.equipment_type_id,
+                    description = input.description
+                };
+
+                return Ok(new Data_response<Data_output_equipment_type>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = data_output
-            };
-
-            return Ok(response);
+                return BadRequest(new Data_response<Data_output_equipment_type>
+                {
+                    status = false,
+                    data = null
+                });
+            }
         }
 
         /// <summary>

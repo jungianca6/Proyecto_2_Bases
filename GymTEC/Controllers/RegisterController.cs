@@ -9,6 +9,14 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class RegisterController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public RegisterController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
+
         /// <summary>
         /// Registra un nuevo cliente en el sistema.
         /// </summary>

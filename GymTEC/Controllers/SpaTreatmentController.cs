@@ -11,6 +11,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class SpaTreatmentController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public SpaTreatmentController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         /// <summary>
         /// Inserta un nuevo tratamiento spa o registra uno nuevo.
         /// </summary>
