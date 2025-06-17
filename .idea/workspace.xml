@@ -5,8 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7124ebcb-41d3-4647-af49-6c241eba8589" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePlanTrabajo.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePlanTrabajo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePg.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClientePg.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePg.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClientePg.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClientePlanTrabajo.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClientePlanTrabajo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/ClienteUnionClase.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClienteUnionClase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/InstructorAsignarCliente.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorAsignarCliente.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/InstructorBusqueda.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorBusqueda.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/InstructorCrearPlan.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorCrearPlan.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/InstructorPg.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorPg.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/InstructorPg.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorPg.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +81,8 @@
       <workItem from="1749183723181" duration="1633000" />
       <workItem from="1750040074389" duration="229000" />
       <workItem from="1750040442629" duration="4105000" />
+      <workItem from="1750125792959" duration="163000" />
+      <workItem from="1750126113477" duration="657000" />
     </task>
     <servers />
   </component>

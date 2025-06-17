@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useState } from "react";
 import Login from "./pgs/Login";
 import AdminPg from "./pgs/Admin/AdminPg";
-import ClientePg from "./pgs/ClientePg";
-import InstructorPg from "./pgs/InstructorPg";
+import ClientePg from "./pgs/Cliente/ClientePg";
+import InstructorPg from "./pgs/Instructor/InstructorPg";
 import AdminSucursal from "./pgs/Admin/AdminSucursal";
 import AdminTratamiento from "./pgs/Admin/AdminTratamiento";
 import AdminPuesto from "./pgs/Admin/AdminPuesto";
@@ -21,15 +21,15 @@ import AdminAsociacionTratamiento from "./pgs/Admin/AdminAsociacionTratamiento";
 import AdminAsociacionInventario from "./pgs/Admin/AdminAsociacionInventario";
 import AdminAsociacionProducto from "./pgs/Admin/AdminAsociacionProducto";
 import AdminCreacionClases from "./pgs/Admin/AdminCreacionClases";
-import InstructorCrearPlan from "./pgs/InstructorCrearPlan";
+import InstructorCrearPlan from "./pgs/Instructor/InstructorCrearPlan";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import ClienteUnionClase from "./pgs/ClienteUnionClase";
-import ClientePlanTrabajo from "./pgs/ClientePlanTrabajo";
+import ClienteUnionClase from "./pgs/Cliente/ClienteUnionClase";
+import ClientePlanTrabajo from "./pgs/Cliente/ClientePlanTrabajo";
 
-import InstructorBusqueda from "./pgs/InstructorBusqueda";
-import InstructorAsignarCliente from "./pgs/InstructorAsignarCliente";
+import InstructorBusqueda from "./pgs/Instructor/InstructorBusqueda";
+import InstructorAsignarCliente from "./pgs/Instructor/InstructorAsignarCliente";
 
 
 function App() {
