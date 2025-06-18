@@ -146,24 +146,33 @@ namespace GymTEC.Controllers
         [HttpPost("get")]
         public ActionResult<Data_response<Data_output_inventory>> GetInventory([FromBody] Data_input_inventory input)
         {
-            // Lógica para consultar equipo por serial_number
+            var parameters = new Dictionary<string, object>
+                {
+                    { "in_serial_number", input.serial_number }
+                };
 
-            var data_output = new Data_output_inventory
+            try
             {
-                equipment_type = "Equipo de pesas",
-                brand = "BrandX",
-                serial_number = input.serial_number,
-                cost = 2500,
-                branch_name = "Sucursal Central"
-            };
+                var result = _databaseService.QuerySingle<Data_output_inventory>(
+                    "SELECT * FROM sp_get_inventory_by_serial(@in_serial_number)",
+                    parameters
+                );
 
-            var response = new Data_response<Data_output_inventory>
+                return Ok(new Data_response<Data_output_inventory>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = data_output
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
 
@@ -201,38 +210,55 @@ namespace GymTEC.Controllers
         [HttpPost("consult_machines_by_branch")]
         public ActionResult<Data_response<Data_output_consult_machine_by_branch>> ConsultMachinesByBranch([FromBody] Data_input_consult_machine_by_branch input)
         {
-            // Simulamos la consulta con datos de ejemplo
-            var dataOutput = new Data_output_consult_machine_by_branch
+            var parameters = new Dictionary<string, object>
             {
-                associated_machines = new List<Data_output_associate_machine>
+                { "in_branch_name", input.branch_name }
+            };
+
+            try
+            {
+                var result = _databaseService.Query("SELECT * FROM sp_consult_machines_by_branch(@in_branch_name)", parameters);
+
+                var associated = new List<Data_output_associate_machine>();
+                var notAssociated = new List<Data_output_associate_machine>();
+
+                foreach (var row in result)
                 {
-                    new Data_output_associate_machine
+                    var machine = new Data_output_associate_machine
                     {
-                        serial_number = "SN987654",
-                        brand = "TechFit",
-                        model = "X2000",
-                        branch_name = input.branch_name
-                    }
-                },
-                not_associated_machines = new List<Data_output_associate_machine>
-                {
-                    new Data_output_associate_machine
-                    {
-                        serial_number = "SN123321",
-                        brand = "GymPro",
-                        model = "Alpha5",
-                        branch_name = null
-                    }
+                        serial_number = row.serial_number,
+                        brand = row.brand,
+                        model = row.model,
+                        branch_name = row.branch_name
+                    };
+
+                    if ((bool)row.is_associated)
+                        associated.Add(machine);
+                    else
+                        notAssociated.Add(machine);
                 }
-            };
 
-            var response = new Data_response<Data_output_consult_machine_by_branch>
+                var dataOutput = new Data_output_consult_machine_by_branch
+                {
+                    associated_machines = associated,
+                    not_associated_machines = notAssociated
+                };
+
+                return Ok(new Data_response<Data_output_consult_machine_by_branch>
+                {
+                    status = true,
+                    data = dataOutput
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = dataOutput
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
     }
 

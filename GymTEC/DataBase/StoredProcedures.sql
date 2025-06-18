@@ -304,6 +304,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+---------------------- Para get inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_get_inventory_by_serial(in_serial_number TEXT)
+RETURNS TABLE (
+    equipment_type TEXT,
+    brand TEXT,
+    serial_number TEXT,
+    cost INTEGER,
+    branch_name TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        et.name::TEXT,	
+        i.brand::TEXT,
+        i.serial_number::TEXT,
+        i.cost::INTEGER,
+        b.name::TEXT
+    FROM Inventory i
+    JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
+    JOIN Branch b ON i.branch_id = b.branch_id
+    WHERE i.serial_number = in_serial_number;
+END;
+$$ LANGUAGE plpgsql;
+
+
 ---------------------- Para asociar maquina con sucursal inventory ----------------------
 CREATE OR REPLACE FUNCTION sp_associate_machine_to_branch(
     in_serial_number TEXT,
@@ -337,5 +362,42 @@ BEGIN
 	JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
 	JOIN Branch b ON i.branch_id = b.branch_id
 	WHERE i.serial_number = in_serial_number;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para consultar maquina por sucursal inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_consult_machines_by_branch(in_branch_name TEXT)
+RETURNS TABLE (
+    serial_number TEXT,
+    brand TEXT,
+    model TEXT,
+    branch_name TEXT,
+    is_associated BOOLEAN
+) AS $$
+BEGIN
+    -- Máquinas asociadas a la sucursal
+    RETURN QUERY
+    SELECT 
+        i.serial_number::TEXT,
+        i.brand::TEXT,
+        et.name::TEXT AS model,
+        b.name::TEXT,
+        TRUE
+    FROM Inventory i
+    JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
+    JOIN Branch b ON i.branch_id = b.branch_id
+    WHERE b.name = in_branch_name;
+
+    -- Máquinas no asociadas (sin sucursal asignada)
+    RETURN QUERY
+    SELECT 
+        i.serial_number::TEXT,
+        i.brand::TEXT,
+        et.name::TEXT AS model,
+        NULL::TEXT AS branch_name,
+        FALSE
+    FROM Inventory i
+    JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
+    WHERE i.branch_id IS NULL;
 END;
 $$ LANGUAGE plpgsql;
