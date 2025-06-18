@@ -46,7 +46,7 @@ namespace GymTEC.Controllers
         /// - El employee_id debe ser único al insertar.
         /// - Para editar, el employee_id debe existir previamente.
         /// </remarks>
-        [HttpPost("insert_or_edit")]
+        [HttpPost("insert")]
         public ActionResult<Data_response<Data_output_employee>> InsertOrEditEmployee([FromBody] Data_input_employee input)
         {
             var parameters = new Dictionary<string, object>
@@ -87,6 +87,51 @@ namespace GymTEC.Controllers
                 {
                     status = true,
                     data = data_output
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
+        }
+
+
+
+
+        [HttpPost("edit_employee")]
+        public ActionResult<Data_response<string>> EditEmployee([FromBody] Data_input_employee input)
+        {
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_id_number", input.employee_id },
+        { "in_full_name", input.full_name },
+        { "in_province", input.province },
+        { "in_canton", input.canton },
+        { "in_district", input.district },
+        { "in_position", input.position },
+        { "in_branch", input.branch },
+        { "in_payroll_type", input.payroll_type },  // no usado por ahora
+        { "in_salary", input.salary },
+        { "in_email", input.email },
+        { "in_password", input.password }
+    };
+
+            try
+            {
+                _databaseService.ExecuteFunction(
+                    "SELECT sp_edit_employee(@in_id_number, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_type, @in_salary, @in_email, @in_password)",
+                    parameters
+                );
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Empleado editado exitosamente."
                 });
             }
             catch (Exception ex)

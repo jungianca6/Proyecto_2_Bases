@@ -407,7 +407,7 @@ $$ LANGUAGE plpgsql;
 
 ---------------------- Para insertar o editar employee ----------------------
 CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
-    in_id_number TEXT,
+    in_employee_id TEXT,
     in_full_name TEXT,
     in_province TEXT,
     in_canton TEXT,
@@ -421,36 +421,31 @@ CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
 )
 RETURNS VOID AS $$
 DECLARE
-    emp_id INT;
-    pos_id INT;
-    br_id INT;
-    pay_id INT;
+    existing_employee_id INT;
+    branch_id INT;
 BEGIN
-    SELECT position_id INTO pos_id FROM Position WHERE name = in_position;
-    IF pos_id IS NULL THEN
-        RAISE EXCEPTION 'Puesto no encontrado';
-    END IF;
-
-    SELECT branch_id INTO br_id FROM Branch WHERE name = in_branch;
-    IF br_id IS NULL THEN
+    -- Buscar la sucursal
+    SELECT b.branch_id INTO branch_id FROM Branch b WHERE b.name = in_branch;
+    IF branch_id IS NULL THEN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    SELECT spreadsheet_id INTO pay_id FROM Spreadsheet WHERE name = in_payroll_type;
-    IF pay_id IS NULL THEN
-        RAISE EXCEPTION 'Tipo de planilla no encontrado';
-    END IF;
+    -- Buscar si el empleado ya existe
+    SELECT e.employee_id INTO existing_employee_id FROM Employee e WHERE e.id_number = in_employee_id;
 
-    SELECT employee_id INTO emp_id FROM Employee WHERE id_number = in_id_number;
-
-    IF emp_id IS NULL THEN
+    IF existing_employee_id IS NULL THEN
         INSERT INTO Employee (
-            name, province, canton, district, email, id_number, password, salary,
+            name, province, canton, district,
+            email, id_number, password, salary,
             bank_account, position_id, spreadsheet_id, branch_id
         )
         VALUES (
-            in_full_name, in_province, in_canton, in_district, in_email, in_id_number, in_password, in_salary,
-            CONCAT('Cuenta-', in_id_number), pos_id, pay_id, br_id
+            in_full_name, in_province, in_canton, in_district,
+            in_email, in_employee_id, in_password, in_salary,
+            'TEMP', -- Asume que se genera o se asigna luego
+            1,      -- Asume que "position_id" 1 es genérico, reemplázalo por lógica real si quieres
+            1,      -- Igual con "spreadsheet_id"
+            branch_id
         );
     ELSE
         UPDATE Employee
@@ -462,13 +457,66 @@ BEGIN
             email = in_email,
             password = in_password,
             salary = in_salary,
-            bank_account = CONCAT('Cuenta-', in_id_number),
-            position_id = pos_id,
-            spreadsheet_id = pay_id,
-            branch_id = br_id
-        WHERE id_number = in_id_number;
+            branch_id = branch_id
+        WHERE id_number = in_employee_id;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+----------------------  editar employee ----------------------
+CREATE OR REPLACE FUNCTION sp_edit_employee(
+    in_id_number TEXT,
+    in_full_name TEXT,
+    in_province TEXT,
+    in_canton TEXT,
+    in_district TEXT,
+    in_position TEXT,
+    in_branch TEXT,
+    in_payroll_type TEXT,
+    in_salary INTEGER,
+    in_email TEXT,
+    in_password TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    emp_id INT;
+    pos_id INT;
+    br_id INT;
+BEGIN
+    -- Verificar si el empleado existe
+    SELECT employee_id INTO emp_id FROM Employee WHERE id_number = in_id_number;
+    IF emp_id IS NULL THEN
+        RAISE EXCEPTION 'Empleado no existe con la cédula proporcionada';
+    END IF;
+
+    -- Obtener ID del puesto
+    SELECT position_id INTO pos_id FROM Position WHERE name = in_position;
+    IF pos_id IS NULL THEN
+        RAISE EXCEPTION 'Puesto no encontrado';
+    END IF;
+
+    -- Obtener ID de la sucursal
+    SELECT branch_id INTO br_id FROM Branch WHERE name = in_branch;
+    IF br_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal no encontrada';
+    END IF;
+
+    -- Actualizar el empleado
+    UPDATE Employee
+    SET
+        name = in_full_name,
+        province = in_province,
+        canton = in_canton,
+        district = in_district,
+        email = in_email,
+        password = in_password,
+        salary = in_salary,
+        position_id = pos_id,
+        branch_id = br_id
+        -- NOTA: spreadsheet_id queda igual
+    WHERE id_number = in_id_number;
+END;
+$$ LANGUAGE plpgsql;
+
 
 
