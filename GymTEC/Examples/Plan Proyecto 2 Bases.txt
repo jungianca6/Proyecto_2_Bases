@@ -476,24 +476,20 @@ Gestión de Tipos planilla:
 
                 Yo mando: identificador único y descripción del tipo
 
-        ###
-        Ejemplo de entrada:
-        {
-            "equipment_type_id": "EQTYPE001",
-            "description": "Equipo de cardio"
-        }
+		### Ejemplo de entrada:
+		{
+			"description": "Planilla de Entrenadores",
+			"identifier": "ENT-001",
+			"monthly_payment": 500000.00,
+			"hourly_payment": 15000.00,
+			"group_class_payment": 20000.00
+		}
 
-        ###
-        Ejemplo de salida:
-
-        {
-            "status": true,
-            "data": {
-                "equipment_type_id": "EQTYPE001",
-                "description": "Equipo de cardio"
-            }
-        }
-
+		### Ejemplo de salida:
+		{
+			"status": true,
+			"data": "Tipo de planilla 'Planilla de Entrenadores' con ID 'ENT-001' guardado correctamente."
+		}
 
         Eliminar:
 
@@ -528,6 +524,8 @@ Gestión de Tipos planilla:
 						"description": "Planilla de Entrenadores"
 					}
 				}
+
+
 
         ###
         Ejemplo de entrada:
