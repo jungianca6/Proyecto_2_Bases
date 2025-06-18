@@ -962,7 +962,7 @@ Yo mando: código de barras, nombre de sucursal
 
 	Copiar gimnasio:
 
-				Tengo dudas, le tengo que preguntar al profe sobre este
+				Yo mando: Nombre de sucursal a copiar, Nombre de sucursal 
 
 
 #################################### ----------------------- ####################################
