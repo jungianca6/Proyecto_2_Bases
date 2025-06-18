@@ -110,14 +110,14 @@
     font-size: 1rem;
     border: none;
     border-radius: 8px;
-    background-color: #9c27b0;
+    background-color: #2e7d32; 
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .buttonRow button:hover {
-    background-color: #ba68c8;
+    background-color: #388e3c; 
     transform: translateY(-2px);
 }
 
