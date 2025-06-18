@@ -6,6 +6,7 @@ using GymTEC.Data_output_models.manage_branch;
 using GymTEC.Data_output_models.manage_equipment;
 using GymTEC.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GymTEC.Controllers
 {
@@ -41,18 +42,18 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<Data_output_equipment_type>> InsertOrEditEquipmentType([FromBody] Data_input_equipment_type input)
         {
             var parameters = new Dictionary<string, object>
-    {
-        { "in_equipment_type_id", input.equipment_type_id },
-        { "in_description", input.description }
-    };
+            {
+                { "in_name", input.name },
+                { "in_description", input.description }
+            };
 
             try
             {
-                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_equipment_type(@in_equipment_type_id, @in_description)", parameters);
+                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_equipment_type(@in_name, @in_description)", parameters);
 
                 var data_output = new Data_output_equipment_type
                 {
-                    equipment_type_id = input.equipment_type_id,
+                    name = input.name,
                     description = input.description
                 };
 
@@ -64,10 +65,11 @@ namespace GymTEC.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new Data_response<Data_output_equipment_type>
+                return BadRequest(new
                 {
                     status = false,
-                    data = null
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
                 });
             }
         }
@@ -90,15 +92,32 @@ namespace GymTEC.Controllers
         [HttpPost("delete")]
         public ActionResult<Data_response<string>> DeleteEquipmentType([FromBody] Data_input_equipment_type input)
         {
-            // Lógica para eliminar tipo de equipo
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_name", input.name }
+    };
 
-            var response = new Data_response<string>
+            try
             {
-                status = true,
-                data = "Tipo de equipo eliminado exitosamente"
-            };
+                _databaseService.ExecuteFunction("SELECT sp_delete_equipment_type(@in_name)", parameters);
 
-            return Ok(response);
+                var response = new Data_response<string>
+                {
+                    status = true,
+                    data = "Tipo de equipo eliminado exitosamente"
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         /// <summary>
@@ -120,21 +139,49 @@ namespace GymTEC.Controllers
         [HttpPost("get")]
         public ActionResult<Data_response<Data_output_equipment_type>> GetEquipmentType([FromBody] Data_input_equipment_type input)
         {
-            // Lógica para consultar tipo de equipo
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_name", input.name }
+    };
 
-            var data_output = new Data_output_equipment_type
+            try
             {
-                equipment_type_id = input.equipment_type_id,
-                description = "Descripción ejemplo del tipo de equipo"
-            };
+                DataTable result = _databaseService.ExecuteFunction(
+                    "SELECT * FROM sp_get_equipment_type(@in_name)", parameters);
 
-            var response = new Data_response<Data_output_equipment_type>
+                if (result.Rows.Count == 0)
+                {
+                    return NotFound(new
+                    {
+                        status = false,
+                        error = "Tipo de equipo no encontrado",
+                        inner = (string)null
+                    });
+                }
+
+                var row = result.Rows[0];
+
+                var data_output = new Data_output_equipment_type
+                {
+                    name = row["name"].ToString(),
+                    description = row["description"].ToString()
+                };
+
+                return Ok(new Data_response<Data_output_equipment_type>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = data_output
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
     }
 }
