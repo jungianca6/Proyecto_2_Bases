@@ -470,7 +470,7 @@ Gestión de Servicios:
 
 ##### ----------------------- ######
 
-Gestión de Tipos Equipo:
+Gestión de Tipos planilla:
 
         Insertar y editar:
 
