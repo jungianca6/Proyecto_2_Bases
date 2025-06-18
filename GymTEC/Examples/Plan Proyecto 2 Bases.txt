@@ -479,7 +479,7 @@ Gestión de Tipos Equipo:
         ###
         Ejemplo de entrada:
         {
-            "name": "Pesas",
+            "equipment_type_id": "EQTYPE001",
             "description": "Equipo de cardio"
         }
 
@@ -489,7 +489,7 @@ Gestión de Tipos Equipo:
         {
             "status": true,
             "data": {
-                "name": "Pesas",
+                "equipment_type_id": "EQTYPE001",
                 "description": "Equipo de cardio"
             }
         }

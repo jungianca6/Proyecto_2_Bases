@@ -2,7 +2,7 @@
 {
     public class Data_output_equipment_type
     {
-        public string name { get; set; }
+        public string equipment_type_id { get; set; }
         public string description { get; set; }
     }
 }

@@ -217,17 +217,3 @@ BEGIN
     VALUES ('General', TRUE, in_available_spots, in_class_date, in_start, in_end, plan_id, emp_id);
 END;
 $$ LANGUAGE plpgsql;
-
----------------------- Para registrar equipment ----------------------
-CREATE OR REPLACE FUNCTION sp_insert_or_edit_equipment_type(
-    in_equipment_type_id TEXT,
-    in_description TEXT
-)
-RETURNS VOID AS $$
-BEGIN
-    INSERT INTO Equipment_Type (equipment_type_id, description)
-    VALUES (in_equipment_type_id, in_description)
-    ON CONFLICT (equipment_type_id) DO UPDATE
-    SET description = EXCLUDED.description;
-END;
-$$ LANGUAGE plpgsql;
