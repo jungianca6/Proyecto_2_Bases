@@ -525,7 +525,54 @@ Gestión de Tipos planilla:
 					}
 				}
 
+	##### ----------------------- ######
 
+Gestión de Tipos Equipo:
+
+        Insertar y editar:
+
+                Yo mando: identificador único y descripción del tipo
+
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type_id": "EQTYPE001",
+            "description": "Equipo de cardio"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "equipment_type_id": "EQTYPE001",
+                "description": "Equipo de cardio"
+            }
+        }
+
+        Eliminar:
+
+                Yo mando: identificador único
+
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type_id": "EQTYPE001"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Tipo de equipo eliminado exitosamente"
+        }
+
+        Consultar:
+
+                Yo mando: identificador único
+
+                Ud manda: identificador único y descripción del tipo
 
         ###
         Ejemplo de entrada:
