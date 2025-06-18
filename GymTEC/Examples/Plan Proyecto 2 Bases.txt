@@ -494,28 +494,40 @@ Gestión de Tipos Equipo:
             }
         }
 
+
         Eliminar:
 
-                Yo mando: identificador único
+                ### Ejemplo de entrada:
+				{
+					"identifier": "ENT-001"
+				}
 
-        ###
-        Ejemplo de entrada:
-        {
-            "equipment_type_id": "EQTYPE001"
-        }
+				### Ejemplo de salida:
+				{
+					"status": true,
+					"data": "Tipo de planilla con ID 'ENT-001' eliminado correctamente."
+				}
 
-        ###
-        Ejemplo de salida:
-        {
-            "status": true,
-            "data": "Tipo de equipo eliminado exitosamente"
-        }
 
         Consultar:
 
                 Yo mando: identificador único
 
                 Ud manda: identificador único y descripción del tipo
+
+				### Ejemplo de entrada:
+				{
+					"identifier": "ENT-001"
+				}
+
+				### Ejemplo de salida:
+				{
+					"status": true,
+					"data": {
+						"identifier": "ENT-001",
+						"description": "Planilla de Entrenadores"
+					}
+				}
 
         ###
         Ejemplo de entrada:
