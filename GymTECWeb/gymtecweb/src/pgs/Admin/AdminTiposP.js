@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
 
 function AdminTiposP() {
     const [formData, setFormData] = useState({
@@ -10,15 +11,67 @@ function AdminTiposP() {
         pagoClase: ""
     });
 
+    const [consultaData, setConsultaData] = useState(null);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (accion) => {
-        console.log(`Acción: ${accion}`);
-        console.log(formData);
-        // Aquí va el fetch al backend según la acción
+        let data = {};
+
+        if (accion === "insertar" || accion === "editar") {
+            data = {
+                description: formData.descripcion,
+                identifier: formData.identificador,
+                monthly_payment: parseFloat(formData.pagoMensual),
+                hourly_payment: parseFloat(formData.pagoHora),
+                group_class_payment: parseFloat(formData.pagoClase)
+            };
+        } else if (accion === "eliminar" || accion === "consultar") {
+            data = {
+                identifier: formData.identificador
+            };
+        }
+
+        let url = "";
+        switch (accion) {
+            case "insertar":
+                url = "http://localhost:8000/tipos_planilla/insertar";
+                break;
+            case "editar":
+                url = "http://localhost:8000/tipos_planilla/editar";
+                break;
+            case "eliminar":
+                url = "http://localhost:8000/tipos_planilla/eliminar";
+                break;
+            case "consultar":
+                url = "http://localhost:8000/tipos_planilla/consultar";
+                break;
+            default:
+                return;
+        }
+
+        axios.post(url, data)
+            .then((res) => {
+                console.log(`Acción ${accion} exitosa:`, res.data);
+
+                if (accion === "consultar") {
+                    if (res.data.status && res.data.data) {
+                        setConsultaData(res.data.data);
+                    } else {
+                        setConsultaData(null);
+                        alert("Tipo de planilla no encontrado.");
+                    }
+                } else {
+                    alert(`Tipo de planilla ${accion} correctamente.`);
+                }
+            })
+            .catch((err) => {
+                console.error(`Error al ${accion}:`, err);
+                alert(`Error al ${accion} tipo de planilla.`);
+            });
     };
 
     return (
@@ -37,7 +90,6 @@ function AdminTiposP() {
                         name="descripcion"
                         value={formData.descripcion}
                         onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
                     />
 
                     <label htmlFor="identificador" className={styles.label}>Identificador</label>
@@ -47,7 +99,6 @@ function AdminTiposP() {
                         name="identificador"
                         value={formData.identificador}
                         onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
                     />
 
                     <label htmlFor="pagoMensual" className={styles.label}>Pago mensual</label>
@@ -57,27 +108,24 @@ function AdminTiposP() {
                         name="pagoMensual"
                         value={formData.pagoMensual}
                         onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
                     />
 
-                    <label htmlFor="pagoHora" className={styles.label}>Pago por horas</label>
+                    <label htmlFor="pagoHora" className={styles.label}>Pago por hora</label>
                     <input
                         type="number"
                         id="pagoHora"
                         name="pagoHora"
                         value={formData.pagoHora}
                         onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
                     />
 
-                    <label htmlFor="pagoClase" className={styles.label}>Pago por clase (Grupal)</label>
+                    <label htmlFor="pagoClase" className={styles.label}>Pago por clase (grupal)</label>
                     <input
                         type="number"
                         id="pagoClase"
                         name="pagoClase"
                         value={formData.pagoClase}
                         onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
                     />
 
                     <div className={styles.buttonRow}>
@@ -87,6 +135,26 @@ function AdminTiposP() {
                         <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
                     </div>
                 </form>
+
+                <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
+                    Para eliminar o consultar solo se necesita ingresar el identificador.
+                </p>
+
+                {consultaData && (
+                    <div style={{
+                        marginTop: "2rem",
+                        backgroundColor: "white",
+                        padding: "1rem",
+                        borderRadius: "8px",
+                        color: "#333",
+                        maxWidth: "600px",
+                        width: "100%"
+                    }}>
+                        <h2>Resultado de Consulta</h2>
+                        <p><strong>Identificador:</strong> {consultaData.identifier}</p>
+                        <p><strong>Descripción:</strong> {consultaData.description}</p>
+                    </div>
+                )}
             </main>
         </div>
     );
