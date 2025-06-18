@@ -185,17 +185,30 @@ function Login({ setUser }) {
                             <div className={styles.column}>
                                 {[
                                     { name: "age", label: "Edad", type: "number" },
-                                    { name: "birth_date", label: "Fecha de nacimiento", type: "date" },
                                     { name: "weight", label: "Peso (kg)", type: "number" },
                                     { name: "imc", label: "IMC", type: "number" },
                                     { name: "address", label: "Dirección", type: "text" },
                                     { name: "regPassword", label: "Contraseña", type: "password" }
                                 ].map(field => (
                                     <div key={field.name} className={styles.inputBox}>
-                                        <input type={field.type} name={field.name} placeholder={field.label}
+                                        <input type={field.type} name={field.name} id={field.name} placeholder={field.label}
                                             value={form[field.name]} onChange={handleChange} required />
                                     </div>
                                 ))}
+
+
+                                {/* Campo especial con etiqueta para fecha de nacimiento */}
+                                <div className={styles.inputBox}>
+                                    <label htmlFor="birth_date">Fecha de nacimiento</label>
+                                    <input
+                                        type="date"
+                                        name="birth_date"
+                                        id="birth_date"
+                                        value={form.birth_date}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
                             </div>
                         </div>
 
