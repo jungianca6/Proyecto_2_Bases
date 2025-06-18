@@ -964,6 +964,10 @@ Yo mando: código de barras, nombre de sucursal
 
 				Yo mando: Nombre de sucursal a copiar, Nombre de sucursal 
 
+				  "origin_branch_name": "Sucursal Central",
+				  "destination_branch_name": "Sucursal Este"
+				}
+
 
 #################################### ----------------------- ####################################
 
@@ -1076,22 +1080,105 @@ Cliente:
 Instructor:
 
 		Búsqueda de clientes sin entrenador: 
-							Ud manda: lista de clientes sin instructor. Cada cliente con sus datos, mínimo con el nombre completo y la cédula.
 
+		(Es una operacion GET por lo que no tiene parametros de entrada)
+
+
+		###
+		Ejemplo de salida:
+		{
+			"status": true,
+			"data": {
+				"clients": [
+					{
+						"full_name": "Carlos Jiménez Solís",
+						"id_number": "115230456"
+					},
+					{
+						"full_name": "María Rodríguez Vargas",
+						"id_number": "208740122"
+					},
+					{
+						"full_name": "Luis Felipe Sánchez",
+						"id_number": "114560983"
+					}
+				]
+			}
+		}
 		
 		Asignar instructor:
 
-					Yo mando: número de cédula de instructor, número de cédula de cliente
+		Yo mando: número de cédula de instructor, número de cédula de cliente
+
+		###
+		Ejemplo de entrada:
+		{
+			"trainer_id": "117890456",
+			"client_id": "208740122"
+		}
+
+		###
+		Ejemplo de salida:
+		{
+			"status": true,
+			"data": {
+				"message": "Instructor asignado correctamente al cliente."
+			}
+		}
 
 
-		Creación de plan de trabajo: 
+		Creación de plan de trabajo:
 
-						Yo mando: Tengo que preguntarle al profe que debe de tener esto porque no dice.
+		Yo mando: {
+			client_id: "",
+			day: "Lunes",
+			exercise_name: "",
+			sets: 1,
+			repetitions: 1,
+			notes: ""
+		}
 
+		###
+		Ejemplo de entrada:
+		{
+			"client_id": "208740122",
+			"day": "Lunes",
+			"exercise_name": "Sentadillas con peso corporal",
+			"sets": 3,
+			"repetitions": 15,
+			"notes": "Mantener postura correcta durante el ejercicio"
+		}
+
+		###
+		Ejemplo de salida:
+		{
+			"status": true,
+			"data": {
+				"message": "Ejercicio agregado al plan de trabajo del cliente."
+			}
+		}
 		
 		Registro de clase: 
-	
-					Tengo dudas, le tengo que preguntar al profe	
-				
+
+		Yo mando: cuando se realizará la clase, fecha de inicio, fecha de finalización, instructor, cupos disponibles
+
+		###
+		Ejemplo de entrada:
+		{
+			"class_date": "2025-07-01",
+			"start_date": "2025-07-01",
+			"end_date": "2025-07-31",
+			"instructor": "Ana Pérez",
+			"available_spots": 15
+		}
+
+		###
+		Ejemplo de salida:
+		{
+			"status": true,
+			"data": {
+				"message": "Clase registrada exitosamente"
+			}
+		}
 
 	

@@ -54,5 +54,18 @@ namespace GymTEC.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("create_workout_plan")]
+        public ActionResult<Data_response<string>> CreateWorkoutPlan([FromBody] Data_input_create_workout_plan input)
+        {
+            string msg = $"Ejercicio '{input.exercise_name}' agregado al plan de trabajo del cliente {input.client_id} para el {input.day}.";
+
+            return Ok(new Data_response<string>
+            {
+                status = true,
+                data = msg
+            });
+        }
+
     }
 }

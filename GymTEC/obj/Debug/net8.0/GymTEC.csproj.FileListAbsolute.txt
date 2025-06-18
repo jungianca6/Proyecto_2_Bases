@@ -95,3 +95,21 @@ C:\Users\darig\OneDrive\Documentos\TEC\Semestre 5\Bases de Datos\Proyecto_2_Base
 C:\Users\darig\OneDrive\Documentos\TEC\Semestre 5\Bases de Datos\Proyecto_2_Bases\GymTEC\bin\Debug\net8.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\darig\OneDrive\Documentos\TEC\Semestre 5\Bases de Datos\Proyecto_2_Bases\GymTEC\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\darig\OneDrive\Documentos\TEC\Semestre 5\Bases de Datos\Proyecto_2_Bases\GymTEC\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Accelergreat.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Accelergreat.EntityFramework.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Accelergreat.EntityFramework.PostgreSql.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Dapper.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Namotion.Reflection.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\NJsonSchema.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\NJsonSchema.Annotations.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Npgsql.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\space\source\repos\GymTEC\GymTEC\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

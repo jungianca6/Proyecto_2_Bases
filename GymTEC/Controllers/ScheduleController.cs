@@ -49,5 +49,7 @@ namespace GymTEC.Controllers
 
             return Ok(response);
         }
+
+
     }
 }

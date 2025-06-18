@@ -12,6 +12,6 @@
         public int classes_or_hours { get; set; }       // número de clases impartidas o horas laboradas
         public decimal amount_to_pay { get; set; }      // monto a pagar
 
-        public string type_
+        public string type { get; set; }
     }
 }
