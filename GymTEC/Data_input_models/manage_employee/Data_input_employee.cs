@@ -10,7 +10,7 @@
         public string position { get; set; }
         public string branch { get; set; }
         public string payroll_type { get; set; }
-        public double salary { get; set; }
+        public int salary { get; set; }
         public string email { get; set; }
         public string password { get; set; }
     }
