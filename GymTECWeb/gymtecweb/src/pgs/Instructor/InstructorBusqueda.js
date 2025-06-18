@@ -8,7 +8,7 @@ function InstructorBusqueda() {
 
     const handleBuscar = async () => {
         try {
-            const res = await axios.post("http://localhost:8000/clientes_sin_instructor");
+            const res = await axios.get("http://localhost:8000/clientes_sin_instructor");
 
             if (res.data.status && Array.isArray(res.data.data)) {
                 setClientes(res.data.data);
