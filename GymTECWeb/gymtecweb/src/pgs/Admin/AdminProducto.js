@@ -86,7 +86,7 @@ function AdminProducto() {
                         style={{ marginBottom: "1rem" }}
                     />
 
-                    <label htmlFor="codigoBarras" className={styles.label}>Código de barras</label>
+                    <label htmlFor="codigoBarras" className={styles.label}>Código del producto</label>
                     <input
                         type="text"
                         id="codigoBarras"
@@ -125,7 +125,7 @@ function AdminProducto() {
                 </form>
 
                 <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
-                    Para eliminar o consultar solo se necesita el código de barras.
+                    Para eliminar o consultar solo se necesita el código del producto.
                 </p>
 
                 {consultaData && (

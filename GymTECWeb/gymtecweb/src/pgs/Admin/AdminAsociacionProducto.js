@@ -73,7 +73,7 @@ function AdminAsociacionProducto() {
                         style={{ marginBottom: "1rem" }}
                     />
 
-                    <label htmlFor="codigoBarras" className={styles.label}>Código de barras</label>
+                    <label htmlFor="codigoBarras" className={styles.label}>Código del producto</label>
                     <input
                         type="text"
                         id="codigoBarras"

@@ -18,8 +18,7 @@ function AdminConfiguracion() {
             </nav>
 
             <main className={styles.main}>
-                <h1 className={styles.welcome}>Bienvenido, admin</h1>
-                <p className={styles.description}>Aquí se realiza la configuración del gimnasio.</p>
+                <h1 className={styles.welcome}>Configuración del gimnasio</h1>
 
                 {/* Nueva sección con los botones centrados */}
                 <div className={styles.centerButtons}>
