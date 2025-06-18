@@ -423,16 +423,24 @@ RETURNS VOID AS $$
 DECLARE
     existing_employee_id INT;
     branch_id INT;
+    position_id INT;
 BEGIN
-    -- Buscar la sucursal
+    -- Verificar sucursal
     SELECT b.branch_id INTO branch_id FROM Branch b WHERE b.name = in_branch;
     IF branch_id IS NULL THEN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    -- Buscar si el empleado ya existe
+    -- Verificar posición
+    SELECT p.position_id INTO position_id FROM Position p WHERE p.name = in_position;
+    IF position_id IS NULL THEN
+        RAISE EXCEPTION 'Puesto no encontrado';
+    END IF;
+
+    -- Verificar si ya existe el empleado
     SELECT e.employee_id INTO existing_employee_id FROM Employee e WHERE e.id_number = in_employee_id;
 
+    -- Si no existe, lo insertamos
     IF existing_employee_id IS NULL THEN
         INSERT INTO Employee (
             name, province, canton, district,
@@ -442,26 +450,16 @@ BEGIN
         VALUES (
             in_full_name, in_province, in_canton, in_district,
             in_email, in_employee_id, in_password, in_salary,
-            'TEMP', -- Asume que se genera o se asigna luego
-            1,      -- Asume que "position_id" 1 es genérico, reemplázalo por lógica real si quieres
-            1,      -- Igual con "spreadsheet_id"
-            branch_id
+            'TEMP',            -- Bank account temporal
+            position_id,       -- Asociado por nombre
+            1,                 -- Planilla genérica
+            branch_id          -- Asociado por nombre
         );
-    ELSE
-        UPDATE Employee
-        SET
-            name = in_full_name,
-            province = in_province,
-            canton = in_canton,
-            district = in_district,
-            email = in_email,
-            password = in_password,
-            salary = in_salary,
-            branch_id = branch_id
-        WHERE id_number = in_employee_id;
     END IF;
+    -- Si ya existe, NO se actualiza nada
 END;
 $$ LANGUAGE plpgsql;
+
 
 ----------------------  editar employee ----------------------
 CREATE OR REPLACE FUNCTION sp_edit_employee(

@@ -66,7 +66,10 @@ namespace GymTEC.Controllers
 
             try
             {
-                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_employee(@in_employee_id, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_type, @in_salary, @in_email, @in_password)", parameters);
+                _databaseService.ExecuteFunction(
+                    "SELECT sp_insert_or_edit_employee(@in_employee_id, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_type, @in_salary, @in_email, @in_password)",
+                    parameters
+                );
 
                 var data_output = new Data_output_employee
                 {
@@ -99,7 +102,6 @@ namespace GymTEC.Controllers
                 });
             }
         }
-
 
 
 
