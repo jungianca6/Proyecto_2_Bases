@@ -6,7 +6,7 @@
         public string equipment_type { get; set; }
         public string brand { get; set; }
         public string serial_number { get; set; }
-        public double cost { get; set; }
+        public int cost { get; set; }
         public string branch_name { get; set; }
     }
 }

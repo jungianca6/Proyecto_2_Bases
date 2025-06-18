@@ -44,24 +44,43 @@ namespace GymTEC.Controllers
         [HttpPost("insert_or_edit")]
         public ActionResult<Data_response<Data_output_inventory>> InsertOrEditInventory([FromBody] Data_input_inventory input)
         {
-            // Lógica para insertar o editar equipo en inventario
-
-            var data_output = new Data_output_inventory
+            var parameters = new Dictionary<string, object>
             {
-                equipment_type = input.equipment_type,
-                brand = input.brand,
-                serial_number = input.serial_number,
-                cost = input.cost,
-                branch_name = input.branch_name
+                { "in_equipment_type_name", input.equipment_type },
+                { "in_brand", input.brand },
+                { "in_serial_number", input.serial_number },
+                { "in_cost", input.cost },
+                { "in_branch_name", input.branch_name }
             };
 
-            var response = new Data_response<Data_output_inventory>
+            try
             {
-                status = true,
-                data = data_output
-            };
+                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_inventory(@in_equipment_type_name, @in_brand, @in_serial_number, @in_cost, @in_branch_name)", parameters);
 
-            return Ok(response);
+                var data_output = new Data_output_inventory
+                {
+                    equipment_type = input.equipment_type,
+                    brand = input.brand,
+                    serial_number = input.serial_number,
+                    cost = input.cost,
+                    branch_name = input.branch_name
+                };
+
+                return Ok(new Data_response<Data_output_inventory>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         /// <summary>
@@ -82,15 +101,30 @@ namespace GymTEC.Controllers
         [HttpPost("delete")]
         public ActionResult<Data_response<string>> DeleteInventory([FromBody] Data_input_inventory input)
         {
-            // Lógica para eliminar equipo del inventario por serial_number
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_serial_number", input.serial_number }
+    };
 
-            var response = new Data_response<string>
+            try
             {
-                status = true,
-                data = "Equipo eliminado exitosamente del inventario"
-            };
+                _databaseService.ExecuteFunction("SELECT sp_delete_inventory_by_serial(@in_serial_number)", parameters);
 
-            return Ok(response);
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Equipo eliminado exitosamente del inventario"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         /// <summary>
@@ -119,7 +153,7 @@ namespace GymTEC.Controllers
                 equipment_type = "Equipo de pesas",
                 brand = "BrandX",
                 serial_number = input.serial_number,
-                cost = 2500.00,
+                cost = 2500,
                 branch_name = "Sucursal Central"
             };
 
@@ -132,25 +166,36 @@ namespace GymTEC.Controllers
             return Ok(response);
         }
 
+
         [HttpPost("associate_machine")]
         public ActionResult<Data_response<Data_output_associate_machine>> AssociateMachine([FromBody] Data_input_associate_machine input)
         {
-            // Simulamos la asociación de la máquina con la sucursal
-            var dataOutput = new Data_output_associate_machine
-            {
-                serial_number = input.serial_number,
-                brand = "TechFit", // Ejemplo fijo
-                model = "X2000",   // Ejemplo fijo
-                branch_name = input.branch_name
-            };
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_serial", input.serial_number },
+        { "in_branch", input.branch_name }
+    };
 
-            var response = new Data_response<Data_output_associate_machine>
+            try
             {
-                status = true,
-                data = dataOutput
-            };
+                var result = _databaseService.QuerySingle<Data_output_associate_machine>(
+                    "SELECT * FROM sp_associate_machine_to_branch(@in_serial, @in_branch)", parameters);
 
-            return Ok(response);
+                return Ok(new Data_response<Data_output_associate_machine>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpPost("consult_machines_by_branch")]

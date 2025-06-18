@@ -253,3 +253,89 @@ BEGIN
     WHERE et.name = in_name;
 END;
 $$ LANGUAGE plpgsql;
+
+---------------------- Para insertar o editar inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_inventory(
+    in_equipment_type_name TEXT,
+    in_brand TEXT,
+    in_serial_number TEXT,
+    in_cost INTEGER,
+    in_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    eq_type_id INT;
+    new_branch_id INT;
+    inv_id INT;
+BEGIN
+    SELECT equipment_type_id INTO eq_type_id FROM Equipment_Type WHERE name = in_equipment_type_name;
+    IF eq_type_id IS NULL THEN
+        RAISE EXCEPTION 'Tipo de equipo no encontrado';
+    END IF;
+
+    SELECT branch_id INTO new_branch_id FROM Branch WHERE name = in_branch_name;
+    IF new_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal no encontrada';
+    END IF;
+
+    SELECT inventory_id INTO inv_id FROM Inventory WHERE serial_number = in_serial_number;
+
+    IF inv_id IS NULL THEN
+        INSERT INTO Inventory (description, brand, serial_number, cost, equipment_type_id, branch_id)
+        VALUES (in_equipment_type_name, in_brand, in_serial_number, in_cost, eq_type_id, new_branch_id);
+    ELSE
+        UPDATE Inventory
+        SET
+            description = in_equipment_type_name,
+            brand = in_brand,
+            cost = in_cost,
+            equipment_type_id = eq_type_id,
+            branch_id = new_branch_id
+        WHERE serial_number = in_serial_number;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para eliminar inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_inventory_by_serial(in_serial_number TEXT)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM Inventory WHERE serial_number = in_serial_number;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para asociar maquina con sucursal inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_associate_machine_to_branch(
+    in_serial_number TEXT,
+    in_branch_name TEXT
+)
+RETURNS TABLE (
+    serial TEXT,
+    brand TEXT,
+    model TEXT,
+    branch TEXT
+) AS $$
+DECLARE
+    b_id INT;
+BEGIN
+    -- Buscar branch_id
+    SELECT branch_id INTO b_id FROM Branch WHERE name = in_branch_name;
+
+    -- Asociar la máquina al branch
+    UPDATE Inventory
+    SET branch_id = b_id
+    WHERE Inventory.serial_number = in_serial_number;
+
+    -- Devolver los datos
+    RETURN QUERY
+	SELECT 
+	    i.serial_number::TEXT,
+	    i.brand::TEXT,
+	    et.name::TEXT,
+	    b.name::TEXT
+	FROM Inventory i
+	JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
+	JOIN Branch b ON i.branch_id = b.branch_id
+	WHERE i.serial_number = in_serial_number;
+END;
+$$ LANGUAGE plpgsql;
