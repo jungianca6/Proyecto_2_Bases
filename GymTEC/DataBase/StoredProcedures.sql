@@ -217,3 +217,39 @@ BEGIN
     VALUES ('General', TRUE, in_available_spots, in_class_date, in_start, in_end, plan_id, emp_id);
 END;
 $$ LANGUAGE plpgsql;
+
+---------------------- Para registrar equipment_type ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_equipment_type(
+    in_name TEXT,
+    in_description TEXT
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO Equipment_Type (name, description)
+    VALUES (in_name, in_description)
+    ON CONFLICT (name) DO UPDATE
+    SET description = EXCLUDED.description;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para delete equipment_type ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_equipment_type(in_name TEXT)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM Equipment_Type WHERE name = in_name;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para consultar equipment_type ----------------------
+CREATE OR REPLACE FUNCTION sp_get_equipment_type(in_name TEXT)
+RETURNS TABLE (
+    name VARCHAR(100),
+    description VARCHAR(100)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT et.name, et.description
+    FROM Equipment_Type et
+    WHERE et.name = in_name;
+END;
+$$ LANGUAGE plpgsql;
