@@ -13,6 +13,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public EmployeeController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         /// <summary>
         /// Inserta un nuevo empleado o edita un empleado existente en el sistema.
         /// </summary>
@@ -42,47 +49,57 @@ namespace GymTEC.Controllers
         [HttpPost("insert_or_edit")]
         public ActionResult<Data_response<Data_output_employee>> InsertOrEditEmployee([FromBody] Data_input_employee input)
         {
-            // Aquí iría la lógica para insertar o editar en base a input.employee_id
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_employee_id", input.employee_id },
+        { "in_full_name", input.full_name },
+        { "in_province", input.province },
+        { "in_canton", input.canton },
+        { "in_district", input.district },
+        { "in_position", input.position },
+        { "in_branch", input.branch },
+        { "in_payroll_type", input.payroll_type },
+        { "in_salary", input.salary },
+        { "in_email", input.email },
+        { "in_password", input.password }
+    };
 
-            var data_output = new Data_output_employee
+            try
             {
-                employee_id = input.employee_id,
-                full_name = input.full_name,
-                province = input.province,
-                district = input.district,
-                canton = input.canton,
-                position = input.position,
-                branch = input.branch,
-                payroll_type = input.payroll_type,
-                salary = input.salary,
-                email = input.email,
-                password = input.password
-            };
+                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_employee(@in_employee_id, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_type, @in_salary, @in_email, @in_password)", parameters);
 
-            var response = new Data_response<Data_output_employee>
+                var data_output = new Data_output_employee
+                {
+                    employee_id = input.employee_id,
+                    full_name = input.full_name,
+                    province = input.province,
+                    canton = input.canton,
+                    district = input.district,
+                    position = input.position,
+                    branch = input.branch,
+                    payroll_type = input.payroll_type,
+                    salary = input.salary,
+                    email = input.email,
+                    password = input.password
+                };
+
+                return Ok(new Data_response<Data_output_employee>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = data_output
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
-        /// <summary>
-        /// Elimina un empleado del sistema.
-        /// </summary>
-        /// <param name="input">Objeto de tipo Data_input_employee que contiene:
-        /// - employee_id del empleado a eliminar.
-        /// </param>
-        /// <returns>
-        /// Devuelve un objeto Data_response con un mensaje de confirmación.
-        /// - status = true si la operación es exitosa.
-        /// - data = mensaje de texto.
-        /// </returns>
-        /// <remarks>
-        /// Restricciones:
-        /// - El employee_id debe existir previamente en el sistema.
-        /// </remarks>
         [HttpPost("delete")]
         public ActionResult<Data_response<string>> DeleteEmployee([FromBody] Data_input_employee input)
         {

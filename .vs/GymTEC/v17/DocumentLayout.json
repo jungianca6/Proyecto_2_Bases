@@ -3,6 +3,7 @@
   "WorkspaceRootPath": "C:\\Users\\space\\source\\repos\\GymTEC\\",
   "Documents": [
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_output_models\\manage_payroll\\data_output_generate_payroll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_output_models\\manage_payroll\\data_output_generate_payroll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -45,14 +46,19 @@
     {
       "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\space\\source\\repos\\gymtec\\gymtec\\data_input_models\\manage_search\\data_input_search_class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\data_input_models\\manage_search\\data_input_search_class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|c:\\users\\darig\\onedrive\\documentos\\tec\\semestre 5\\bases de datos\\proyecto_2_bases\\gymtec\\controllers\\equipmenttypecontroller .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC7DCD5-A1F8-41FE-B479-E3C0C5A8A691}|GymTEC\\GymTEC.csproj|solutionrelative:gymtec\\controllers\\equipmenttypecontroller .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> 1ca7bc0c98744b723c1969e5571c1889d28526dc
     }
   ],
   "DocumentGroupContainers": [
     {
-      "Orientation": 0,
+      "Orientation": 1,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
+<<<<<<< HEAD
           "DockedWidth": 200,
           "SelectedChildIndex": 2,
           "Children": [
@@ -199,6 +205,47 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-12T06:44:50.29Z"
+=======
+          "DockedHeight": 314,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 199,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EquipmentTypeController .cs",
+              "DocumentMoniker": "C:\\Users\\darig\\OneDrive\\Documentos\\TEC\\Semestre 5\\Bases de Datos\\Proyecto_2_Bases\\GymTEC\\Controllers\\EquipmentTypeController .cs",
+              "RelativeDocumentMoniker": "GymTEC\\Controllers\\EquipmentTypeController .cs",
+              "ToolTip": "C:\\Users\\darig\\OneDrive\\Documentos\\TEC\\Semestre 5\\Bases de Datos\\Proyecto_2_Bases\\GymTEC\\Controllers\\EquipmentTypeController .cs",
+              "RelativeToolTip": "GymTEC\\Controllers\\EquipmentTypeController .cs",
+              "ViewState": "AQIAAIoAAAAAAAAAAAAgwKQAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-17T23:39:35.014Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 48,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+>>>>>>> 1ca7bc0c98744b723c1969e5571c1889d28526dc
             }
           ]
         }

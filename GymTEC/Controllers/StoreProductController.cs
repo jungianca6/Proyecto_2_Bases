@@ -9,6 +9,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class StoreProductController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public StoreProductController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         [HttpPost("associate_store_product")]
         public ActionResult<Data_response<string>> AssociateStoreProduct([FromBody] Data_input_associate_store_product input)
         {

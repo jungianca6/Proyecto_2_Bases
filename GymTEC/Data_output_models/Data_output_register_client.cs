@@ -14,5 +14,6 @@
         public string address { get; set; }
         public string email { get; set; }
         public string role { get; set; } // Siempre será "Cliente"
+        public string phone { get; set; } // Siempre será "Cliente"
     }
 }

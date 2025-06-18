@@ -75,12 +75,12 @@ CREATE TABLE Employee (
     employee_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     province VARCHAR(200) NOT NULL,
-	canton VARCHAR(200) NOT NULL,
-	district VARCHAR(200) NOT NULL,
+    canton VARCHAR(200) NOT NULL,
+    district VARCHAR(200) NOT NULL,
     email VARCHAR(100) NOT NULL,
     id_number VARCHAR(20) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    salary NUMERIC(10,2) NOT NULL,
+    salary INT NOT NULL,
     bank_account VARCHAR(50) NOT NULL,
     position_id INT NOT NULL REFERENCES Position(position_id),
     spreadsheet_id INT NOT NULL REFERENCES Spreadsheet(spreadsheet_id),
@@ -127,7 +127,7 @@ CREATE TABLE Client (
     phone VARCHAR(20) NOT NULL,
     password VARCHAR(100) NOT NULL,
     birth_date DATE NOT NULL,
-    weight NUMERIC(5,2) NOT NULL,
+    weight INT NOT NULL,
     username VARCHAR(100) NOT NULL
     -- Age and BMI are derived attributes, NOT stored
 );

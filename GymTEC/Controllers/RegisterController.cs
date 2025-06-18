@@ -9,6 +9,14 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class RegisterController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public RegisterController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
+
         /// <summary>
         /// Registra un nuevo cliente en el sistema.
         /// </summary>
@@ -24,17 +32,56 @@ namespace GymTEC.Controllers
         [HttpPost("register_client")]
         public ActionResult<Data_response<Data_output_register_client>> RegisterClient([FromBody] Data_input_register_client input)
         {
-            // Aquí iría la lógica para registrar un cliente con base en la información recibida
-
-            Data_output_register_client data_Output = new Data_output_register_client();
-
-            var response = new Data_response<Data_output_register_client>
+            var parameters = new Dictionary<string, object>
             {
-                status = true,
-                data = data_Output
+                { "in_client_id", input.id_number },
+                { "in_first_name", input.first_name },
+                { "in_user_name", input.user_name },
+                { "in_last_name_1", input.last_name_1 },
+                { "in_last_name_2", input.last_name_2 },
+                { "in_birth_date", input.birth_date },
+                { "in_weight", input.weight },
+                { "in_address", input.address },
+                { "in_email", input.email },
+                { "in_password", Encriptador.ObtenerHashMD5(input.password) },
+                { "in_phone", input.phone }
             };
 
-            return Ok(response);
+            try
+            {
+                _databaseService.ExecuteFunction("SELECT sp_register_client(@in_client_id, @in_first_name, @in_user_name, @in_last_name_1, @in_last_name_2, @in_birth_date, @in_weight, @in_address, @in_email, @in_password, @in_phone)", parameters);
+
+                var data_Output = new Data_output_register_client
+                {
+                    id_number = input.id_number.ToString(),
+                    first_name = input.first_name,
+                    user_name = input.user_name,
+                    last_name_1 = input.last_name_1,
+                    last_name_2 = input.last_name_2,
+                    birth_date = input.birth_date,
+                    weight = input.weight,
+                    imc = input.imc, // Este se sigue enviando aunque no se almacene
+                    address = input.address,
+                    email = input.email,
+                    role = input.role,
+                    phone = input.phone
+                };
+
+                return Ok(new Data_response<Data_output_register_client>
+                {
+                    status = true,
+                    data = data_Output
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
     }
 }

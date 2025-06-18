@@ -9,6 +9,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class WorkoutPlanController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public WorkoutPlanController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         [HttpPost("view_workout_plan")]
         public ActionResult<Data_response<Data_output_view_workout_plan>> ViewWorkoutPlan([FromBody] Data_input_view_workout_plan input)
         {

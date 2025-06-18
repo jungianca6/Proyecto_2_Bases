@@ -217,3 +217,258 @@ BEGIN
     VALUES ('General', TRUE, in_available_spots, in_class_date, in_start, in_end, plan_id, emp_id);
 END;
 $$ LANGUAGE plpgsql;
+
+---------------------- Para registrar equipment_type ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_equipment_type(
+    in_name TEXT,
+    in_description TEXT
+)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO Equipment_Type (name, description)
+    VALUES (in_name, in_description)
+    ON CONFLICT (name) DO UPDATE
+    SET description = EXCLUDED.description;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para delete equipment_type ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_equipment_type(in_name TEXT)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM Equipment_Type WHERE name = in_name;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para consultar equipment_type ----------------------
+CREATE OR REPLACE FUNCTION sp_get_equipment_type(in_name TEXT)
+RETURNS TABLE (
+    name VARCHAR(100),
+    description VARCHAR(100)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT et.name, et.description
+    FROM Equipment_Type et
+    WHERE et.name = in_name;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para insertar o editar inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_inventory(
+    in_equipment_type_name TEXT,
+    in_brand TEXT,
+    in_serial_number TEXT,
+    in_cost INTEGER,
+    in_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    eq_type_id INT;
+    new_branch_id INT;
+    inv_id INT;
+BEGIN
+    SELECT equipment_type_id INTO eq_type_id FROM Equipment_Type WHERE name = in_equipment_type_name;
+    IF eq_type_id IS NULL THEN
+        RAISE EXCEPTION 'Tipo de equipo no encontrado';
+    END IF;
+
+    SELECT branch_id INTO new_branch_id FROM Branch WHERE name = in_branch_name;
+    IF new_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal no encontrada';
+    END IF;
+
+    SELECT inventory_id INTO inv_id FROM Inventory WHERE serial_number = in_serial_number;
+
+    IF inv_id IS NULL THEN
+        INSERT INTO Inventory (description, brand, serial_number, cost, equipment_type_id, branch_id)
+        VALUES (in_equipment_type_name, in_brand, in_serial_number, in_cost, eq_type_id, new_branch_id);
+    ELSE
+        UPDATE Inventory
+        SET
+            description = in_equipment_type_name,
+            brand = in_brand,
+            cost = in_cost,
+            equipment_type_id = eq_type_id,
+            branch_id = new_branch_id
+        WHERE serial_number = in_serial_number;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para eliminar inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_inventory_by_serial(in_serial_number TEXT)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM Inventory WHERE serial_number = in_serial_number;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para get inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_get_inventory_by_serial(in_serial_number TEXT)
+RETURNS TABLE (
+    equipment_type TEXT,
+    brand TEXT,
+    serial_number TEXT,
+    cost INTEGER,
+    branch_name TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        et.name::TEXT,	
+        i.brand::TEXT,
+        i.serial_number::TEXT,
+        i.cost::INTEGER,
+        b.name::TEXT
+    FROM Inventory i
+    JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
+    JOIN Branch b ON i.branch_id = b.branch_id
+    WHERE i.serial_number = in_serial_number;
+END;
+$$ LANGUAGE plpgsql;
+
+
+---------------------- Para asociar maquina con sucursal inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_associate_machine_to_branch(
+    in_serial_number TEXT,
+    in_branch_name TEXT
+)
+RETURNS TABLE (
+    serial TEXT,
+    brand TEXT,
+    model TEXT,
+    branch TEXT
+) AS $$
+DECLARE
+    b_id INT;
+BEGIN
+    -- Buscar branch_id
+    SELECT branch_id INTO b_id FROM Branch WHERE name = in_branch_name;
+
+    -- Asociar la máquina al branch
+    UPDATE Inventory
+    SET branch_id = b_id
+    WHERE Inventory.serial_number = in_serial_number;
+
+    -- Devolver los datos
+    RETURN QUERY
+	SELECT 
+	    i.serial_number::TEXT,
+	    i.brand::TEXT,
+	    et.name::TEXT,
+	    b.name::TEXT
+	FROM Inventory i
+	JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
+	JOIN Branch b ON i.branch_id = b.branch_id
+	WHERE i.serial_number = in_serial_number;
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para consultar maquina por sucursal inventory ----------------------
+CREATE OR REPLACE FUNCTION sp_consult_machines_by_branch(in_branch_name TEXT)
+RETURNS TABLE (
+    serial_number TEXT,
+    brand TEXT,
+    model TEXT,
+    branch_name TEXT,
+    is_associated BOOLEAN
+) AS $$
+BEGIN
+    -- Máquinas asociadas a la sucursal
+    RETURN QUERY
+    SELECT 
+        i.serial_number::TEXT,
+        i.brand::TEXT,
+        et.name::TEXT AS model,
+        b.name::TEXT,
+        TRUE
+    FROM Inventory i
+    JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
+    JOIN Branch b ON i.branch_id = b.branch_id
+    WHERE b.name = in_branch_name;
+
+    -- Máquinas no asociadas (sin sucursal asignada)
+    RETURN QUERY
+    SELECT 
+        i.serial_number::TEXT,
+        i.brand::TEXT,
+        et.name::TEXT AS model,
+        NULL::TEXT AS branch_name,
+        FALSE
+    FROM Inventory i
+    JOIN Equipment_Type et ON i.equipment_type_id = et.equipment_type_id
+    WHERE i.branch_id IS NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+---------------------- Para insertar o editar employee ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
+    in_id_number TEXT,
+    in_full_name TEXT,
+    in_province TEXT,
+    in_canton TEXT,
+    in_district TEXT,
+    in_position TEXT,
+    in_branch TEXT,
+    in_payroll_type TEXT,
+    in_salary INT,
+    in_email TEXT,
+    in_password TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    emp_id INT;
+    pos_id INT;
+    br_id INT;
+    pay_id INT;
+BEGIN
+    SELECT position_id INTO pos_id FROM Position WHERE name = in_position;
+    IF pos_id IS NULL THEN
+        RAISE EXCEPTION 'Puesto no encontrado';
+    END IF;
+
+    SELECT branch_id INTO br_id FROM Branch WHERE name = in_branch;
+    IF br_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal no encontrada';
+    END IF;
+
+    SELECT spreadsheet_id INTO pay_id FROM Spreadsheet WHERE name = in_payroll_type;
+    IF pay_id IS NULL THEN
+        RAISE EXCEPTION 'Tipo de planilla no encontrado';
+    END IF;
+
+    SELECT employee_id INTO emp_id FROM Employee WHERE id_number = in_id_number;
+
+    IF emp_id IS NULL THEN
+        INSERT INTO Employee (
+            name, province, canton, district, email, id_number, password, salary,
+            bank_account, position_id, spreadsheet_id, branch_id
+        )
+        VALUES (
+            in_full_name, in_province, in_canton, in_district, in_email, in_id_number, in_password, in_salary,
+            CONCAT('Cuenta-', in_id_number), pos_id, pay_id, br_id
+        );
+    ELSE
+        UPDATE Employee
+        SET
+            name = in_full_name,
+            province = in_province,
+            canton = in_canton,
+            district = in_district,
+            email = in_email,
+            password = in_password,
+            salary = in_salary,
+            bank_account = CONCAT('Cuenta-', in_id_number),
+            position_id = pos_id,
+            spreadsheet_id = pay_id,
+            branch_id = br_id
+        WHERE id_number = in_id_number;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+

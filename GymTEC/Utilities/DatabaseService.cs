@@ -1,3 +1,4 @@
+using Dapper;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -35,5 +36,27 @@ namespace GymTEC.Utilities
 
             return dataTable;
         }
+
+        public T QuerySingle<T>(string sql, Dictionary<string, object> parameters)
+        {
+            using var conn = new NpgsqlConnection(_connectionString);
+            conn.Open();
+
+            var dynamicParams = new DynamicParameters();
+            foreach (var param in parameters)
+            {
+                dynamicParams.Add(param.Key, param.Value);
+            }
+
+            return conn.QuerySingle<T>(sql, dynamicParams);
+        }
+
+        public IEnumerable<dynamic> Query(string sql, Dictionary<string, object> parameters)
+        {
+            using var conn = new NpgsqlConnection(_connectionString);
+            conn.Open();
+            return conn.Query(sql, new DynamicParameters(parameters));
+        }
+
     }
 }

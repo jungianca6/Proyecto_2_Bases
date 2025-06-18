@@ -9,6 +9,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class PayrollController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public PayrollController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         [HttpPost("generate_payroll")]
         public ActionResult<Data_response<Data_output_generate_payroll>> GeneratePayroll([FromBody] Data_input_generate_payroll input)
         {

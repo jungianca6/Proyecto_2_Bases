@@ -13,6 +13,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public ProductController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         /// <summary>
         /// Inserta o edita un producto.
         /// </summary>

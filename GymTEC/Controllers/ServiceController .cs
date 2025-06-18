@@ -13,6 +13,13 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class ServiceController : ControllerBase
     {
+        private readonly DatabaseService _databaseService;
+
+        public ServiceController(DatabaseService databaseService)
+        {
+            _databaseService = databaseService;
+        }
+
         /// <summary>
         /// Inserta un nuevo servicio o edita uno existente según el service_id proporcionado.
         /// </summary>
