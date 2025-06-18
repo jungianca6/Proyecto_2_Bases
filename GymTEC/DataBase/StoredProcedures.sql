@@ -27,6 +27,37 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+
+---------------------- Para el Register ----------------------
+CREATE OR REPLACE FUNCTION sp_register_client(
+    in_client_id INT,
+    in_first_name TEXT,
+    in_user_name TEXT,
+    in_last_name_1 TEXT,
+    in_last_name_2 TEXT,
+    in_birth_date TEXT,
+    in_weight INT,
+    in_address TEXT,
+    in_email TEXT,
+    in_password TEXT,
+    in_phone TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    full_name TEXT := in_first_name || ' ' || in_last_name_1 || ' ' || in_last_name_2;
+BEGIN
+    INSERT INTO Client (
+        client_id, name, email, address, phone,
+        password, birth_date, weight, username
+    )
+    VALUES (
+        in_client_id, full_name, in_email, in_address, in_phone,
+        in_password, in_birth_date::DATE, in_weight, in_user_name
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+
 ---------------------- Para insertar branch ----------------------
 CREATE OR REPLACE FUNCTION sp_insert_branch(
     in_name TEXT,
