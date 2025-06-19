@@ -17,14 +17,16 @@ function ClienteUnionClase() {
     };
 
     const handleSubmit = async () => {
+        const startDateFormatted = new Date(formData.fechaInicio).toISOString().split("T")[0];
+        const endDateFormatted = new Date(formData.fechaFinal).toISOString().split("T")[0];
         const payload = {
             class_type: formData.tipoClase,
-            start_date: formData.fechaInicio,
-            end_date: formData.fechaFinal
+            start_date: startDateFormatted,
+            end_date: endDateFormatted
         };
 
         try {
-            const res = await axios.post("http://localhost:8000/buscar_clases", payload);
+            const res = await axios.post("https://localhost:7155/ClassSearch/search_class", payload);
             if (res.data.status) {
                 setClasesEncontradas(res.data.data);
             } else {
@@ -39,7 +41,7 @@ function ClienteUnionClase() {
 
     const handleUnirse = async (clase) => {
         try {
-            const res = await axios.post("http://localhost:8000/unirse_clase", clase);
+            const res = await axios.post("https://localhost:7155/ClassRegistration/register_class", clase);
             if (res.data.status) {
                 alert("Te has unido a la clase exitosamente.");
             } else {

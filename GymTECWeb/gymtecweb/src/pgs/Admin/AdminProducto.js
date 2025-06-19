@@ -27,22 +27,26 @@ function AdminProducto() {
                 cost: parseFloat(formData.costo)
             };
         } else if (accion === "eliminar" || accion === "consultar") {
-            data = { barcode: formData.codigoBarras };
+            data = { product_name: "",
+                     barcode: formData.codigoBarras,
+                     description: "",
+                     cost: 0
+             };
         }
 
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "http://TU_BACKEND/productos/insertar";
+                url = "https://localhost:7155/Product/insert_or_edit";
                 break;
             case "editar":
-                url = "http://TU_BACKEND/productos/editar";
+                url = "https://localhost:7155/Product/insert_or_edit";
                 break;
             case "eliminar":
-                url = "http://TU_BACKEND/productos/eliminar";
+                url = "https://localhost:7155/Product/delete";
                 break;
             case "consultar":
-                url = "http://TU_BACKEND/productos/consultar";
+                url = "https://localhost:7155/Product/get";
                 break;
             default:
                 return;
