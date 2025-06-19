@@ -116,18 +116,33 @@ namespace GymTEC.Controllers
         [HttpPost("get_payroll_type")]
         public ActionResult<Data_response<Data_output_get_payroll_type>> GetPayrollType([FromBody] Data_input_get_payroll_type input)
         {
-            // Simulación de búsqueda (en la práctica, consultar en base de datos)
-            var result = new Data_output_get_payroll_type
-            {
-                identifier = input.identifier,
-                description = "Planilla de Entrenadores"
-            };
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_position_name", input.puesto }
+    };
 
-            return Ok(new Data_response<Data_output_get_payroll_type>
+            try
             {
-                status = true,
-                data = result
-            });
+                var result = _databaseService.QuerySingle<Data_output_get_payroll_type>(
+                    "SELECT name AS puesto, description FROM Position WHERE name = @in_position_name",
+                    parameters
+                );
+
+                return Ok(new Data_response<Data_output_get_payroll_type>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
     }
 }
