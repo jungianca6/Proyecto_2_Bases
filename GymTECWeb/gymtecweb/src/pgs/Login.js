@@ -56,7 +56,7 @@ function Login({ setUser }) {
                 password: form.password
             };
 
-            const response = await axios.post("http://localhost:8000/login_usuario", requestData);
+            const response = await axios.post("https://localhost:7155/Login/log_in", requestData);
 
             if (response.data.status === true) {
                 const data = response.data.data;
@@ -101,7 +101,7 @@ function Login({ setUser }) {
         e.preventDefault();
         try {
             const payload = {
-                id_number: form.id_number,
+                id_number: parseInt(form.id_number),
                 first_name: form.first_name,
                 user_name: form.user_name,
                 last_name_1: form.last_name_1,
@@ -116,7 +116,7 @@ function Login({ setUser }) {
                 role: "Cliente"
             };
 
-            const res = await axios.post("http://localhost:8000/registro_cliente", payload);
+            const res = await axios.post("https://localhost:7155/Register/register_client", payload);
 
             if (res.data.status) {
                 alert("Registro exitoso. Ya puedes iniciar sesión.");
