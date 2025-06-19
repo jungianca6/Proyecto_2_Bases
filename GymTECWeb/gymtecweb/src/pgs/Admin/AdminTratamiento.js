@@ -19,27 +19,27 @@ function AdminTratamiento() {
         if (accion === "insertar" || accion === "editar") {
             data = {
                 treatment_name: formData.nombre,
-                treatment_id: formData.identificador
+                treatment_id: 0
             };
         } else if (accion === "eliminar" || accion === "consultar") {
             data = {
-                treatment_id: formData.identificador
+                treatment_id: 0
             };
         }
 
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "http://TU_BACKEND/tratamientos/insertar";
+                url = "https://localhost:7155/SpaTreatment/insert_spa_treatment";
                 break;
             case "editar":
-                url = "http://TU_BACKEND/tratamientos/editar";
+                url = "https://localhost:7155/SpaTreatment/edit_spa_treatment";
                 break;
             case "eliminar":
-                url = "http://TU_BACKEND/tratamientos/eliminar";
+                url = "https://localhost:7155/SpaTreatment/delete_spa_treatment";
                 break;
             case "consultar":
-                url = "http://TU_BACKEND/tratamientos/consultar";
+                url = "https://localhost:7155/SpaTreatment/consult_spa_treatment";
                 break;
             default:
                 console.error("Acción no válida");
@@ -82,16 +82,6 @@ function AdminTratamiento() {
                         id="nombre"
                         name="nombre"
                         value={formData.nombre}
-                        onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
-                    />
-
-                    <label htmlFor="identificador" className={styles.label}>Identificador del tratamiento</label>
-                    <input
-                        type="text"
-                        id="identificador"
-                        name="identificador"
-                        value={formData.identificador}
                         onChange={handleChange}
                         style={{ marginBottom: "1rem" }}
                     />
