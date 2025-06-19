@@ -25,23 +25,25 @@ function AdminPuesto() {
             };
         } else if (accion === "eliminar" || accion === "consultar") {
             data = {
-                position_id: formData.identificador
+                position_name: formData.nombre,
+                description: "",
+                position_id: ""
             };
         }
 
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "http://TU_BACKEND/puestos/insertar";
+                url = "https://localhost:7155/Position/insert_position";
                 break;
             case "editar":
-                url = "http://TU_BACKEND/puestos/editar";
+                url = "https://localhost:7155/Position/edit_position";
                 break;
             case "eliminar":
-                url = "http://TU_BACKEND/puestos/eliminar";
+                url = "https://localhost:7155/Position/delete_position";
                 break;
             case "consultar":
-                url = "http://TU_BACKEND/puestos/consultar";
+                url = "https://localhost:7155/Position/consult_position";
                 break;
             default:
                 console.error("Acción no válida");
@@ -117,7 +119,7 @@ function AdminPuesto() {
                 </form>
 
                 <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
-                    Para eliminar o consultar solo es necesario enviar el identificador del puesto.
+                    Para eliminar o consultar solo es necesario enviar el nombre del puesto.
                 </p>
 
                 {consultaData && (
