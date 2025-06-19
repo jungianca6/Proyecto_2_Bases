@@ -12,7 +12,7 @@ function AdminEmpleado() {
     distrito: "",
     puesto: "",
     sucursal: "",
-    planilla: "",
+    planillaID: "",
     salario: "",
     correo: "",
     contrasena: ""
@@ -35,28 +35,39 @@ function AdminEmpleado() {
         district: formData.distrito,
         position: formData.puesto,
         branch: formData.sucursal,
-        payroll_type: formData.planilla,
+        payroll_id: formData.planillaID,
         salary: parseFloat(formData.salario),
         email: formData.correo,
         password: formData.contrasena
       };
     } else if (accion === "eliminar" || accion === "consultar") {
-      data = { employee_id: formData.cedula };
+      data = {
+        employee_id: formData.cedula,
+        full_name: "",
+        province: "",
+        canton: "",
+        district: "",
+        position: "",
+        branch: "",
+        payroll_id: 0,
+        salary: 0,
+        email: "",
+        password: "" };
     }
 
     let url = "";
     switch (accion) {
       case "insertar":
-        url = "http://TU_BACKEND/empleados/insertar";
+        url = "https://localhost:7155/Employee/insert";
         break;
       case "editar":
-        url = "http://TU_BACKEND/empleados/editar";
+        url = "https://localhost:7155/Employee/edit_employee";
         break;
       case "eliminar":
-        url = "http://TU_BACKEND/empleados/eliminar";
+        url = "https://localhost:7155/Employee/delete";
         break;
       case "consultar":
-        url = "http://TU_BACKEND/empleados/consultar";
+        url = "https://localhost:7155/Employee/get";
         break;
       default:
         return;
@@ -120,8 +131,8 @@ function AdminEmpleado() {
               <label htmlFor="sucursal" className={styles.label}>Sucursal asignada</label>
               <input id="sucursal" name="sucursal" value={formData.sucursal} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
-              <label htmlFor="planilla" className={styles.label}>ID del Tipo de planilla</label>
-              <input id="planilla" name="planilla" value={formData.planilla} onChange={handleChange} style={{ marginBottom: "1rem" }} />
+              <label htmlFor="planillaID" className={styles.label}>ID del Tipo de planilla</label>
+              <input id="planillaID" name="planillaID" value={formData.planillaID} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
               <label htmlFor="salario" className={styles.label}>Salario</label>
               <input id="salario" name="salario" type="number" value={formData.salario} onChange={handleChange} style={{ marginBottom: "1rem" }} />
