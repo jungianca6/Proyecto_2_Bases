@@ -12,7 +12,7 @@ function Login({ setUser }) {
         id_number: "", first_name: "", user_name: "",
         last_name_1: "", last_name_2: "",
         age: "", birth_date: "", weight: "",
-        imc: "", address: "", email: "", regPassword: ""
+        imc: "", address: "", email: "", phone: "", regPassword: ""
     });
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
@@ -56,9 +56,10 @@ function Login({ setUser }) {
                 password: form.password
             };
 
-            const response = await axios.post("http://localhost:8000/login_usuario", requestData);
+            const response = await axios.post("https://localhost:7155/Login/log_in", requestData);
 
             if (response.data.status === true) {
+                console.log("Datos recibidos del backend:", response.data);
                 const data = response.data.data;
 
                 const usuario = {
@@ -101,22 +102,23 @@ function Login({ setUser }) {
         e.preventDefault();
         try {
             const payload = {
-                id_number: form.id_number,
+                id_number: parseInt(form.id_number),
                 first_name: form.first_name,
                 user_name: form.user_name,
                 last_name_1: form.last_name_1,
                 last_name_2: form.last_name_2,
                 age: parseInt(form.age, 10),
-                birth_date: new Date(form.birth_date).toLocaleDateString("en-GB") + " 00:00",
+                birth_date: new Date(form.birth_date).toISOString().split("T")[0] + "T00:00:00",
                 weight: parseFloat(form.weight),
                 imc: parseFloat(form.imc),
                 address: form.address,
                 email: form.email,
                 password: form.regPassword,
-                role: "Cliente"
+                role: "Cliente",
+                phone: form.phone
             };
 
-            const res = await axios.post("http://localhost:8000/registro_cliente", payload);
+            const res = await axios.post("https://localhost:7155/Register/register_client", payload);
 
             if (res.data.status) {
                 alert("Registro exitoso. Ya puedes iniciar sesión.");
@@ -173,7 +175,8 @@ function Login({ setUser }) {
                                     { name: "first_name", label: "Nombre", type: "text" },
                                     { name: "last_name_1", label: "Apellido 1", type: "text" },
                                     { name: "last_name_2", label: "Apellido 2", type: "text" },
-                                    { name: "email", label: "Correo", type: "email" }
+                                    { name: "email", label: "Correo", type: "email" },
+                                    { name: "phone", label: "Teléfono", type: "text" }
                                 ].map(field => (
                                     <div key={field.name} className={styles.inputBox}>
                                         <input type={field.type} name={field.name} placeholder={field.label}
@@ -185,17 +188,30 @@ function Login({ setUser }) {
                             <div className={styles.column}>
                                 {[
                                     { name: "age", label: "Edad", type: "number" },
-                                    { name: "birth_date", label: "Fecha de nacimiento", type: "date" },
                                     { name: "weight", label: "Peso (kg)", type: "number" },
                                     { name: "imc", label: "IMC", type: "number" },
                                     { name: "address", label: "Dirección", type: "text" },
                                     { name: "regPassword", label: "Contraseña", type: "password" }
                                 ].map(field => (
                                     <div key={field.name} className={styles.inputBox}>
-                                        <input type={field.type} name={field.name} placeholder={field.label}
+                                        <input type={field.type} name={field.name} id={field.name} placeholder={field.label}
                                             value={form[field.name]} onChange={handleChange} required />
                                     </div>
                                 ))}
+
+
+                                {/* Campo especial con etiqueta para fecha de nacimiento */}
+                                <div className={styles.inputBox}>
+                                    <label htmlFor="birth_date">Fecha de nacimiento</label>
+                                    <input
+                                        type="date"
+                                        name="birth_date"
+                                        id="birth_date"
+                                        value={form.birth_date}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
                             </div>
                         </div>
 

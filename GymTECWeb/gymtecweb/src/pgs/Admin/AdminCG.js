@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./AdminPg.module.css";
+import axios from "axios";
 
 function AdminCG() {
     const [formData, setFormData] = useState({
@@ -13,9 +14,24 @@ function AdminCG() {
     };
 
     const handleSubmit = () => {
-        console.log("Acción: copiar gimnasio");
-        console.log(formData);
-        // Aquí va el fetch al backend
+        const payload = {
+            origin_branch_name: formData.sucursalOrigen,
+            destination_branch_name: formData.sucursalDestino
+        };
+
+        axios.post("http://localhost:8000/copiar_gimnasio", payload)
+            .then((res) => {
+                if (res.data.status) {
+                    alert("Copia realizada exitosamente.");
+                    setFormData({ sucursalOrigen: "", sucursalDestino: "" });
+                } else {
+                    alert("Error al copiar gimnasio: " + (res.data.message || "desconocido"));
+                }
+            })
+            .catch((err) => {
+                console.error("Error al conectar con el servidor:", err);
+                alert("Error al copiar gimnasio.");
+            });
     };
 
     return (

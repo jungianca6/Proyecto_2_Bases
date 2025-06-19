@@ -16,7 +16,7 @@ function AdminGeneracion() {
     const handleSubmit = () => {
         const data = {
             branch_name: formData.nombreSucursal,
-            pay_type: formData.tipoPago
+            type: formData.tipoPago
         };
 
         axios.post("http://TU_BACKEND_URL/planilla/generar", data)
