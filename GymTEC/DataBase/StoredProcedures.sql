@@ -414,34 +414,40 @@ CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
     in_district TEXT,
     in_position TEXT,
     in_branch TEXT,
-    in_payroll_type TEXT,
+    in_payroll_id INT,
     in_salary INT,
     in_email TEXT,
     in_password TEXT
 )
 RETURNS VOID AS $$
 DECLARE
-    existing_employee_id INT;
-    branch_id INT;
-    position_id INT;
+    v_existing_employee_id INT;
+    v_branch_id INT;
+    v_position_id INT;
+    v_spreadsheet_exists BOOLEAN;
 BEGIN
-    -- Verificar sucursal
-    SELECT b.branch_id INTO branch_id FROM Branch b WHERE b.name = in_branch;
-    IF branch_id IS NULL THEN
+    -- Validar sucursal
+    SELECT branch_id INTO v_branch_id FROM Branch WHERE name = in_branch;
+    IF v_branch_id IS NULL THEN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    -- Verificar posición
-    SELECT p.position_id INTO position_id FROM Position p WHERE p.name = in_position;
-    IF position_id IS NULL THEN
+    -- Validar puesto
+    SELECT position_id INTO v_position_id FROM Position WHERE name = in_position;
+    IF v_position_id IS NULL THEN
         RAISE EXCEPTION 'Puesto no encontrado';
     END IF;
 
-    -- Verificar si ya existe el empleado
-    SELECT e.employee_id INTO existing_employee_id FROM Employee e WHERE e.id_number = in_employee_id;
+    -- Validar existencia de planilla
+    SELECT EXISTS (SELECT 1 FROM Spreadsheet WHERE spreadsheet_id = in_payroll_id) INTO v_spreadsheet_exists;
+    IF NOT v_spreadsheet_exists THEN
+        RAISE EXCEPTION 'Planilla no encontrada';
+    END IF;
 
-    -- Si no existe, lo insertamos
-    IF existing_employee_id IS NULL THEN
+    -- Verificar si ya existe el empleado
+    SELECT employee_id INTO v_existing_employee_id FROM Employee WHERE id_number = in_employee_id;
+
+    IF v_existing_employee_id IS NULL THEN
         INSERT INTO Employee (
             name, province, canton, district,
             email, id_number, password, salary,
@@ -450,13 +456,12 @@ BEGIN
         VALUES (
             in_full_name, in_province, in_canton, in_district,
             in_email, in_employee_id, in_password, in_salary,
-            'TEMP',            -- Bank account temporal
-            position_id,       -- Asociado por nombre
-            1,                 -- Planilla genérica
-            branch_id          -- Asociado por nombre
+            'TEMP',
+            v_position_id,
+            in_payroll_id,
+            v_branch_id
         );
     END IF;
-    -- Si ya existe, NO se actualiza nada
 END;
 $$ LANGUAGE plpgsql;
 
@@ -470,7 +475,7 @@ CREATE OR REPLACE FUNCTION sp_edit_employee(
     in_district TEXT,
     in_position TEXT,
     in_branch TEXT,
-    in_payroll_type TEXT,
+    in_payroll_id INT,
     in_salary INTEGER,
     in_email TEXT,
     in_password TEXT
@@ -480,26 +485,33 @@ DECLARE
     emp_id INT;
     pos_id INT;
     br_id INT;
+    spreadsheet_exists BOOLEAN;
 BEGIN
-    -- Verificar si el empleado existe
+    -- Validar existencia del empleado
     SELECT employee_id INTO emp_id FROM Employee WHERE id_number = in_id_number;
     IF emp_id IS NULL THEN
         RAISE EXCEPTION 'Empleado no existe con la cédula proporcionada';
     END IF;
 
-    -- Obtener ID del puesto
+    -- Validar existencia del puesto
     SELECT position_id INTO pos_id FROM Position WHERE name = in_position;
     IF pos_id IS NULL THEN
         RAISE EXCEPTION 'Puesto no encontrado';
     END IF;
 
-    -- Obtener ID de la sucursal
+    -- Validar existencia de la sucursal
     SELECT branch_id INTO br_id FROM Branch WHERE name = in_branch;
     IF br_id IS NULL THEN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    -- Actualizar el empleado
+    -- Validar existencia de la planilla
+    SELECT EXISTS (SELECT 1 FROM Spreadsheet WHERE spreadsheet_id = in_payroll_id) INTO spreadsheet_exists;
+    IF NOT spreadsheet_exists THEN
+        RAISE EXCEPTION 'Planilla no encontrada';
+    END IF;
+
+    -- Actualizar datos del empleado
     UPDATE Employee
     SET
         name = in_full_name,
@@ -510,11 +522,12 @@ BEGIN
         password = in_password,
         salary = in_salary,
         position_id = pos_id,
-        branch_id = br_id
-        -- NOTA: spreadsheet_id queda igual
+        branch_id = br_id,
+        spreadsheet_id = in_payroll_id
     WHERE id_number = in_id_number;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 
