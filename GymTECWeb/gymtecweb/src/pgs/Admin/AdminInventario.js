@@ -30,23 +30,27 @@ function AdminInventario() {
             };
         } else if (accion === "eliminar" || accion === "consultar") {
             data = {
-                serial_number: formData.numeroSerie
+                equipment_type: "",
+                brand: "",
+                serial_number: "",
+                cost: parseFloat(formData.costo),
+                branch_name: ""
             };
         }
 
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "http://TU_BACKEND/inventario/insertar";
+                url = "https://localhost:7155/Inventory/insert_or_edit";
                 break;
             case "editar":
-                url = "http://TU_BACKEND/inventario/editar";
+                url = "https://localhost:7155/Inventory/insert_or_edi";
                 break;
             case "eliminar":
-                url = "http://TU_BACKEND/inventario/eliminar";
+                url = "https://localhost:7155/Inventory/delete";
                 break;
             case "consultar":
-                url = "http://TU_BACKEND/inventario/consultar";
+                url = "https://localhost:7155/Inventory/get";
                 break;
             default:
                 return;
