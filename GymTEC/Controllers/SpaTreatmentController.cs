@@ -162,14 +162,13 @@ namespace GymTEC.Controllers
         {
             var parameters = new Dictionary<string, object>
             {
-                { "in_id", input.treatment_id }
+                { "p_name", input.treatment_name }
             };
-
 
             try
             {
                 var result = _databaseService.QuerySingleOrDefault<Data_output_manage_spa_treatment>(
-                    "SELECT * FROM sp_get_spa_treatment(@in_id)", parameters);
+                    "SELECT * FROM sp_get_spa_treatment_by_name(@p_name)", parameters);
 
                 if (result == null)
                 {
@@ -228,22 +227,33 @@ namespace GymTEC.Controllers
         }
 
         [HttpPost("consult_spa_treatments")]
-        public ActionResult<Data_response<List<Data_output_associate_spa_treatment>>> ConsultSpaTreatments([FromBody] Data_input_consult_spa_treatment input)
+        public ActionResult<Data_response<IEnumerable<Data_output_associate_spa_treatment>>> ConsultSpaTreatments([FromBody] Data_input_consult_spa_treatment input)
         {
-            // Simulamos la consulta devolviendo una lista de tratamientos asociados y no asociados
-            var treatments = new List<Data_output_associate_spa_treatment>
+            var parameters = new Dictionary<string, object>
             {
-                new Data_output_associate_spa_treatment { treatment_id = 1, treatment_name = "Masaje relajante" },
-                new Data_output_associate_spa_treatment { treatment_id = 2, treatment_name = "Aromaterapia" }
+                { "in_treatment_name", input.treatment_name }
             };
 
-            var response = new Data_response<List<Data_output_associate_spa_treatment>>
+            try
             {
-                status = true,
-                data = treatments
-            };
+                var treatments = _databaseService.QueryList<Data_output_associate_spa_treatment>(
+                    "SELECT * FROM sp_search_spa_treatments_by_name(@in_treatment_name)", parameters);
 
-            return Ok(response);
+                return Ok(new Data_response<IEnumerable<Data_output_associate_spa_treatment>>
+                {
+                    status = true,
+                    data = treatments
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
     }
