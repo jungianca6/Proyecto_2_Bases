@@ -120,7 +120,7 @@ function AdminEmpleado() {
               <label htmlFor="sucursal" className={styles.label}>Sucursal asignada</label>
               <input id="sucursal" name="sucursal" value={formData.sucursal} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
-              <label htmlFor="planilla" className={styles.label}>Tipo de planilla</label>
+              <label htmlFor="planilla" className={styles.label}>ID del Tipo de planilla</label>
               <input id="planilla" name="planilla" value={formData.planilla} onChange={handleChange} style={{ marginBottom: "1rem" }} />
 
               <label htmlFor="salario" className={styles.label}>Salario</label>
