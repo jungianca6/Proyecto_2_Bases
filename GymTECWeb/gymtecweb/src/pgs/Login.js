@@ -59,6 +59,7 @@ function Login({ setUser }) {
             const response = await axios.post("https://localhost:7155/Login/log_in", requestData);
 
             if (response.data.status === true) {
+                console.log("Datos recibidos del backend:", response.data);
                 const data = response.data.data;
 
                 const usuario = {
