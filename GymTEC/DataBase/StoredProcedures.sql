@@ -731,20 +731,21 @@ $$ LANGUAGE plpgsql;
 
 ----------------------  consult_spa_treatment ----------------------
 
-DROP FUNCTION IF EXISTS sp_get_spa_treatment(INT);
+DROP FUNCTION IF EXISTS sp_get_spa_treatment_by_name(p_name TEXT);
 
-CREATE OR REPLACE FUNCTION sp_get_spa_treatment(
-    in_id INT
+CREATE OR REPLACE FUNCTION sp_get_spa_treatment_by_name(
+    p_name TEXT
 )
 RETURNS TABLE (
     treatment_id INT,
-    treatment_name VARCHAR(100)  -- Cambiar TEXT por VARCHAR(100)
+    treatment_name VARCHAR(100),
+    description VARCHAR(200)
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT st.treatment_id, st.name
-    FROM Spa_Treatment AS st
-    WHERE st.treatment_id = in_id;
+    SELECT st.treatment_id, st.name AS treatment_name, st.description
+    FROM Spa_Treatment st
+    WHERE st.name = p_name;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -772,5 +773,49 @@ BEGIN
     INSERT INTO Spa_Treatment_Branch (treatment_id, branch_id)
     VALUES (in_treatment_id, v_branch_id)
     ON CONFLICT DO NOTHING;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ----------------------  sp_search_spa_treatments_by_name ----------------------
+
+-- Asociados
+DROP FUNCTION IF EXISTS sp_get_associated_spa_treatments(TEXT);
+
+CREATE OR REPLACE FUNCTION sp_get_associated_spa_treatments(p_branch_name TEXT)
+RETURNS TABLE(treatment_id INT, treatment_name VARCHAR(100)) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT st.treatment_id, st.name
+    FROM Spa_Treatment st
+    JOIN Spa_Treatment_Branch stb ON st.treatment_id = stb.treatment_id
+    JOIN Branch b ON b.branch_id = stb.branch_id
+    WHERE b.name = p_branch_name;
+END;
+$$ LANGUAGE plpgsql;
+
+-- No asociados
+DROP FUNCTION IF EXISTS sp_get_not_associated_spa_treatments(TEXT);
+
+CREATE OR REPLACE FUNCTION sp_get_not_associated_spa_treatments(p_branch_name TEXT)
+RETURNS TABLE(treatment_id INT, treatment_name VARCHAR(100)) AS $$
+DECLARE
+    v_branch_id INT;
+BEGIN
+    SELECT branch_id INTO v_branch_id
+    FROM Branch
+    WHERE name = p_branch_name;
+
+    IF v_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Branch name % not found', p_branch_name;
+    END IF;
+
+    RETURN QUERY
+    SELECT st.treatment_id, st.name
+    FROM Spa_Treatment st
+    WHERE st.treatment_id NOT IN (
+        SELECT stb.treatment_id
+        FROM Spa_Treatment_Branch stb
+        WHERE stb.branch_id = v_branch_id
+    );
 END;
 $$ LANGUAGE plpgsql;
