@@ -19,28 +19,29 @@ function AdminEquipo() {
 
         if (accion === "insertar" || accion === "editar") {
             data = {
-                equipment_type_id: formData.identificador,
+                name: formData.identificador,
                 description: formData.descripcion
             };
         } else if (accion === "eliminar" || accion === "consultar") {
             data = {
-                equipment_type_id: formData.identificador
+                name: formData.identificador,
+                description: ""
             };
         }
 
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "http://TU_BACKEND/equipo/insertar";
+                url = "https://localhost:7155/EquipmentType/insert_or_edit";
                 break;
             case "editar":
-                url = "http://TU_BACKEND/equipo/editar";
+                url = "https://localhost:7155/EquipmentType/insert_or_edit";
                 break;
             case "eliminar":
-                url = "http://TU_BACKEND/equipo/eliminar";
+                url = "https://localhost:7155/EquipmentType/delete";
                 break;
             case "consultar":
-                url = "http://TU_BACKEND/equipo/consultar";
+                url = "https://localhost:7155/EquipmentType/get";
                 break;
             default:
                 return;
