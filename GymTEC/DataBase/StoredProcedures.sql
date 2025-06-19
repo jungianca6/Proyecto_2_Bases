@@ -625,3 +625,36 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+----------------------  edit Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_edit_position(
+    in_position_id INT,
+    in_name TEXT,
+    in_description TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    existing_id INT;
+BEGIN
+    -- Verifica si el puesto existe
+    IF NOT EXISTS (SELECT 1 FROM Position WHERE position_id = in_position_id) THEN
+        RAISE EXCEPTION 'No existe un puesto con ese ID';
+    END IF;
+
+    -- Verifica que no exista otro puesto con el mismo nombre
+    SELECT position_id INTO existing_id
+    FROM Position
+    WHERE LOWER(name) = LOWER(in_name)
+      AND position_id != in_position_id;
+
+    IF FOUND THEN
+        RAISE EXCEPTION 'Ya existe otro puesto con ese nombre';
+    END IF;
+
+    -- Actualiza los datos
+    UPDATE Position
+    SET name = in_name,
+        description = in_description
+    WHERE position_id = in_position_id;
+END;
+$$ LANGUAGE plpgsql;

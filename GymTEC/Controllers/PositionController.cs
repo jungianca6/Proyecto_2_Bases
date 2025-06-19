@@ -80,38 +80,46 @@ namespace GymTEC.Controllers
         [HttpPost("edit_position")]
         public ActionResult<Data_response<Data_output_manage_position>> EditPosition([FromBody] Data_input_manage_position input)
         {
-            var data_Output = new Data_output_manage_position
+            if (string.IsNullOrWhiteSpace(input.position_id))
             {
-                position_name = input.position_name,
-                description = input.description,
-                position_id = input.position_id
-            };
+                return BadRequest(new { status = false, error = "El ID del puesto es obligatorio." });
+            }
 
-            var response = new Data_response<Data_output_manage_position>
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_position_id", int.Parse(input.position_id) },
+        { "in_name", input.position_name },
+        { "in_description", input.description }
+    };
+
+            try
             {
-                status = true,
-                data = data_Output
-            };
+                _databaseService.ExecuteFunction("SELECT sp_edit_position(@in_position_id, @in_name, @in_description)", parameters);
 
-            return Ok(response);
+                var data_Output = new Data_output_manage_position
+                {
+                    position_id = input.position_id,
+                    position_name = input.position_name,
+                    description = input.description
+                };
+
+                return Ok(new Data_response<Data_output_manage_position>
+                {
+                    status = true,
+                    data = data_Output
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
-        /// <summary>
-        /// Elimina un puesto de trabajo existente.
-        /// </summary>
-        /// <param name="input">Objeto Data_input_delete_position con:
-        /// - position_id: Identificador único del puesto a eliminar.
-        /// </param>
-        /// <returns>
-        /// Data_response con mensaje de éxito.
-        /// - status: true si la eliminación fue exitosa.
-        /// - data: Mensaje de confirmación.
-        /// </returns>
-        /// <remarks>
-        /// Restricciones:
-        /// - El position_id debe existir.
-        /// - No debe haber empleados asignados a este puesto antes de eliminar.
-        /// </remarks>
         [HttpPost("delete_position")]
         public ActionResult<Data_response<string>> DeletePosition([FromBody] Data_input_delete_position input)
         {
