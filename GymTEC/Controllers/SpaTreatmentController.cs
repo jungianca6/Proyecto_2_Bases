@@ -30,20 +30,37 @@ namespace GymTEC.Controllers
         [HttpPost("insert_spa_treatment")]
         public ActionResult<Data_response<Data_output_manage_spa_treatment>> InsertSpaTreatment([FromBody] Data_input_manage_spa_treatment input)
         {
-            // Simulamos la inserción y devolvemos la misma data recibida como confirmación
-            Data_output_manage_spa_treatment data_Output = new Data_output_manage_spa_treatment
+            var parameters = new Dictionary<string, object>
             {
-                treatment_name = input.treatment_name,
-                treatment_id = input.treatment_id
+                { "in_id", input.treatment_id },
+                { "in_name", input.treatment_name }
             };
 
-            var response = new Data_response<Data_output_manage_spa_treatment>
+            try
             {
-                status = true,
-                data = data_Output
-            };
+                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_spa_treatment(@in_id, @in_name)", parameters);
 
-            return Ok(response);
+                var data_output = new Data_output_manage_spa_treatment
+                {
+                    treatment_id = input.treatment_id,
+                    treatment_name = input.treatment_name
+                };
+
+                return Ok(new Data_response<Data_output_manage_spa_treatment>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         /// <summary>
@@ -56,20 +73,37 @@ namespace GymTEC.Controllers
         [HttpPost("edit_spa_treatment")]
         public ActionResult<Data_response<Data_output_manage_spa_treatment>> EditSpaTreatment([FromBody] Data_input_manage_spa_treatment input)
         {
-            // Simulamos la edición y devolvemos la misma data recibida
-            Data_output_manage_spa_treatment data_Output = new Data_output_manage_spa_treatment
+            var parameters = new Dictionary<string, object>
             {
-                treatment_name = input.treatment_name,
-                treatment_id = input.treatment_id
+                { "in_id", input.treatment_id },
+                { "in_name", input.treatment_name }
             };
 
-            var response = new Data_response<Data_output_manage_spa_treatment>
+            try
             {
-                status = true,
-                data = data_Output
-            };
+                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_spa_treatment(@in_id, @in_name)", parameters);
 
-            return Ok(response);
+                var data_output = new Data_output_manage_spa_treatment
+                {
+                    treatment_id = input.treatment_id,
+                    treatment_name = input.treatment_name
+                };
+
+                return Ok(new Data_response<Data_output_manage_spa_treatment>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         /// <summary>
@@ -82,16 +116,40 @@ namespace GymTEC.Controllers
         [HttpPost("delete_spa_treatment")]
         public ActionResult<Data_response<string>> DeleteSpaTreatment([FromBody] Data_input_delete_spa_treatment input)
         {
-            // Simulamos la eliminación del tratamiento spa
-            var response = new Data_response<string>
+            var parameters = new Dictionary<string, object>
             {
-                status = true,
-                data = "Treatment deleted successfully"
+                { "in_id", input.treatment_id }
             };
 
-            return Ok(response);
+            try
+            {
+                _databaseService.ExecuteFunction("SELECT sp_delete_spa_treatment(@in_id)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Treatment deleted successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
+
+        /// <summary>
+        /// Consulta un tratamiento spa por su treatment_id.
+        /// </summary>
+        /// <param name="input">Datos que contienen el ID del tratamiento a consultar.</param>
+        /// <returns>
+        /// Respuesta con estado y datos del tratamiento consultado.
+        /// </returns>
         /// <summary>
         /// Consulta un tratamiento spa por su treatment_id.
         /// </summary>
@@ -102,20 +160,41 @@ namespace GymTEC.Controllers
         [HttpPost("consult_spa_treatment")]
         public ActionResult<Data_response<Data_output_manage_spa_treatment>> ConsultSpaTreatment([FromBody] Data_input_consult_spa_treatment input)
         {
-            // Simulamos la consulta devolviendo un tratamiento de ejemplo
-            Data_output_manage_spa_treatment data_Output = new Data_output_manage_spa_treatment
+            var parameters = new Dictionary<string, object>
             {
-                treatment_name = "Masaje relajante",
-                treatment_id = input.treatment_id
+                { "in_id", input.treatment_id }
             };
 
-            var response = new Data_response<Data_output_manage_spa_treatment>
-            {
-                status = true,
-                data = data_Output
-            };
 
-            return Ok(response);
+            try
+            {
+                var result = _databaseService.QuerySingleOrDefault<Data_output_manage_spa_treatment>(
+                    "SELECT * FROM sp_get_spa_treatment(@in_id)", parameters);
+
+                if (result == null)
+                {
+                    return NotFound(new Data_response<Data_output_manage_spa_treatment>
+                    {
+                        status = false,
+                        data = null
+                    });
+                }
+
+                return Ok(new Data_response<Data_output_manage_spa_treatment>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpPost("associate_spa_treatment")]
