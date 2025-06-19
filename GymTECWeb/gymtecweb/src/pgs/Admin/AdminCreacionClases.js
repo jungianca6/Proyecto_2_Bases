@@ -6,7 +6,7 @@ function AdminCreacionClases() {
     const [formData, setFormData] = useState({
         tipoClase: "",
         instructor: "",
-        grupal: "",  // Se convertirá a booleano
+        grupal: false,
         capacidad: "",
         fecha: "",
         horaInicio: "",
@@ -18,18 +18,27 @@ function AdminCreacionClases() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    const handleCheckboxChange = (e) => {
+        const { name, checked } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: checked }));
+    };
+
+    const formatHora = (hora) => {
+        return hora.length === 5 ? `${hora}:00` : hora; 
+    };
+
     const handleSubmit = () => {
         const data = {
             class_type: formData.tipoClase,
             instructor: formData.instructor,
-            is_group_class: formData.grupal.toLowerCase() === "true", // convierte a booleano
+            is_group_class: formData.grupal, 
             capacity: parseInt(formData.capacidad),
-            date: formData.fecha,
-            start_time: formData.horaInicio,
-            end_time: formData.horaFinalizacion
+            date: new Date(formData.fecha).toISOString().split("T")[0],
+            start_time: formatHora(formData.horaInicio),
+            end_time: formatHora(formData.horaFinalizacion)
         };
 
-        axios.post("http://TU_BACKEND/clases/crear", data)
+        axios.post("https://localhost:7155/Class/add_class", data)
             .then(() => {
                 alert("Clase creada correctamente.");
             })
@@ -57,23 +66,38 @@ function AdminCreacionClases() {
                             <label htmlFor="instructor" className={styles.label}>Instructor</label>
                             <input type="text" id="instructor" name="instructor" value={formData.instructor} onChange={handleChange} />
 
-                            <label htmlFor="grupal" className={styles.label}>Grupal (true/false)</label>
-                            <input type="text" id="grupal" name="grupal" value={formData.grupal} onChange={handleChange} />
-
                             <label htmlFor="capacidad" className={styles.label}>Capacidad</label>
-                            <input type="number" id="capacidad" name="capacidad" value={formData.capacidad} onChange={handleChange} />
+                            <input
+                                type="number"
+                                id="capacidad"
+                                name="capacidad"
+                                value={formData.capacidad}
+                                onChange={handleChange}
+                            />
+
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "1rem" }}>
+                                <input
+                                    type="checkbox"
+                                    id="grupal"
+                                    name="grupal"
+                                    checked={formData.grupal}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <label htmlFor="grupal" className={styles.label}>Clase grupal</label>
+                            </div>
                         </div>
+
 
                         {/* Columna derecha */}
                         <div>
                             <label htmlFor="fecha" className={styles.label}>Fecha de clase</label>
                             <input type="date" id="fecha" name="fecha" value={formData.fecha} onChange={handleChange} />
 
-                            <label htmlFor="horaInicio" className={styles.label}>Hora de inicio (HH:mm:ss)</label>
-                            <input type="text" id="horaInicio" name="horaInicio" value={formData.horaInicio} onChange={handleChange} />
+                            <label htmlFor="horaInicio" className={styles.label}>Hora de inicio</label>
+                            <input type="time" id="horaInicio" name="horaInicio" value={formData.horaInicio} onChange={handleChange} />
 
-                            <label htmlFor="horaFinalizacion" className={styles.label}>Hora de finalización (HH:mm:ss)</label>
-                            <input type="text" id="horaFinalizacion" name="horaFinalizacion" value={formData.horaFinalizacion} onChange={handleChange} />
+                            <label htmlFor="horaFinalizacion" className={styles.label}>Hora de finalización</label>
+                            <input type="time" id="horaFinalizacion" name="horaFinalizacion" value={formData.horaFinalizacion} onChange={handleChange} />
                         </div>
                     </div>
 
