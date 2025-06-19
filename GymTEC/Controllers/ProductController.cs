@@ -25,39 +25,48 @@ namespace GymTEC.Controllers
         }
 
         /// <summary>
-        /// Inserta o edita un producto.
+        /// ----------------------  insert_or_edit ----------------------
+        /// Inserta un nuevo producto o edita uno existente en el sistema de inventario.
+        /// Esta operación se basa en el código de barras (`barcode`) como identificador único.
+        /// Si el producto ya existe con ese código, se actualizan sus datos;
+        /// si no existe, se inserta como uno nuevo con store_id = 1 por defecto.
         /// </summary>
-        /// <param name="input">Objeto Data_input_product con:
-        /// - product_name: Nombre del producto.
-        /// - barcode: Código de barras del producto (identificador único).
-        /// - description: Descripción del producto.
-        /// - cost: Costo del producto.
+        /// <param name="input">
+        /// Objeto de tipo <see cref="Data_input_product"/> que contiene:
+        /// - product_name (string): Nombre del producto.
+        /// - barcode (string): Código de barras único del producto.
+        /// - description (string): Descripción detallada del producto.
+        /// - cost (int): Costo del producto en colones (sin decimales).
         /// </param>
         /// <returns>
-        /// Data_response con el producto insertado o editado.
-        /// - status: true si la operación fue exitosa.
-        /// - data: Data_output_product con los datos del producto.
+        /// Retorna un objeto <see cref="Data_response{T}"/> con los siguientes datos:
+        /// - status (bool): true si la operación fue exitosa; false en caso de error.
+        /// - data (Data_output_product): contiene los datos insertados o actualizados del producto.
         /// </returns>
         /// <remarks>
-        /// Restricciones:
-        /// - El barcode debe ser único para insertar.
-        /// - Para edición, el barcode debe existir.
+        /// Reglas del procedimiento:
+        /// - Si el `barcode` ya existe en la tabla Product, el producto será actualizado.
+        /// - Si no existe, se inserta uno nuevo con los datos proporcionados.
+        /// - El campo `store_id` es asignado por defecto con el valor 1.
         /// </remarks>
         [HttpPost("insert_or_edit")]
         public ActionResult<Data_response<Data_output_product>> InsertOrEditProduct([FromBody] Data_input_product input)
         {
+            // Diccionario de parámetros para ejecutar el procedimiento almacenado
             var parameters = new Dictionary<string, object>
-            {
-                { "in_name", input.product_name },
-                { "in_barcode", input.barcode },
-                { "in_description", input.description },
-                { "in_cost", input.cost }
-            };
+    {
+        { "in_name", input.product_name },
+        { "in_barcode", input.barcode },
+        { "in_description", input.description },
+        { "in_cost", input.cost }
+    };
 
             try
             {
+                // Ejecuta el procedimiento almacenado de inserción o actualización
                 _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_product(@in_name, @in_barcode, @in_description, @in_cost)", parameters);
 
+                // Construye la respuesta de salida con los mismos datos recibidos
                 var data_output = new Data_output_product
                 {
                     product_name = input.product_name,
@@ -66,16 +75,15 @@ namespace GymTEC.Controllers
                     cost = input.cost
                 };
 
-                var response = new Data_response<Data_output_product>
+                return Ok(new Data_response<Data_output_product>
                 {
                     status = true,
                     data = data_output
-                };
-
-                return Ok(response);
+                });
             }
             catch (Exception ex)
             {
+                // Retorna un error detallado en caso de fallo
                 return BadRequest(new
                 {
                     status = false,
@@ -85,20 +93,24 @@ namespace GymTEC.Controllers
             }
         }
 
+
         /// <summary>
-        /// Elimina un producto existente por su código de barras.
+        /// ----------------------  delete ----------------------
+        /// Elimina un producto existente del sistema utilizando su código de barras como identificador único.
         /// </summary>
-        /// <param name="input">Objeto Data_input_product con:
-        /// - barcode: Código de barras del producto a eliminar.
+        /// <param name="input">
+        /// Objeto de tipo <see cref="Data_input_product"/> que contiene:
+        /// - barcode (string): Código de barras del producto a eliminar.
         /// </param>
         /// <returns>
-        /// Data_response con mensaje de éxito.
-        /// - status: true si la eliminación fue exitosa.
-        /// - data: Mensaje de confirmación.
+        /// Retorna un objeto <see cref="Data_response{T}"/> con:
+        /// - status (bool): true si la operación fue exitosa.
+        /// - data (string): Mensaje de confirmación de la eliminación.
         /// </returns>
         /// <remarks>
-        /// Restricciones:
-        /// - El producto debe existir para ser eliminado.
+        /// Requisitos:
+        /// - El código de barras debe pertenecer a un producto existente en la base de datos.
+        /// - Si no existe, se capturará una excepción desde la base de datos o se ignorará silenciosamente dependiendo del procedimiento.
         /// </remarks>
         [HttpPost("delete")]
         public ActionResult<Data_response<string>> DeleteProduct([FromBody] Data_input_product input)
@@ -132,19 +144,21 @@ namespace GymTEC.Controllers
         }
 
         /// <summary>
-        /// Consulta un producto por su código de barras.
+        /// ----------------------  get ----------------------
+        /// Consulta los datos de un producto específico mediante su código de barras.
         /// </summary>
-        /// <param name="input">Objeto Data_input_product con:
-        /// - barcode: Código de barras del producto a consultar.
+        /// <param name="input">
+        /// Objeto de tipo <see cref="Data_input_product"/> que contiene:
+        /// - barcode (string): Código de barras del producto a consultar.
         /// </param>
         /// <returns>
-        /// Data_response con los datos del producto consultado.
-        /// - status: true si la consulta fue exitosa.
-        /// - data: Data_output_product con los datos del producto.
+        /// Retorna un objeto <see cref="Data_response{T}"/> con:
+        /// - status (bool): true si la consulta fue exitosa; false si no se encontró el producto.
+        /// - data (Data_output_product): Datos del producto encontrado, o null si no existe.
         /// </returns>
         /// <remarks>
-        /// Restricciones:
-        /// - El producto debe existir para la consulta.
+        /// Requisitos:
+        /// - El producto debe estar registrado previamente con el código de barras proporcionado.
         /// </remarks>
         [HttpPost("get")]
         public ActionResult<Data_response<Data_output_product>> GetProduct([FromBody] Data_input_product input)
@@ -156,12 +170,13 @@ namespace GymTEC.Controllers
 
             try
             {
-                // Usa QuerySingleOrDefault en lugar de QuerySingle
+                // Se intenta obtener el producto con el código proporcionado
                 var result = _databaseService.QuerySingleOrDefault<Data_output_product>(
                     "SELECT * FROM sp_get_product(@in_barcode)", parameters);
 
                 if (result == null)
                 {
+                    // Retorna NotFound si no se encontró ningún producto
                     return NotFound(new Data_response<Data_output_product>
                     {
                         status = false,
@@ -169,6 +184,7 @@ namespace GymTEC.Controllers
                     });
                 }
 
+                // Retorna el producto encontrado
                 return Ok(new Data_response<Data_output_product>
                 {
                     status = true,
@@ -177,6 +193,7 @@ namespace GymTEC.Controllers
             }
             catch (Exception ex)
             {
+                // Retorna error detallado en caso de excepción
                 return BadRequest(new
                 {
                     status = false,
@@ -185,6 +202,7 @@ namespace GymTEC.Controllers
                 });
             }
         }
+
 
     }
 
