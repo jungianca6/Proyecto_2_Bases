@@ -200,14 +200,31 @@ namespace GymTEC.Controllers
         [HttpPost("associate_spa_treatment")]
         public ActionResult<Data_response<string>> AssociateSpaTreatment([FromBody] Data_input_associate_spa_treatment input)
         {
-            // Simulamos la asociación del tratamiento spa a la sucursal
-            var response = new Data_response<string>
+            var parameters = new Dictionary<string, object>
             {
-                status = true,
-                data = $"Tratamiento con ID {input.treatment_id} asociado a la sucursal {input.branch_name} exitosamente"
+                { "in_treatment_id", input.treatment_id },
+                { "in_branch_name", input.branch_name }
             };
 
-            return Ok(response);
+            try
+            {
+                _databaseService.ExecuteFunction("SELECT sp_associate_spa_treatment(@in_treatment_id, @in_branch_name)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = $"Tratamiento con ID {input.treatment_id} asociado a la sucursal \"{input.branch_name}\" exitosamente"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpPost("consult_spa_treatments")]
