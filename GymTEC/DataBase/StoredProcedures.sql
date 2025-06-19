@@ -604,3 +604,36 @@ BEGIN
     GROUP BY e.id_number, e.name, s.class_rate;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+----------------------  insert Position ----------------------
+
+
+
+CREATE OR REPLACE FUNCTION sp_insert_position(
+    in_name TEXT,
+    in_description TEXT
+)
+RETURNS INT AS $$
+DECLARE
+    new_id INT;
+    existing_id INT;
+BEGIN
+    -- Verifica si ya existe un puesto con el mismo nombre (case insensitive)
+    SELECT position_id INTO existing_id
+    FROM Position
+    WHERE LOWER(name) = LOWER(in_name);
+
+    IF FOUND THEN
+        RAISE EXCEPTION 'Ya existe un puesto con ese nombre';
+    END IF;
+
+    INSERT INTO Position (name, description)
+    VALUES (in_name, in_description)
+    RETURNING position_id INTO new_id;
+
+    RETURN new_id;
+END;
+$$ LANGUAGE plpgsql;
+
