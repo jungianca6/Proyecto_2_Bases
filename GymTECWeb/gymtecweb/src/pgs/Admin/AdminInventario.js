@@ -44,7 +44,7 @@ function AdminInventario() {
                 url = "https://localhost:7155/Inventory/insert_or_edit";
                 break;
             case "editar":
-                url = "https://localhost:7155/Inventory/insert_or_edi";
+                url = "https://localhost:7155/Inventory/insert_or_edit";
                 break;
             case "eliminar":
                 url = "https://localhost:7155/Inventory/delete";
