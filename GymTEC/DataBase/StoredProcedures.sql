@@ -693,3 +693,37 @@ BEGIN
     WHERE LOWER(p.name) = LOWER(in_name);
 END;
 $$ LANGUAGE plpgsql;
+----------------------  delete Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_delete_position(in_name TEXT)
+RETURNS VOID AS $$
+DECLARE
+    pos_id   INT;
+    emp_count INT;
+BEGIN
+    -- 1. Verificar que el puesto exista
+    SELECT position_id
+      INTO pos_id
+      FROM Position p
+     WHERE LOWER(p.name) = LOWER(in_name);
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No existe un puesto con ese nombre';
+    END IF;
+
+    -- 2. Verificar que no haya empleados asignados
+    SELECT COUNT(*) 
+      INTO emp_count
+      FROM Employee e
+     WHERE e.position_id = pos_id;
+
+    IF emp_count > 0 THEN
+        RAISE EXCEPTION 'No se puede eliminar: hay % asignado(s) a este puesto', emp_count;
+    END IF;
+
+    -- 3. Borrar el puesto
+    DELETE FROM Position
+     WHERE position_id = pos_id;
+END;
+$$ LANGUAGE plpgsql;
+
