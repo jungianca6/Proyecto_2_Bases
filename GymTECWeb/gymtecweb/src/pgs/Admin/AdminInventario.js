@@ -30,11 +30,11 @@ function AdminInventario() {
             };
         } else if (accion === "eliminar" || accion === "consultar") {
             data = {
-                equipment_type: "",
-                brand: "",
-                serial_number: "",
+                equipment_type: formData.tipoEquipo,
+                brand: formData.marca,
+                serial_number: formData.numeroSerie,
                 cost: parseFloat(formData.costo),
-                branch_name: ""
+                branch_name: formData.nombreSucursal
             };
         }
 
@@ -44,7 +44,7 @@ function AdminInventario() {
                 url = "https://localhost:7155/Inventory/insert_or_edit";
                 break;
             case "editar":
-                url = "https://localhost:7155/Inventory/insert_or_edi";
+                url = "https://localhost:7155/Inventory/insert_or_edit";
                 break;
             case "eliminar":
                 url = "https://localhost:7155/Inventory/delete";
@@ -63,6 +63,7 @@ function AdminInventario() {
                 if (accion === "consultar") {
                     if (res.data.status && res.data.data) {
                         setConsultaData(res.data.data);
+                        console.log("Datos recibidos del backend:", res.data);
                     } else {
                         setConsultaData(null);
                         alert("Equipo no encontrado");
