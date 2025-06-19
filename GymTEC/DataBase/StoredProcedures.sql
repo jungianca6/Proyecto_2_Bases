@@ -797,3 +797,30 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+-- ----------------------  sp_associate_spa_treatment ----------------------
+DROP FUNCTION IF EXISTS sp_associate_spa_treatment(INT, TEXT);
+
+CREATE OR REPLACE FUNCTION sp_associate_spa_treatment(
+    in_treatment_id INT,
+    in_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    v_branch_id INT;
+BEGIN
+    -- Buscar el ID de la sucursal por nombre
+    SELECT branch_id INTO v_branch_id
+    FROM Branch
+    WHERE name = in_branch_name;
+
+    IF v_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal con nombre "%" no encontrada', in_branch_name;
+    END IF;
+
+    -- Insertar asociación sin duplicados
+    INSERT INTO Spa_Treatment_Branch (treatment_id, branch_id)
+    VALUES (in_treatment_id, v_branch_id)
+    ON CONFLICT DO NOTHING;
+END;
+$$ LANGUAGE plpgsql;
