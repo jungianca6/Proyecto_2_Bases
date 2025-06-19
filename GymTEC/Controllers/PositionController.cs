@@ -41,39 +41,42 @@ namespace GymTEC.Controllers
         [HttpPost("insert_position")]
         public ActionResult<Data_response<Data_output_manage_position>> InsertPosition([FromBody] Data_input_manage_position input)
         {
-            var data_Output = new Data_output_manage_position
-            {
-                position_name = input.position_name,
-                description = input.description,
-                position_id = input.position_id
-            };
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_name", input.position_name },
+        { "in_description", input.description }
+    };
 
-            var response = new Data_response<Data_output_manage_position>
+            try
             {
-                status = true,
-                data = data_Output
-            };
+                _databaseService.ExecuteFunction("SELECT sp_insert_position(@in_name, @in_description)", parameters);
 
-            return Ok(response);
+                var data_Output = new Data_output_manage_position
+                {
+                    position_name = input.position_name,
+                    description = input.description,
+                    position_id = null // o vacío, ya que no se recupera el ID insertado
+                };
+
+                var response = new Data_response<Data_output_manage_position>
+                {
+                    status = true,
+                    data = data_Output
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
-        /// <summary>
-        /// Edita un puesto de trabajo existente.
-        /// </summary>
-        /// <param name="input">Objeto Data_input_manage_position con:
-        /// - position_name: Nombre actualizado del puesto.
-        /// - description: Descripción actualizada del puesto.
-        /// - position_id: Identificador único del puesto a editar.
-        /// </param>
-        /// <returns>
-        /// Data_response con el objeto editado.
-        /// - status: true si la operación fue exitosa.
-        /// - data: Data_output_manage_position con los datos actualizados.
-        /// </returns>
-        /// <remarks>
-        /// Restricciones:
-        /// - El position_id debe existir en la base de datos.
-        /// </remarks>
         [HttpPost("edit_position")]
         public ActionResult<Data_response<Data_output_manage_position>> EditPosition([FromBody] Data_input_manage_position input)
         {
