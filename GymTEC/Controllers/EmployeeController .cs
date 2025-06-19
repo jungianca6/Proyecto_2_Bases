@@ -50,24 +50,24 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<Data_output_employee>> InsertOrEditEmployee([FromBody] Data_input_employee input)
         {
             var parameters = new Dictionary<string, object>
-            {
-                { "in_employee_id", input.employee_id },
-                { "in_full_name", input.full_name },
-                { "in_province", input.province },
-                { "in_canton", input.canton },
-                { "in_district", input.district },
-                { "in_position", input.position },
-                { "in_branch", input.branch },
-                { "in_payroll_type", input.payroll_type },
-                { "in_salary", input.salary },
-                { "in_email", input.email },
-                { "in_password", input.password }
-            };
+    {
+        { "in_employee_id", input.employee_id },
+        { "in_full_name", input.full_name },
+        { "in_province", input.province },
+        { "in_canton", input.canton },
+        { "in_district", input.district },
+        { "in_position", input.position },
+        { "in_branch", input.branch },
+        { "in_payroll_id", input.payroll_id }, // ID en vez de nombre
+        { "in_salary", input.salary },
+        { "in_email", input.email },
+        { "in_password", Encriptador.ObtenerHashMD5(input.password) }
+    };
 
             try
             {
                 _databaseService.ExecuteFunction(
-                    "SELECT sp_insert_or_edit_employee(@in_employee_id, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_type, @in_salary, @in_email, @in_password)",
+                    "SELECT sp_insert_or_edit_employee(@in_employee_id, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_id, @in_salary, @in_email, @in_password)",
                     parameters
                 );
 
@@ -80,7 +80,7 @@ namespace GymTEC.Controllers
                     district = input.district,
                     position = input.position,
                     branch = input.branch,
-                    payroll_type = input.payroll_type,
+                    payroll_id = input.payroll_id,
                     salary = input.salary,
                     email = input.email,
                     password = input.password
@@ -104,7 +104,6 @@ namespace GymTEC.Controllers
         }
 
 
-
         [HttpPost("edit_employee")]
         public ActionResult<Data_response<string>> EditEmployee([FromBody] Data_input_employee input)
         {
@@ -117,16 +116,16 @@ namespace GymTEC.Controllers
         { "in_district", input.district },
         { "in_position", input.position },
         { "in_branch", input.branch },
-        { "in_payroll_type", input.payroll_type },  // no usado por ahora
+        { "in_payroll_id", input.payroll_id }, // ID directo
         { "in_salary", input.salary },
         { "in_email", input.email },
-        { "in_password", input.password }
+        { "in_password", Encriptador.ObtenerHashMD5(input.password) }
     };
 
             try
             {
                 _databaseService.ExecuteFunction(
-                    "SELECT sp_edit_employee(@in_id_number, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_type, @in_salary, @in_email, @in_password)",
+                    "SELECT sp_edit_employee(@in_id_number, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_id, @in_salary, @in_email, @in_password)",
                     parameters
                 );
 
@@ -146,6 +145,8 @@ namespace GymTEC.Controllers
                 });
             }
         }
+
+
 
         [HttpPost("delete")]
         public ActionResult<Data_response<string>> DeleteEmployee([FromBody] Data_input_employee input)
@@ -192,7 +193,7 @@ namespace GymTEC.Controllers
                 district = "San Rafael",
                 position = "Entrenador Personal",
                 branch = "Sucursal Escazú",
-                payroll_type = "Mensual",
+                payroll_id = 1,
                 salary = 650000,
                 email = "juan.perez@example.com",
                 password = "contraseñaSegura123"
