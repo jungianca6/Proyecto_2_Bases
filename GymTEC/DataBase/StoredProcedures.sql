@@ -85,7 +85,7 @@ CREATE OR REPLACE FUNCTION sp_insert_branch(
     in_email TEXT,
     in_phone1 TEXT,
     in_phone2 TEXT,
-    in_opening_date TIMESTAMP,
+    in_opening_date TEXT, -- CAMBIO AQUÍ
     in_opening_hours TEXT,
     in_spa BOOLEAN,
     in_store BOOLEAN
@@ -95,7 +95,12 @@ DECLARE
     new_branch_id INT;
 BEGIN
     INSERT INTO Branch(name, province, canton, district, email, phone1, phone2, opening_date, opening_hours)
-    VALUES (in_name, in_province, in_canton, in_district, in_email, in_phone1, in_phone2, in_opening_date, in_opening_hours)
+    VALUES (
+        in_name, in_province, in_canton, in_district, in_email,
+        in_phone1, in_phone2,
+        CAST(in_opening_date AS DATE), -- CONVERSIÓN AQUÍ
+        in_opening_hours
+    )
     RETURNING branch_id INTO new_branch_id;
 
     IF in_spa THEN
@@ -589,39 +594,9 @@ BEGIN
     JOIN Class c ON e.employee_id = c.employee_id
     LEFT JOIN Spreadsheet s ON e.position_id = s.position_id
     WHERE b.name = in_branch_name
-    GROUP BY e.id_number, e.name, s.class_rate;
+    GROUP BY e.employee_id, e.name, s.class_rate;
 END;
 $$ LANGUAGE plpgsql;
 
 
-
-----------------------  insert Position ----------------------
-
-
-
-CREATE OR REPLACE FUNCTION sp_insert_position(
-    in_name TEXT,
-    in_description TEXT
-)
-RETURNS INT AS $$
-DECLARE
-    new_id INT;
-    existing_id INT;
-BEGIN
-    -- Verifica si ya existe un puesto con el mismo nombre (case insensitive)
-    SELECT position_id INTO existing_id
-    FROM Position
-    WHERE LOWER(name) = LOWER(in_name);
-
-    IF FOUND THEN
-        RAISE EXCEPTION 'Ya existe un puesto con ese nombre';
-    END IF;
-
-    INSERT INTO Position (name, description)
-    VALUES (in_name, in_description)
-    RETURNING position_id INTO new_id;
-
-    RETURN new_id;
-END;
-$$ LANGUAGE plpgsql;
-
+----------------------  Generar planilla(spreadsheet/payroll) ----------------------
