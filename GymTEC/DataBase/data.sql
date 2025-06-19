@@ -172,3 +172,28 @@ CREATE TABLE Admin (
 	username VARCHAR(100) NOT NULL,
 	password VARCHAR(100) NOT NULL
 )
+
+
+-- Client - Product (Insert or Edit)
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_product(
+    in_name TEXT,
+    in_barcode TEXT,
+    in_description TEXT,
+    in_cost INT
+)
+RETURNS VOID AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM Product WHERE barcode = in_barcode) THEN
+        -- Actualizar producto existente
+        UPDATE Product
+        SET name = in_name,
+            description = in_description,
+            cost = in_cost
+        WHERE barcode = in_barcode;
+    ELSE
+        -- Insertar nuevo producto con store_id = 1 por defecto
+        INSERT INTO Product (name, barcode, description, cost, is_active, store_id)
+        VALUES (in_name, in_barcode, in_description, in_cost, TRUE, 1);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
