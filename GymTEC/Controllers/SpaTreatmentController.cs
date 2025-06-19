@@ -162,14 +162,13 @@ namespace GymTEC.Controllers
         {
             var parameters = new Dictionary<string, object>
             {
-                { "in_id", input.treatment_id }
+                { "p_name", input.treatment_name }
             };
-
 
             try
             {
                 var result = _databaseService.QuerySingleOrDefault<Data_output_manage_spa_treatment>(
-                    "SELECT * FROM sp_get_spa_treatment(@in_id)", parameters);
+                    "SELECT * FROM sp_get_spa_treatment_by_name(@p_name)", parameters);
 
                 if (result == null)
                 {
@@ -197,23 +196,34 @@ namespace GymTEC.Controllers
             }
         }
 
-        [HttpPost("associate_spa_treatment")]
-        public ActionResult<Data_response<string>> AssociateSpaTreatment([FromBody] Data_input_associate_spa_treatment input)
+        [HttpPost("consult_associate_spa_treatments")]
+        public ActionResult<Data_response<Data_output_associated_treatments_response>> ConsultAssociateSpaTreatments([FromBody] Data_input_consult_associate_spa_treatment input)
         {
-            var parameters = new Dictionary<string, object>
-            {
-                { "in_treatment_id", input.treatment_id },
-                { "in_branch_name", input.branch_name }
-            };
-
             try
             {
-                _databaseService.ExecuteFunction("SELECT sp_associate_spa_treatment(@in_treatment_id, @in_branch_name)", parameters);
+                var parameters = new Dictionary<string, object>
+                {
+                    { "p_branch_name", input.branch_name }
+                };
 
-                return Ok(new Data_response<string>
+                // Obtiene tratamientos asociados
+                var associated = _databaseService.QueryList<Data_output_associate_spa_treatment>(
+                    "SELECT * FROM sp_get_associated_spa_treatments(@p_branch_name)", parameters);
+
+                // Obtiene tratamientos no asociados
+                var notAssociated = _databaseService.QueryList<Data_output_associate_spa_treatment>(
+                    "SELECT * FROM sp_get_not_associated_spa_treatments(@p_branch_name)", parameters);
+
+                var responseData = new Data_output_associated_treatments_response
+                {
+                    associated = associated.ToList(),
+                    not_associated = notAssociated.ToList()
+                };
+
+                return Ok(new Data_response<Data_output_associated_treatments_response>
                 {
                     status = true,
-                    data = $"Tratamiento con ID {input.treatment_id} asociado a la sucursal \"{input.branch_name}\" exitosamente"
+                    data = responseData
                 });
             }
             catch (Exception ex)
@@ -225,25 +235,6 @@ namespace GymTEC.Controllers
                     inner = ex.InnerException?.Message
                 });
             }
-        }
-
-        [HttpPost("consult_spa_treatments")]
-        public ActionResult<Data_response<List<Data_output_associate_spa_treatment>>> ConsultSpaTreatments([FromBody] Data_input_consult_spa_treatment input)
-        {
-            // Simulamos la consulta devolviendo una lista de tratamientos asociados y no asociados
-            var treatments = new List<Data_output_associate_spa_treatment>
-            {
-                new Data_output_associate_spa_treatment { treatment_id = 1, treatment_name = "Masaje relajante" },
-                new Data_output_associate_spa_treatment { treatment_id = 2, treatment_name = "Aromaterapia" }
-            };
-
-            var response = new Data_response<List<Data_output_associate_spa_treatment>>
-            {
-                status = true,
-                data = treatments
-            };
-
-            return Ok(response);
         }
 
     }
