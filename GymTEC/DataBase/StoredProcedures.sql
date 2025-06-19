@@ -37,7 +37,7 @@ BEGIN
         RETURN QUERY
         SELECT 
             a.username::TEXT,
-            'Administrador'::TEXT,
+            'Admin'::TEXT,
             a.admin_id::TEXT
         FROM Admin a
         WHERE a.username = in_username AND a.password = in_password;
@@ -85,7 +85,7 @@ CREATE OR REPLACE FUNCTION sp_insert_branch(
     in_email TEXT,
     in_phone1 TEXT,
     in_phone2 TEXT,
-    in_opening_date TIMESTAMP,
+    in_opening_date TEXT, -- CAMBIO AQUÍ
     in_opening_hours TEXT,
     in_spa BOOLEAN,
     in_store BOOLEAN
@@ -95,7 +95,12 @@ DECLARE
     new_branch_id INT;
 BEGIN
     INSERT INTO Branch(name, province, canton, district, email, phone1, phone2, opening_date, opening_hours)
-    VALUES (in_name, in_province, in_canton, in_district, in_email, in_phone1, in_phone2, in_opening_date, in_opening_hours)
+    VALUES (
+        in_name, in_province, in_canton, in_district, in_email,
+        in_phone1, in_phone2,
+        CAST(in_opening_date AS DATE), -- CONVERSIÓN AQUÍ
+        in_opening_hours
+    )
     RETURNING branch_id INTO new_branch_id;
 
     IF in_spa THEN
@@ -463,40 +468,34 @@ CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
     in_district TEXT,
     in_position TEXT,
     in_branch TEXT,
-    in_payroll_id INT,
+    in_payroll_type TEXT,
     in_salary INT,
     in_email TEXT,
     in_password TEXT
 )
 RETURNS VOID AS $$
 DECLARE
-    v_existing_employee_id INT;
-    v_branch_id INT;
-    v_position_id INT;
-    v_spreadsheet_exists BOOLEAN;
+    existing_employee_id INT;
+    branch_id INT;
+    position_id INT;
 BEGIN
-    -- Validar sucursal
-    SELECT branch_id INTO v_branch_id FROM Branch WHERE name = in_branch;
-    IF v_branch_id IS NULL THEN
+    -- Verificar sucursal
+    SELECT b.branch_id INTO branch_id FROM Branch b WHERE b.name = in_branch;
+    IF branch_id IS NULL THEN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    -- Validar puesto
-    SELECT position_id INTO v_position_id FROM Position WHERE name = in_position;
-    IF v_position_id IS NULL THEN
+    -- Verificar posición
+    SELECT p.position_id INTO position_id FROM Position p WHERE p.name = in_position;
+    IF position_id IS NULL THEN
         RAISE EXCEPTION 'Puesto no encontrado';
     END IF;
 
-    -- Validar existencia de planilla
-    SELECT EXISTS (SELECT 1 FROM Spreadsheet WHERE spreadsheet_id = in_payroll_id) INTO v_spreadsheet_exists;
-    IF NOT v_spreadsheet_exists THEN
-        RAISE EXCEPTION 'Planilla no encontrada';
-    END IF;
-
     -- Verificar si ya existe el empleado
-    SELECT employee_id INTO v_existing_employee_id FROM Employee WHERE id_number = in_employee_id;
+    SELECT e.employee_id INTO existing_employee_id FROM Employee e WHERE e.id_number = in_employee_id;
 
-    IF v_existing_employee_id IS NULL THEN
+    -- Si no existe, lo insertamos
+    IF existing_employee_id IS NULL THEN
         INSERT INTO Employee (
             name, province, canton, district,
             email, id_number, password, salary,
@@ -505,12 +504,13 @@ BEGIN
         VALUES (
             in_full_name, in_province, in_canton, in_district,
             in_email, in_employee_id, in_password, in_salary,
-            'TEMP',
-            v_position_id,
-            in_payroll_id,
-            v_branch_id
+            'TEMP',            -- Bank account temporal
+            position_id,       -- Asociado por nombre
+            1,                 -- Planilla genérica
+            branch_id          -- Asociado por nombre
         );
     END IF;
+    -- Si ya existe, NO se actualiza nada
 END;
 $$ LANGUAGE plpgsql;
 
@@ -524,7 +524,7 @@ CREATE OR REPLACE FUNCTION sp_edit_employee(
     in_district TEXT,
     in_position TEXT,
     in_branch TEXT,
-    in_payroll_id INT,
+    in_payroll_type TEXT,
     in_salary INTEGER,
     in_email TEXT,
     in_password TEXT
@@ -534,33 +534,26 @@ DECLARE
     emp_id INT;
     pos_id INT;
     br_id INT;
-    spreadsheet_exists BOOLEAN;
 BEGIN
-    -- Validar existencia del empleado
+    -- Verificar si el empleado existe
     SELECT employee_id INTO emp_id FROM Employee WHERE id_number = in_id_number;
     IF emp_id IS NULL THEN
         RAISE EXCEPTION 'Empleado no existe con la cédula proporcionada';
     END IF;
 
-    -- Validar existencia del puesto
+    -- Obtener ID del puesto
     SELECT position_id INTO pos_id FROM Position WHERE name = in_position;
     IF pos_id IS NULL THEN
         RAISE EXCEPTION 'Puesto no encontrado';
     END IF;
 
-    -- Validar existencia de la sucursal
+    -- Obtener ID de la sucursal
     SELECT branch_id INTO br_id FROM Branch WHERE name = in_branch;
     IF br_id IS NULL THEN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    -- Validar existencia de la planilla
-    SELECT EXISTS (SELECT 1 FROM Spreadsheet WHERE spreadsheet_id = in_payroll_id) INTO spreadsheet_exists;
-    IF NOT spreadsheet_exists THEN
-        RAISE EXCEPTION 'Planilla no encontrada';
-    END IF;
-
-    -- Actualizar datos del empleado
+    -- Actualizar el empleado
     UPDATE Employee
     SET
         name = in_full_name,
@@ -571,8 +564,8 @@ BEGIN
         password = in_password,
         salary = in_salary,
         position_id = pos_id,
-        branch_id = br_id,
-        spreadsheet_id = in_payroll_id
+        branch_id = br_id
+        -- NOTA: spreadsheet_id queda igual
     WHERE id_number = in_id_number;
 END;
 $$ LANGUAGE plpgsql;
@@ -582,7 +575,7 @@ $$ LANGUAGE plpgsql;
 ----------------------  Generar planilla(spreadsheet/payroll) ----------------------
 CREATE OR REPLACE FUNCTION sp_generate_payroll(in_branch_name TEXT)
 RETURNS TABLE (
-    id_number TEXT,
+    employee_id TEXT,
     full_name TEXT,
     classes_or_hours INTEGER,
     amount_to_pay NUMERIC(10,2),
@@ -591,7 +584,7 @@ RETURNS TABLE (
 BEGIN
     RETURN QUERY
     SELECT 
-        e.id_number::TEXT,
+        e.employee_id::TEXT,
         e.name::TEXT AS full_name,
         COUNT(c.class_id)::INTEGER AS classes_or_hours,
         COUNT(c.class_id)::NUMERIC * COALESCE(s.class_rate, 0) AS amount_to_pay,
@@ -601,7 +594,7 @@ BEGIN
     JOIN Class c ON e.employee_id = c.employee_id
     LEFT JOIN Spreadsheet s ON e.position_id = s.position_id
     WHERE b.name = in_branch_name
-    GROUP BY e.id_number, e.name, s.class_rate;
+    GROUP BY e.employee_id, e.name, s.class_rate;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -634,6 +627,103 @@ BEGIN
     RETURNING position_id INTO new_id;
 
     RETURN new_id;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------  edit Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_edit_position(
+    in_position_id INT,
+    in_name TEXT,
+    in_description TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    existing_id INT;
+BEGIN
+    -- Verifica si el puesto existe
+    IF NOT EXISTS (SELECT 1 FROM Position WHERE position_id = in_position_id) THEN
+        RAISE EXCEPTION 'No existe un puesto con ese ID';
+    END IF;
+
+    -- Verifica que no exista otro puesto con el mismo nombre
+    SELECT position_id INTO existing_id
+    FROM Position
+    WHERE LOWER(name) = LOWER(in_name)
+      AND position_id != in_position_id;
+
+    IF FOUND THEN
+        RAISE EXCEPTION 'Ya existe otro puesto con ese nombre';
+    END IF;
+
+    -- Actualiza los datos
+    UPDATE Position
+    SET name = in_name,
+        description = in_description
+    WHERE position_id = in_position_id;
+END;
+$$ LANGUAGE plpgsql;   
+
+
+----------------------  consult Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_consult_position(in_name TEXT)
+RETURNS TABLE (
+    position_id INT,
+    position_name TEXT,
+    description TEXT
+) AS $$
+BEGIN
+    -- Verifica existencia
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM Position p
+        WHERE LOWER(p.name) = LOWER(in_name)
+    ) THEN
+        RAISE EXCEPTION 'No existe un puesto con ese nombre';
+    END IF;
+
+    -- Devuelve la fila con casts explícitos a TEXT
+    RETURN QUERY
+    SELECT
+        p.position_id,
+        p.name::TEXT         AS position_name,
+        p.description::TEXT  AS description
+    FROM Position p
+    WHERE LOWER(p.name) = LOWER(in_name);
+END;
+$$ LANGUAGE plpgsql;
+----------------------  delete Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_delete_position(in_name TEXT)
+RETURNS VOID AS $$
+DECLARE
+    pos_id   INT;
+    emp_count INT;
+BEGIN
+    -- 1. Verificar que el puesto exista
+    SELECT position_id
+      INTO pos_id
+      FROM Position p
+     WHERE LOWER(p.name) = LOWER(in_name);
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No existe un puesto con ese nombre';
+    END IF;
+
+    -- 2. Verificar que no haya empleados asignados
+    SELECT COUNT(*) 
+      INTO emp_count
+      FROM Employee e
+     WHERE e.position_id = pos_id;
+
+    IF emp_count > 0 THEN
+        RAISE EXCEPTION 'No se puede eliminar: hay % asignado(s) a este puesto', emp_count;
+    END IF;
+
+    -- 3. Borrar el puesto
+    DELETE FROM Position
+     WHERE position_id = pos_id;
 END;
 $$ LANGUAGE plpgsql;
 

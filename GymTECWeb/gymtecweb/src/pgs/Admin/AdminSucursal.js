@@ -49,16 +49,16 @@ function AdminSucursal() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "http://TU_BACKEND/sucursales/insertar";
+                url = "https://localhost:7155/Branch/insert_branch";
                 break;
             case "editar":
-                url = "http://TU_BACKEND/sucursales/editar";
+                url = "https://localhost:7155/Branch/edit_branch";
                 break;
             case "eliminar":
-                url = "http://TU_BACKEND/sucursales/eliminar";
+                url = "https://localhost:7155/Branch/delete_branch";
                 break;
             case "consultar":
-                url = "http://TU_BACKEND/sucursales/consultar";
+                url = "https://localhost:7155/Branch/consult_branch";
                 break;
             default:
                 console.error("Acción no válida");
@@ -145,7 +145,7 @@ function AdminSucursal() {
                     </div>
                     </form>
                     {consultaData && (
-                        <div style={{ marginTop: "3rem", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px", backgroundColor: "#f9f9f9" }}>
+                        <div style={{ marginTop: "3rem", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px", color: "#333", backgroundColor: "#f9f9f9" }}>
                             <h2>Resultado de Consulta</h2>
                             <p><strong>Nombre:</strong> {consultaData.name}</p>
                             <p><strong>Provincia:</strong> {consultaData.province}</p>

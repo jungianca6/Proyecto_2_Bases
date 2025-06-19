@@ -54,7 +54,6 @@ namespace GymTEC.Controllers
             // Procesar datos
             var phone1 = input.phone_numbers.Count > 0 ? input.phone_numbers[0] : "";
             var phone2 = input.phone_numbers.Count > 1 ? input.phone_numbers[1] : "";
-            var parsedDate = DateTime.ParseExact(input.opening_date.Split(' ')[0], "dd/MM/yyyy", null);
 
             var parameters = new Dictionary<string, object>
             {
@@ -65,7 +64,7 @@ namespace GymTEC.Controllers
                 { "in_email", $"{input.name.Replace(" ", "").ToLower()}@gymtec.com" }, // email autogenerado
                 { "in_phone1", phone1 },
                 { "in_phone2", phone2 },
-                { "in_opening_date", parsedDate },
+                { "in_opening_date", input.opening_date },
                 { "in_opening_hours", input.attention_schedule },
                 { "in_spa", input.spa },
                 { "in_store", input.store }

@@ -80,83 +80,161 @@ namespace GymTEC.Controllers
         [HttpPost("edit_position")]
         public ActionResult<Data_response<Data_output_manage_position>> EditPosition([FromBody] Data_input_manage_position input)
         {
-            var data_Output = new Data_output_manage_position
+            if (string.IsNullOrWhiteSpace(input.position_id))
             {
-                position_name = input.position_name,
-                description = input.description,
-                position_id = input.position_id
-            };
+                return BadRequest(new { status = false, error = "El ID del puesto es obligatorio." });
+            }
 
-            var response = new Data_response<Data_output_manage_position>
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_position_id", int.Parse(input.position_id) },
+        { "in_name", input.position_name },
+        { "in_description", input.description }
+    };
+
+            try
             {
-                status = true,
-                data = data_Output
-            };
+                _databaseService.ExecuteFunction("SELECT sp_edit_position(@in_position_id, @in_name, @in_description)", parameters);
 
-            return Ok(response);
+                var data_Output = new Data_output_manage_position
+                {
+                    position_id = input.position_id,
+                    position_name = input.position_name,
+                    description = input.description
+                };
+
+                return Ok(new Data_response<Data_output_manage_position>
+                {
+                    status = true,
+                    data = data_Output
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
-        /// <summary>
-        /// Elimina un puesto de trabajo existente.
-        /// </summary>
-        /// <param name="input">Objeto Data_input_delete_position con:
-        /// - position_id: Identificador único del puesto a eliminar.
-        /// </param>
-        /// <returns>
-        /// Data_response con mensaje de éxito.
-        /// - status: true si la eliminación fue exitosa.
-        /// - data: Mensaje de confirmación.
-        /// </returns>
-        /// <remarks>
-        /// Restricciones:
-        /// - El position_id debe existir.
-        /// - No debe haber empleados asignados a este puesto antes de eliminar.
-        /// </remarks>
         [HttpPost("delete_position")]
         public ActionResult<Data_response<string>> DeletePosition([FromBody] Data_input_delete_position input)
         {
-            var response = new Data_response<string>
+            // Validación básica
+            if (string.IsNullOrWhiteSpace(input.position_name))
             {
-                status = true,
-                data = "Position deleted successfully"
-            };
+                return BadRequest(new
+                {
+                    status = false,
+                    error = "El nombre del puesto es obligatorio."
+                });
+            }
 
-            return Ok(response);
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_name", input.position_name }
+    };
+
+            try
+            {
+                _databaseService.ExecuteFunction(
+                    "SELECT sp_delete_position(@in_name)",
+                    parameters
+                );
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Position deleted successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                // Si no existe el puesto
+                if (ex.Message.Contains("No existe un puesto con ese nombre"))
+                {
+                    return NotFound(new
+                    {
+                        status = false,
+                        error = ex.Message
+                    });
+                }
+                // Si hay empleados asignados
+                if (ex.Message.StartsWith("No se puede eliminar"))
+                {
+                    return BadRequest(new
+                    {
+                        status = false,
+                        error = ex.Message
+                    });
+                }
+
+                // Otros errores
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
-        /// <summary>
-        /// Consulta la información de un puesto de trabajo.
-        /// </summary>
-        /// <param name="input">Objeto Data_input_consult_position con:
-        /// - position_id: Identificador único del puesto a consultar.
-        /// </param>
-        /// <returns>
-        /// Data_response con los datos del puesto consultado.
-        /// - status: true si la consulta fue exitosa.
-        /// - data: Data_output_manage_position con los datos del puesto.
-        /// </returns>
-        /// <remarks>
-        /// Restricciones:
-        /// - El position_id debe existir.
-        /// </remarks>
         [HttpPost("consult_position")]
         public ActionResult<Data_response<Data_output_manage_position>> ConsultPosition([FromBody] Data_input_consult_position input)
         {
-            // Ejemplo de respuesta estática
-            var data_Output = new Data_output_manage_position
+            // Validación básica
+            if (string.IsNullOrWhiteSpace(input.position_name))
             {
-                position_name = "Entrenador Personal",
-                description = "Responsable de guiar a los clientes en sus rutinas",
-                position_id = input.position_id
-            };
+                return BadRequest(new { status = false, error = "El nombre del puesto es obligatorio." });
+            }
 
-            var response = new Data_response<Data_output_manage_position>
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_name", input.position_name }
+    };
+
+            try
             {
-                status = true,
-                data = data_Output
-            };
+                // Ejecuta la función y mapea columnas a Data_output_manage_position
+                var result = _databaseService.QuerySingle<Data_output_manage_position>(
+                    @"SELECT 
+                position_id::TEXT   AS position_id,
+                position_name       AS position_name,
+                description
+              FROM sp_consult_position(@in_name)",
+                    parameters
+                );
 
-            return Ok(response);
+                return Ok(new Data_response<Data_output_manage_position>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                // Si la excepción viene del SP por no existir, devolvemos 404
+                if (ex.Message.Contains("No existe un puesto con ese nombre"))
+                {
+                    return NotFound(new
+                    {
+                        status = false,
+                        error = ex.Message
+                    });
+                }
+
+                // Otros errores
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
+
     }
 }

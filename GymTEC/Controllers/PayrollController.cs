@@ -2,6 +2,7 @@
 using GymTEC.Data_output_models.manage_payroll;
 using GymTEC.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GymTEC.Controllers
 {
@@ -19,35 +20,50 @@ namespace GymTEC.Controllers
         [HttpPost("generate_payroll")]
         public ActionResult<Data_response<Data_output_generate_payroll>> GeneratePayroll([FromBody] Data_input_generate_payroll input)
         {
-            // Simulamos la generación de planilla con datos ficticios
-            var payrollData = new Data_output_generate_payroll
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_branch_name", input.branch_name }
+    };
+
+            try
             {
-                employees = new List<EmployeePayrollInfo>
+                // Ejecuta la función y obtiene los resultados
+                var results = _databaseService.ExecuteFunction("SELECT sp_generate_payroll(@in_branch_name)", parameters);
+
+                // Construir lista de empleados a partir de los resultados
+                var employees = new List<EmployeePayrollInfo>();
+                foreach (DataRow row in results.Rows)
                 {
-                    new EmployeePayrollInfo
+                    employees.Add(new EmployeePayrollInfo
                     {
-                        id_number = "123456789",
-                        full_name = "Juan Pérez",
-                        classes_or_hours = 40,
-                        amount_to_pay = 500.00m
-                    },
-                    new EmployeePayrollInfo
-                    {
-                        id_number = "987654321",
-                        full_name = "María González",
-                        classes_or_hours = 35,
-                        amount_to_pay = 437.50m
-                    }
+                        employee_id = row["employee_id"].ToString(),
+                        full_name = row["full_name"].ToString(),
+                        classes_or_hours = Convert.ToInt32(row["classes_or_hours"]),
+                        amount_to_pay = Convert.ToDecimal(row["amount_to_pay"]),
+                        type = row["type"].ToString()
+                    });
                 }
-            };
 
-            var response = new Data_response<Data_output_generate_payroll>
+                var data_output = new Data_output_generate_payroll
+                {
+                    employees = employees
+                };
+
+                return Ok(new Data_response<Data_output_generate_payroll>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = payrollData
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpPost("manage_payroll_type")]
