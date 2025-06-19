@@ -6,6 +6,6 @@
         public string product_name { get; set; }      // nombre
         public string barcode { get; set; }           // código de barras
         public string description { get; set; }       // descripción
-        public double cost { get; set; }              // costo
+        public int cost { get; set; }              // costo
     }
 }

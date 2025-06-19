@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\GymTEC",
+    "\\GymTEC\\Controllers"
   ],
-  "SelectedNode": "\\C:\\Users\\space\\source\\repos\\GymTEC",
+  "SelectedNode": "\\GymTEC\\Controllers\\ProductController.cs",
   "PreviewInSolutionExplorer": false
 }
