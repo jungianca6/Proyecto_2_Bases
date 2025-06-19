@@ -63,6 +63,7 @@ function AdminInventario() {
                 if (accion === "consultar") {
                     if (res.data.status && res.data.data) {
                         setConsultaData(res.data.data);
+                        console.log("Datos recibidos del backend:", res.data);
                     } else {
                         setConsultaData(null);
                         alert("Equipo no encontrado");
