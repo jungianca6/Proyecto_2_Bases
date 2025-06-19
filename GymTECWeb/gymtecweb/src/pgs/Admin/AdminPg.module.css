@@ -148,3 +148,17 @@
     padding: 1rem;
     font-size: 1.1rem;
 }
+
+.form label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+.form input,
+.form select {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem; /* Espacio entre cada campo */
+}
