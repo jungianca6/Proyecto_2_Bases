@@ -44,7 +44,7 @@ namespace GymTEC.Controllers
             var parameters = new Dictionary<string, object>
             {
                 { "in_username", input.user_name },
-                { "in_password", input.password }
+                { "in_password", Encriptador.ObtenerHashMD5(input.password) }
             };
 
             DataTable result = _databaseService.ExecuteFunction(

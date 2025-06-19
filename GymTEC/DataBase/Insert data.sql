@@ -91,3 +91,38 @@ INSERT INTO Client_Treatment (client_id, treatment_id, date, time) VALUES
 (1, 1, '2025-06-14', '16:00'),
 (2, 2, '2025-06-15', '17:00'),
 (3, 3, '2025-06-16', '18:00');
+
+INSERT INTO Admin (username, password) VALUES 
+('admin1', '1844156d4166d94387f1a4ad031ca5fa'),
+('admin2', 'c289ffe12a30c94530b7fc4e532e2f42'),
+('admin3', '06d6d78ec1dd8f97a0475ecfd034c55c');
+
+/*
+Contraseñas:
+admin12
+admin23
+admin34
+
+Para los employees:
+pw1
+pw2
+pw3
+
+Input que funciono para el registro
+{
+  "id_number": 4534534,
+  "first_name": "string",
+  "user_name": "string",
+  "last_name_1": "string",
+  "last_name_2": "string",
+  "age": 0,
+  "birth_date": "2025-06-10",
+  "weight": 0,
+  "imc": 0,
+  "address": "string",
+  "email": "string",
+  "password": "string",
+  "role": "string",
+  "phone": "string"
+}
+*/

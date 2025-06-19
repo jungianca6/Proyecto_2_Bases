@@ -50,19 +50,19 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<Data_output_employee>> InsertOrEditEmployee([FromBody] Data_input_employee input)
         {
             var parameters = new Dictionary<string, object>
-    {
-        { "in_employee_id", input.employee_id },
-        { "in_full_name", input.full_name },
-        { "in_province", input.province },
-        { "in_canton", input.canton },
-        { "in_district", input.district },
-        { "in_position", input.position },
-        { "in_branch", input.branch },
-        { "in_payroll_type", input.payroll_type },
-        { "in_salary", input.salary },
-        { "in_email", input.email },
-        { "in_password", input.password }
-    };
+            {
+                { "in_employee_id", input.employee_id },
+                { "in_full_name", input.full_name },
+                { "in_province", input.province },
+                { "in_canton", input.canton },
+                { "in_district", input.district },
+                { "in_position", input.position },
+                { "in_branch", input.branch },
+                { "in_payroll_type", input.payroll_type },
+                { "in_salary", input.salary },
+                { "in_email", input.email },
+                { "in_password", input.password }
+            };
 
             try
             {

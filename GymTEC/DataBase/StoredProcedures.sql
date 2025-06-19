@@ -3,26 +3,75 @@
 
 ---------------------- Para el Login ----------------------
 CREATE OR REPLACE FUNCTION sp_log_in_user(
-    in_username VARCHAR,
-    in_password VARCHAR
+    in_username TEXT,
+    in_password TEXT
 )
 RETURNS TABLE (
-    username VARCHAR,   
-    role VARCHAR,          
-    employee_id INT        
+    username TEXT,
+    role TEXT,
+    employee_id TEXT
 ) AS $$
 BEGIN
+    -- Buscar en Client
     RETURN QUERY
     SELECT 
-        e.username,
-        p.name AS role,
-        e.employee_id
-    FROM 
-        Employee e
-    JOIN Position p ON e.position_id = p.position_id
-    WHERE 
-        e.username = in_username
-        AND e.password = in_password;
+        c.username::TEXT, 
+        'Cliente'::TEXT, 
+        c.client_id::TEXT
+    FROM Client c
+    WHERE c.username = in_username AND c.password = in_password;
+
+    -- Si no encontró en Client, buscar en Employee
+    IF NOT FOUND THEN
+        RETURN QUERY
+        SELECT 
+            e.id_number::TEXT,
+            'Instructor'::TEXT,
+            e.employee_id::TEXT
+        FROM Employee e
+        WHERE e.id_number = in_username AND e.password = in_password;
+    END IF;
+
+    -- Si tampoco encontró en Employee, buscar en Admin
+    IF NOT FOUND THEN
+        RETURN QUERY
+        SELECT 
+            a.username::TEXT,
+            'Administrador'::TEXT,
+            a.admin_id::TEXT
+        FROM Admin a
+        WHERE a.username = in_username AND a.password = in_password;
+    END IF;
+
+END;
+$$ LANGUAGE plpgsql;
+
+---------------------- Para el Register ----------------------Add commentMore actions
+CREATE OR REPLACE FUNCTION sp_register_client(
+    in_client_id INT,
+    in_first_name TEXT,
+    in_user_name TEXT,
+    in_last_name_1 TEXT,
+    in_last_name_2 TEXT,
+    in_birth_date TEXT,
+    in_weight INT,
+    in_address TEXT,
+    in_email TEXT,
+    in_password TEXT,
+    in_phone TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    full_name TEXT := in_first_name || ' ' || in_last_name_1 || ' ' || in_last_name_2;
+BEGIN
+    INSERT INTO Client (
+        client_id, name, email, address, phone,
+        password, birth_date, weight, username
+    )
+    VALUES (
+        in_client_id, full_name, in_email, in_address, in_phone,
+        in_password, in_birth_date::DATE, in_weight, in_user_name
+    );
 END;
 $$ LANGUAGE plpgsql;
 
@@ -518,3 +567,28 @@ $$ LANGUAGE plpgsql;
 
 
 
+----------------------  Generar planilla(spreadsheet/payroll) ----------------------
+CREATE OR REPLACE FUNCTION sp_generate_payroll(in_branch_name TEXT)
+RETURNS TABLE (
+    id_number TEXT,
+    full_name TEXT,
+    classes_or_hours INTEGER,
+    amount_to_pay NUMERIC(10,2),
+    type TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        e.id_number::TEXT,
+        e.name::TEXT AS full_name,
+        COUNT(c.class_id)::INTEGER AS classes_or_hours,
+        COUNT(c.class_id)::NUMERIC * COALESCE(s.class_rate, 0) AS amount_to_pay,
+        'Clase'::TEXT AS type
+    FROM Employee e
+    JOIN Branch b ON e.branch_id = b.branch_id
+    JOIN Class c ON e.employee_id = c.employee_id
+    LEFT JOIN Spreadsheet s ON e.position_id = s.position_id
+    WHERE b.name = in_branch_name
+    GROUP BY e.id_number, e.name, s.class_rate;
+END;
+$$ LANGUAGE plpgsql;

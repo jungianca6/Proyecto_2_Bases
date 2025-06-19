@@ -87,9 +87,10 @@ CREATE TABLE Employee (
     branch_id INT NOT NULL REFERENCES Branch(branch_id)
 );
 
+
 -- 10. Table Class
 CREATE TABLE Class (
-    class_id SERIAL PRIMARY KEY,
+    class_id PRIMARY KEY,
     type VARCHAR(50) NOT NULL,
     is_group BOOLEAN NOT NULL,
     max_capacity INT NOT NULL,
@@ -165,3 +166,9 @@ CREATE TABLE Client_Treatment (
     time TIME,
     PRIMARY KEY (client_id, treatment_id, date)
 );
+
+CREATE TABLE Admin (
+	admin_id SERIAL PRIMARY KEY,
+	username VARCHAR(100) NOT NULL,
+	password VARCHAR(100) NOT NULL
+)
