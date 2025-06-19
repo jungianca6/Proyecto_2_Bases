@@ -24,14 +24,14 @@ namespace GymTEC.Controllers
             var parameters = new Dictionary<string, object>
             {
                 { "in_type", input.class_type },
-                { "in_start_time", input.start_time },
-                { "in_end_time", input.end_time }
+                { "in_start_date", input.start_date },
+                { "in_end_date", input.end_date }
             };
 
             try
             {
                 DataTable result = _databaseService.ExecuteFunction(
-                    "SELECT * FROM sp_search_class(@in_type, @in_start_time, @in_end_time)", parameters);
+                    "SELECT * FROM sp_search_class(@in_type, @in_start_date , @in_end_date )", parameters);
 
                 var classList = new List<Data_output_class_info>();
 
@@ -43,7 +43,9 @@ namespace GymTEC.Controllers
                         start_time = row["start_time"].ToString(),
                         end_time = row["end_time"].ToString(),
                         instructor = row["instructor"].ToString(),
-                        available_spots = Convert.ToInt32(row["available_spots"])
+                        available_spots = Convert.ToInt32(row["available_spots"]),
+                        start_date = input.start_date,
+                        end_date = input.end_date
                     });
                 }
 

@@ -272,6 +272,39 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+---------------------- Para search Clases ----------------------
+CREATE OR REPLACE FUNCTION sp_search_class(
+    in_type TEXT,
+    in_start_date TEXT,
+    in_end_date TEXT
+)
+RETURNS TABLE (
+    class_date DATE,
+    start_time TIME,
+    end_time TIME,
+    instructor TEXT,
+    available_spots INT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.date AS class_date,
+        c.start_time,
+        c.end_time,
+        e.name::TEXT AS instructor,
+        (c.max_capacity - COUNT(a.client_id))::INTEGER AS available_spots 
+    FROM Class c
+    JOIN Employee e ON c.employee_id = e.employee_id
+    LEFT JOIN Class_Attendance a ON c.class_id = a.class_id AND a.date = c.date
+    WHERE c.type = in_type
+      AND c.date BETWEEN in_start_date::DATE AND in_end_date::DATE
+    GROUP BY c.class_id, c.date, c.start_time, c.end_time, e.name, c.max_capacity;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
 ---------------------- Para registrar equipment_type ----------------------
 CREATE OR REPLACE FUNCTION sp_insert_or_edit_equipment_type(
     in_name TEXT,
@@ -773,8 +806,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
 ----------------------  delete payroll planilla spreadsheet----------------------
 CREATE OR REPLACE FUNCTION sp_delete_payroll_type(in_puesto TEXT)
 RETURNS VOID AS $$
@@ -785,118 +816,16 @@ BEGIN
 
     IF pos_id IS NOT NULL THEN
         
-		DELETE FROM Position
-		WHERE position_id = 3;
-		
-		DELETE FROM Employee
-		WHERE position_id = 3;
+		UPDATE Employee
+		SET position_id = 1
+		WHERE position_id = pos_id;
+
+		UPDATE Employee
+		SET position_id = 5
+		WHERE position_id = pos_id;
 		
 		DELETE FROM Spreadsheet
-		WHERE spreadsheet_id = 3;
-        DELETE FROM Position WHERE position_id = pos_id;
+		WHERE position_id = pos_id;
     END IF;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION sp_delete_spa_treatment(
-    in_id INT
-)
-RETURNS VOID AS $$
-BEGIN
-    DELETE FROM Spa_Treatment
-    WHERE treatment_id = in_id;
-END;
-$$ LANGUAGE plpgsql;
-
-----------------------  consult_spa_treatment ----------------------
-
-DROP FUNCTION IF EXISTS sp_get_spa_treatment_by_name(p_name TEXT);
-
-CREATE OR REPLACE FUNCTION sp_get_spa_treatment_by_name(
-    p_name TEXT
-)
-RETURNS TABLE (
-    treatment_id INT,
-    treatment_name VARCHAR(100),
-    description VARCHAR(200)
-) AS $$
-BEGIN
-    RETURN QUERY
-    SELECT st.treatment_id, st.name AS treatment_name, st.description
-    FROM Spa_Treatment st
-    WHERE st.name = p_name;
-END;
-$$ LANGUAGE plpgsql;
-
-
--- ----------------------  sp_associate_spa_treatment ----------------------
-DROP FUNCTION IF EXISTS sp_associate_spa_treatment(INT, TEXT);
-
-CREATE OR REPLACE FUNCTION sp_associate_spa_treatment(
-    in_treatment_id INT,
-    in_branch_name TEXT
-)
-RETURNS VOID AS $$
-DECLARE
-    v_branch_id INT;
-BEGIN
-    -- Buscar el ID de la sucursal por nombre
-    SELECT branch_id INTO v_branch_id
-    FROM Branch
-    WHERE name = in_branch_name;
-
-    IF v_branch_id IS NULL THEN
-        RAISE EXCEPTION 'Sucursal con nombre "%" no encontrada', in_branch_name;
-    END IF;
-
-    -- Insertar asociación sin duplicados
-    INSERT INTO Spa_Treatment_Branch (treatment_id, branch_id)
-    VALUES (in_treatment_id, v_branch_id)
-    ON CONFLICT DO NOTHING;
-END;
-$$ LANGUAGE plpgsql;
-
--- ----------------------  sp_search_spa_treatments_by_name ----------------------
-
--- Asociados
-DROP FUNCTION IF EXISTS sp_get_associated_spa_treatments(TEXT);
-
-CREATE OR REPLACE FUNCTION sp_get_associated_spa_treatments(p_branch_name TEXT)
-RETURNS TABLE(treatment_id INT, treatment_name VARCHAR(100)) AS $$
-BEGIN
-    RETURN QUERY
-    SELECT st.treatment_id, st.name
-    FROM Spa_Treatment st
-    JOIN Spa_Treatment_Branch stb ON st.treatment_id = stb.treatment_id
-    JOIN Branch b ON b.branch_id = stb.branch_id
-    WHERE b.name = p_branch_name;
-END;
-$$ LANGUAGE plpgsql;
-
--- No asociados
-DROP FUNCTION IF EXISTS sp_get_not_associated_spa_treatments(TEXT);
-
-CREATE OR REPLACE FUNCTION sp_get_not_associated_spa_treatments(p_branch_name TEXT)
-RETURNS TABLE(treatment_id INT, treatment_name VARCHAR(100)) AS $$
-DECLARE
-    v_branch_id INT;
-BEGIN
-    SELECT branch_id INTO v_branch_id
-    FROM Branch
-    WHERE name = p_branch_name;
-
-    IF v_branch_id IS NULL THEN
-        RAISE EXCEPTION 'Branch name % not found', p_branch_name;
-    END IF;
-
-    RETURN QUERY
-    SELECT st.treatment_id, st.name
-    FROM Spa_Treatment st
-    WHERE st.treatment_id NOT IN (
-        SELECT stb.treatment_id
-        FROM Spa_Treatment_Branch stb
-        WHERE stb.branch_id = v_branch_id
-    );
 END;
 $$ LANGUAGE plpgsql;
