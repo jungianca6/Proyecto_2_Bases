@@ -2,6 +2,6 @@
 {
     public class Data_input_delete_payroll_type
     {
-        public string identifier { get; set; }
+        public string puesto { get; set; }
     }
 }
