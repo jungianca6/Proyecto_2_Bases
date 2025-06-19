@@ -58,5 +58,12 @@ namespace GymTEC.Utilities
             return conn.Query(sql, new DynamicParameters(parameters));
         }
 
+        public IEnumerable<T> Query2<T>(string sql, Dictionary<string, object> parameters)
+        {
+            using var conn = new NpgsqlConnection(_connectionString);
+            conn.Open();
+            return conn.Query<T>(sql, new DynamicParameters(parameters));
+        }
+
     }
 }

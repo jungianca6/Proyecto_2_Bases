@@ -27,26 +27,12 @@ namespace GymTEC.Controllers
 
             try
             {
-                // Ejecuta la función y obtiene los resultados
-                var results = _databaseService.ExecuteFunction("SELECT sp_generate_payroll(@in_branch_name)", parameters);
-
-                // Construir lista de empleados a partir de los resultados
-                var employees = new List<EmployeePayrollInfo>();
-                foreach (DataRow row in results.Rows)
-                {
-                    employees.Add(new EmployeePayrollInfo
-                    {
-                        employee_id = row["employee_id"].ToString(),
-                        full_name = row["full_name"].ToString(),
-                        classes_or_hours = Convert.ToInt32(row["classes_or_hours"]),
-                        amount_to_pay = Convert.ToDecimal(row["amount_to_pay"]),
-                        type = row["type"].ToString()
-                    });
-                }
+                var result = _databaseService.Query2<EmployeePayrollInfo>(
+                    "SELECT * FROM sp_generate_payroll(@in_branch_name)", parameters);
 
                 var data_output = new Data_output_generate_payroll
                 {
-                    employees = employees
+                    employees = result.ToList()
                 };
 
                 return Ok(new Data_response<Data_output_generate_payroll>
