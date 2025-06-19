@@ -30,11 +30,11 @@ function AdminInventario() {
             };
         } else if (accion === "eliminar" || accion === "consultar") {
             data = {
-                equipment_type: formData.tipoEquipo,
-                brand: formData.marca,
+                equipment_type: "",
+                brand: "",
                 serial_number: formData.numeroSerie,
-                cost: parseFloat(formData.costo),
-                branch_name: formData.nombreSucursal
+                cost: 0,
+                branch_name: ""
             };
         }
 
