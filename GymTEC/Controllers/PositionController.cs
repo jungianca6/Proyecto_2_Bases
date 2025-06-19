@@ -150,21 +150,56 @@ namespace GymTEC.Controllers
         [HttpPost("consult_position")]
         public ActionResult<Data_response<Data_output_manage_position>> ConsultPosition([FromBody] Data_input_consult_position input)
         {
-            // Ejemplo de respuesta estática
-            var data_Output = new Data_output_manage_position
+            // Validación básica
+            if (string.IsNullOrWhiteSpace(input.position_name))
             {
-                position_name = "Entrenador Personal",
-                description = "Responsable de guiar a los clientes en sus rutinas",
-                position_id = input.position_id
-            };
+                return BadRequest(new { status = false, error = "El nombre del puesto es obligatorio." });
+            }
 
-            var response = new Data_response<Data_output_manage_position>
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_name", input.position_name }
+    };
+
+            try
             {
-                status = true,
-                data = data_Output
-            };
+                // Ejecuta la función y mapea columnas a Data_output_manage_position
+                var result = _databaseService.QuerySingle<Data_output_manage_position>(
+                    @"SELECT 
+                position_id::TEXT   AS position_id,
+                position_name       AS position_name,
+                description
+              FROM sp_consult_position(@in_name)",
+                    parameters
+                );
 
-            return Ok(response);
+                return Ok(new Data_response<Data_output_manage_position>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                // Si la excepción viene del SP por no existir, devolvemos 404
+                if (ex.Message.Contains("No existe un puesto con ese nombre"))
+                {
+                    return NotFound(new
+                    {
+                        status = false,
+                        error = ex.Message
+                    });
+                }
+
+                // Otros errores
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
+
     }
 }

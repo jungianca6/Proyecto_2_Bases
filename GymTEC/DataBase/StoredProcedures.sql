@@ -662,4 +662,34 @@ BEGIN
         description = in_description
     WHERE position_id = in_position_id;
 END;
+$$ LANGUAGE plpgsql;   
+
+
+----------------------  consult Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_consult_position(in_name TEXT)
+RETURNS TABLE (
+    position_id INT,
+    position_name TEXT,
+    description TEXT
+) AS $$
+BEGIN
+    -- Verifica existencia
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM Position p
+        WHERE LOWER(p.name) = LOWER(in_name)
+    ) THEN
+        RAISE EXCEPTION 'No existe un puesto con ese nombre';
+    END IF;
+
+    -- Devuelve la fila con casts explícitos a TEXT
+    RETURN QUERY
+    SELECT
+        p.position_id,
+        p.name::TEXT         AS position_name,
+        p.description::TEXT  AS description
+    FROM Position p
+    WHERE LOWER(p.name) = LOWER(in_name);
+END;
 $$ LANGUAGE plpgsql;

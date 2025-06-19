@@ -2,6 +2,6 @@
 {
     public class Data_input_consult_position
     {
-        public string position_id { get; set; }
+        public string position_name { get; set; }
     }
 }
