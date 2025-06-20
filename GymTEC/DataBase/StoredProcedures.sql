@@ -25,11 +25,11 @@ BEGIN
     IF NOT FOUND THEN
         RETURN QUERY
         SELECT 
-            e.id_number::TEXT,
+            e.username::TEXT,
             'Instructor'::TEXT,
             e.employee_id::TEXT
         FROM Employee e
-        WHERE e.id_number = in_username AND e.password = in_password;
+        WHERE e.username = in_username AND e.password = in_password;
     END IF;
 
     -- Si tampoco encontró en Employee, buscar en Admin
@@ -489,11 +489,56 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
----------------------- Para insertar o editar employee ----------------------
+----------------------  insertar employee ----------------------
 CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
+    in_employee_id TEXT,         
+    in_full_name TEXT,
+    in_province TEXT,
+    in_canton TEXT,
+    in_district TEXT,
+    in_position TEXT,
+    in_branch TEXT,
+    in_payroll_id INT,
+    in_salary INT,
+    in_email TEXT,
+    in_username TEXT,
+    in_password TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    exists_flag TEXT;
+    branch_id INT;
+    position_id INT;
+BEGIN
+    SELECT b.branch_id INTO branch_id FROM Branch b WHERE b.name = in_branch;
+    IF branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal no encontrada';
+    END IF;
+
+    SELECT p.position_id INTO position_id FROM Position p WHERE p.name = in_position;
+    IF position_id IS NULL THEN
+        RAISE EXCEPTION 'Puesto no encontrado';
+    END IF;
+
+    SELECT e.employee_id INTO exists_flag FROM Employee e WHERE e.employee_id = in_employee_id;
+
+    IF exists_flag IS NULL THEN
+        INSERT INTO Employee (
+            employee_id, name, province, canton, district,
+            email, username, password, salary,
+            bank_account, position_id, spreadsheet_id, branch_id
+        ) VALUES (
+            in_employee_id, in_full_name, in_province, in_canton, in_district,
+            in_email, in_username, in_password, in_salary,
+            'TEMP', position_id, in_payroll_id, branch_id
+        );
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  editar employee ----------------------
+CREATE OR REPLACE FUNCTION sp_edit_employee(
     in_employee_id TEXT,
     in_full_name TEXT,
     in_province TEXT,
@@ -501,76 +546,20 @@ CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
     in_district TEXT,
     in_position TEXT,
     in_branch TEXT,
-    in_payroll_type TEXT,
-    in_salary INT,
-    in_email TEXT,
-    in_password TEXT
-)
-RETURNS VOID AS $$
-DECLARE
-    existing_employee_id INT;
-    branch_id INT;
-    position_id INT;
-BEGIN
-    -- Verificar sucursal
-    SELECT b.branch_id INTO branch_id FROM Branch b WHERE b.name = in_branch;
-    IF branch_id IS NULL THEN
-        RAISE EXCEPTION 'Sucursal no encontrada';
-    END IF;
-
-    -- Verificar posición
-    SELECT p.position_id INTO position_id FROM Position p WHERE p.name = in_position;
-    IF position_id IS NULL THEN
-        RAISE EXCEPTION 'Puesto no encontrado';
-    END IF;
-
-    -- Verificar si ya existe el empleado
-    SELECT e.employee_id INTO existing_employee_id FROM Employee e WHERE e.id_number = in_employee_id;
-
-    -- Si no existe, lo insertamos
-    IF existing_employee_id IS NULL THEN
-        INSERT INTO Employee (
-            name, province, canton, district,
-            email, id_number, password, salary,
-            bank_account, position_id, spreadsheet_id, branch_id
-        )
-        VALUES (
-            in_full_name, in_province, in_canton, in_district,
-            in_email, in_employee_id, in_password, in_salary,
-            'TEMP',            -- Bank account temporal
-            position_id,       -- Asociado por nombre
-            1,                 -- Planilla genérica
-            branch_id          -- Asociado por nombre
-        );
-    END IF;
-    -- Si ya existe, NO se actualiza nada
-END;
-$$ LANGUAGE plpgsql;
-
-
-----------------------  editar employee ----------------------
-CREATE OR REPLACE FUNCTION sp_edit_employee(
-    in_id_number TEXT,
-    in_full_name TEXT,
-    in_province TEXT,
-    in_canton TEXT,
-    in_district TEXT,
-    in_position TEXT,
-    in_branch TEXT,
-    in_payroll_type TEXT,
+    in_payroll_id INTEGER,
     in_salary INTEGER,
     in_email TEXT,
     in_password TEXT
 )
 RETURNS VOID AS $$
 DECLARE
-    emp_id INT;
+    exists_flag TEXT;
     pos_id INT;
     br_id INT;
 BEGIN
-    -- Verificar si el empleado existe
-    SELECT employee_id INTO emp_id FROM Employee WHERE id_number = in_id_number;
-    IF emp_id IS NULL THEN
+    -- Verificar si el empleado existe (por cédula)
+    SELECT employee_id INTO exists_flag FROM Employee WHERE employee_id = in_employee_id;
+    IF exists_flag IS NULL THEN
         RAISE EXCEPTION 'Empleado no existe con la cédula proporcionada';
     END IF;
 
@@ -586,7 +575,7 @@ BEGIN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    -- Actualizar el empleado
+    -- Actualizar los datos del empleado
     UPDATE Employee
     SET
         name = in_full_name,
@@ -597,9 +586,68 @@ BEGIN
         password = in_password,
         salary = in_salary,
         position_id = pos_id,
-        branch_id = br_id
-        -- NOTA: spreadsheet_id queda igual
-    WHERE id_number = in_id_number;
+        branch_id = br_id,
+        spreadsheet_id = in_payroll_id -- actualizar planilla también
+    WHERE employee_id = in_employee_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  delete employee ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_employee(
+    in_employee_id TEXT
+)
+RETURNS VOID AS $$
+BEGIN
+    -- Verifica existencia
+    IF NOT EXISTS (SELECT 1 FROM Employee WHERE employee_id = in_employee_id) THEN
+        RAISE EXCEPTION 'Empleado con cédula % no existe.', in_employee_id;
+    END IF;
+
+    -- Elimina
+    DELETE FROM Employee WHERE employee_id = in_employee_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+----------------------  delete employee ----------------------
+CREATE OR REPLACE FUNCTION sp_get_employee(
+    in_employee_id TEXT
+)
+RETURNS TABLE (
+    employee_id TEXT,
+    full_name TEXT,
+    province TEXT,
+    canton TEXT,
+    district TEXT,
+    "position" TEXT,
+    "branch" TEXT,
+    payroll_id INT,
+    salary INT,
+    email TEXT,
+    username TEXT,
+    password TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        e.employee_id,
+        e.name::TEXT,           -- ← Cast explícito
+        e.province::TEXT,
+        e.canton::TEXT,
+        e.district::TEXT,
+        p.name::TEXT AS "position",
+        b.name::TEXT AS "branch",
+        e.spreadsheet_id,
+        e.salary,
+        e.email::TEXT,
+        e.username::TEXT,
+        e.password::TEXT
+    FROM Employee e
+    JOIN Position p ON p.position_id = e.position_id
+    JOIN Branch b ON b.branch_id = e.branch_id
+    WHERE e.employee_id = in_employee_id;
 END;
 $$ LANGUAGE plpgsql;
 

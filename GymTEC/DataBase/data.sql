@@ -72,16 +72,16 @@ CREATE TABLE Work_Plan (
 
 -- 9. Table Employee
 CREATE TABLE Employee (
-    employee_id SERIAL PRIMARY KEY,
+    employee_id TEXT PRIMARY KEY,               -- número de cédula del empleado
     name VARCHAR(100) NOT NULL,
     province VARCHAR(200) NOT NULL,
     canton VARCHAR(200) NOT NULL,
     district VARCHAR(200) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    id_number VARCHAR(20) NOT NULL,
+    username VARCHAR(100) NOT NULL,            
     password VARCHAR(100) NOT NULL,
     salary INT NOT NULL,
-    bank_account VARCHAR(50) NOT NULL,
+    bank_account VARCHAR(50) NOT NULL DEFAULT 'TEMP',
     position_id INT NOT NULL REFERENCES Position(position_id),
     spreadsheet_id INT NOT NULL REFERENCES Spreadsheet(spreadsheet_id),
     branch_id INT NOT NULL REFERENCES Branch(branch_id)

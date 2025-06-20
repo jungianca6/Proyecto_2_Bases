@@ -50,24 +50,25 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<Data_output_employee>> InsertOrEditEmployee([FromBody] Data_input_employee input)
         {
             var parameters = new Dictionary<string, object>
-    {
-        { "in_employee_id", input.employee_id },
-        { "in_full_name", input.full_name },
-        { "in_province", input.province },
-        { "in_canton", input.canton },
-        { "in_district", input.district },
-        { "in_position", input.position },
-        { "in_branch", input.branch },
-        { "in_payroll_id", input.payroll_id }, // ID en vez de nombre
-        { "in_salary", input.salary },
-        { "in_email", input.email },
-        { "in_password", Encriptador.ObtenerHashMD5(input.password) }
-    };
+                {
+                    { "in_employee_id", input.employee_id },   // TEXT
+                    { "in_full_name", input.full_name },       // TEXT
+                    { "in_province", input.province },         // TEXT
+                    { "in_canton", input.canton },             // TEXT
+                    { "in_district", input.district },         // TEXT
+                    { "in_position", input.position },         // TEXT
+                    { "in_branch", input.branch },             // TEXT
+                    { "in_payroll_id", input.payroll_id },     // INTEGER
+                    { "in_salary", input.salary },             // INTEGER
+                    { "in_email", input.email },               // TEXT
+                    { "in_username", input.username }, 
+                    { "in_password", Encriptador.ObtenerHashMD5(input.password) } // TEXT
+                };
 
             try
             {
                 _databaseService.ExecuteFunction(
-                    "SELECT sp_insert_or_edit_employee(@in_employee_id, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_id, @in_salary, @in_email, @in_password)",
+                    "SELECT sp_insert_or_edit_employee(@in_employee_id, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_id, @in_salary, @in_email, @in_username, @in_password)",
                     parameters
                 );
 
@@ -83,7 +84,8 @@ namespace GymTEC.Controllers
                     payroll_id = input.payroll_id,
                     salary = input.salary,
                     email = input.email,
-                    password = input.password
+                    username = input.username,
+                    password = input.password // ⚠️ No se recomienda retornar passwords, incluso en hash
                 };
 
                 return Ok(new Data_response<Data_output_employee>
@@ -108,24 +110,24 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<string>> EditEmployee([FromBody] Data_input_employee input)
         {
             var parameters = new Dictionary<string, object>
-    {
-        { "in_id_number", input.employee_id },
-        { "in_full_name", input.full_name },
-        { "in_province", input.province },
-        { "in_canton", input.canton },
-        { "in_district", input.district },
-        { "in_position", input.position },
-        { "in_branch", input.branch },
-        { "in_payroll_id", input.payroll_id }, // ID directo
-        { "in_salary", input.salary },
-        { "in_email", input.email },
-        { "in_password", Encriptador.ObtenerHashMD5(input.password) }
-    };
+            {
+                { "in_employee_id", input.employee_id },      
+                { "in_full_name", input.full_name },
+                { "in_province", input.province },
+                { "in_canton", input.canton },
+                { "in_district", input.district },
+                { "in_position", input.position },
+                { "in_branch", input.branch },
+                { "in_payroll_id", input.payroll_id },
+                { "in_salary", input.salary },
+                { "in_email", input.email },
+                { "in_password", Encriptador.ObtenerHashMD5(input.password) }
+            };
 
             try
             {
                 _databaseService.ExecuteFunction(
-                    "SELECT sp_edit_employee(@in_id_number, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_id, @in_salary, @in_email, @in_password)",
+                    "SELECT sp_edit_employee(@in_employee_id, @in_full_name, @in_province, @in_canton, @in_district, @in_position, @in_branch, @in_payroll_id, @in_salary, @in_email, @in_password)",
                     parameters
                 );
 
@@ -151,15 +153,33 @@ namespace GymTEC.Controllers
         [HttpPost("delete")]
         public ActionResult<Data_response<string>> DeleteEmployee([FromBody] Data_input_employee input)
         {
-            // Aquí iría la lógica para eliminar en base a input.employee_id
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_employee_id", input.employee_id }
+    };
 
-            var response = new Data_response<string>
+            try
             {
-                status = true,
-                data = "Empleado eliminado exitosamente"
-            };
+                _databaseService.ExecuteFunction(
+                    "SELECT sp_delete_employee(@in_employee_id)",
+                    parameters
+                );
 
-            return Ok(response);
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Empleado eliminado exitosamente."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         /// <summary>
@@ -181,31 +201,42 @@ namespace GymTEC.Controllers
         [HttpPost("get")]
         public ActionResult<Data_response<Data_output_employee>> GetEmployee([FromBody] Data_input_employee input)
         {
-            // Aquí iría la lógica para consultar el empleado por input.employee_id
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_employee_id", input.employee_id }
+    };
 
-            // Ejemplo ficticio de respuesta:
-            var data_output = new Data_output_employee
+            try
             {
-                employee_id = input.employee_id,
-                full_name = "Juan Pérez González",
-                province = "San José",
-                canton = "Escazú",
-                district = "San Rafael",
-                position = "Entrenador Personal",
-                branch = "Sucursal Escazú",
-                payroll_id = 1,
-                salary = 650000,
-                email = "juan.perez@example.com",
-                password = "contraseñaSegura123"
-            };
+                var result = _databaseService.QuerySingle<Data_output_employee>(
+                    "SELECT * FROM sp_get_employee(@in_employee_id)",
+                    parameters
+                );
 
-            var response = new Data_response<Data_output_employee>
+                if (result == null)
+                {
+                    return NotFound(new Data_response<Data_output_employee>
+                    {
+                        status = false,
+                        data = null
+                    });
+                }
+
+                return Ok(new Data_response<Data_output_employee>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = data_output
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
     }
 }

@@ -12,6 +12,7 @@
         public int payroll_id { get; set; }       // IGUALMENTE ES UN ID
         public int salary { get; set; }
         public string email { get; set; }
+        public string username { get; set; }
         public string password { get; set; }
     }
 }
