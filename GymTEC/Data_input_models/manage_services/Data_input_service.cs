@@ -2,7 +2,8 @@
 {
     public class Data_input_service
     {
-        public string service_id { get; set; }  // identificador único
+        public string service_name { get; set; }   // ← Cambiado
         public string description { get; set; }
+        public string class_name { get; set; }
     }
 }

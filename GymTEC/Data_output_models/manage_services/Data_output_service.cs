@@ -2,7 +2,7 @@
 {
     public class Data_output_service
     {
-        public string service_id { get; set; }
+        public string service_name { get; set; }
         public string description { get; set; }
     }
 }
