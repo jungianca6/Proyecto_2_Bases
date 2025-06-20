@@ -2,6 +2,7 @@
 using GymTEC.Data_output_models.manage_workout;
 using GymTEC.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GymTEC.Controllers
 {
@@ -19,52 +20,87 @@ namespace GymTEC.Controllers
         [HttpPost("view_workout_plan")]
         public ActionResult<Data_response<Data_output_view_workout_plan>> ViewWorkoutPlan([FromBody] Data_input_view_workout_plan input)
         {
-            // Simulamos la respuesta con un plan de trabajo de ejemplo
-            var workoutPlan = new List<WorkoutPlanItem>
+            var parameters = new Dictionary<string, object>
+                {
+                    { "in_client_id", int.Parse(input.client_id) }
+                };
+
+            try
             {
-                new WorkoutPlanItem
+                var result = _databaseService.ExecuteFunction("SELECT * FROM sp_view_workout_plan(@in_client_id)", parameters);
+
+                var workoutPlan = new List<WorkoutPlanItem>();
+
+                foreach (DataRow row in result.Rows)
                 {
-                    day = "Lunes",
-                    exercise_name = "Flexiones",
-                    sets = 3,
-                    repetitions = 12,
-                    notes = "Mantener la espalda recta"
-                },
-                new WorkoutPlanItem
-                {
-                    day = "Miércoles",
-                    exercise_name = "Sentadillas",
-                    sets = 4,
-                    repetitions = 15,
-                    notes = "Sin peso adicional"
+                    workoutPlan.Add(new WorkoutPlanItem
+                    {
+                        day = row["day"].ToString(),
+                        exercise_name = row["exercise_name"].ToString(),
+                        sets = Convert.ToInt32(row["sets"]),
+                        repetitions = Convert.ToInt32(row["repetitions"]),
+                        notes = row["notes"].ToString()
+                    });
                 }
-            };
 
-            Data_output_view_workout_plan data_Output = new Data_output_view_workout_plan
+                var dataOutput = new Data_output_view_workout_plan
+                {
+                    client_id = input.client_id,
+                    workout_plan = workoutPlan
+                };
+
+                return Ok(new Data_response<Data_output_view_workout_plan>
+                {
+                    status = true,
+                    data = dataOutput
+                });
+            }
+            catch (Exception ex)
             {
-                client_id = input.client_id,
-                workout_plan = workoutPlan
-            };
-
-            var response = new Data_response<Data_output_view_workout_plan>
-            {
-                status = true,
-                data = data_Output
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpPost("create_workout_plan")]
         public ActionResult<Data_response<string>> CreateWorkoutPlan([FromBody] Data_input_create_workout_plan input)
         {
-            string msg = $"Ejercicio '{input.exercise_name}' agregado al plan de trabajo del cliente {input.client_id} para el {input.day}.";
+            var parameters = new Dictionary<string, object>
+                {
+                    { "in_client_id", input.client_id },
+                    { "in_description", input.description },
+                    { "in_period", input.period },
+                    { "in_branch_name", input.branch_name },
+                    { "in_day", input.day },
+                    { "in_exercise_name", input.exercise_name },
+                    { "in_sets", input.sets },
+                    { "in_repetitions", input.repetitions },
+                    { "in_notes", input.notes ?? string.Empty }
+                };
 
-            return Ok(new Data_response<string>
+            try
             {
-                status = true,
-                data = msg
-            });
+                _databaseService.ExecuteFunction("SELECT sp_create_workout_plan(@in_client_id, @in_description, @in_period, @in_branch_name, @in_day, @in_exercise_name, @in_sets, @in_repetitions, @in_notes)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Ejercicio agregado al plan de entrenamiento del cliente."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
     }
