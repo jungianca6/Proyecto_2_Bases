@@ -1,11 +1,10 @@
 
 -- Triggers: 
-
 CREATE OR REPLACE FUNCTION protect_default_treatments()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF OLD.treatment_id IN (1, 2, 3, 4) THEN
-        RAISE EXCEPTION 'No se puede eliminar o modificar un tratamiento predeterminado.';
+    IF OLD.name IN ('Masaje Relajante', 'Masaje descarga muscular', 'Sauna', 'Baño a vapor') THEN
+        RAISE EXCEPTION 'No se puede eliminar o modificar un tratamiento predeterminado: %.', OLD.name;
     END IF;
     RETURN OLD;
 END;
@@ -17,13 +16,12 @@ FOR EACH ROW
 EXECUTE FUNCTION protect_default_treatments();
 
 
-
--- Crear la funci�n del trigger para proteger puestos default
+-- Crear la función del trigger para proteger puestos default
 CREATE OR REPLACE FUNCTION protect_default_positions()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF OLD.position_id IN (1, 2, 3, 4) THEN
-        RAISE EXCEPTION 'No se puede eliminar o modificar un puesto predeterminado.';
+    IF OLD.name IN ('Administrador', 'Instructor', 'Dependiente Spa', 'Dependiente tienda') THEN
+        RAISE EXCEPTION 'No se puede eliminar o modificar un puesto predeterminado: %.', OLD.name;
     END IF;
     RETURN OLD;
 END;
@@ -35,12 +33,12 @@ FOR EACH ROW
 EXECUTE FUNCTION protect_default_positions();
 
 
--- Crear la funci�n del trigger para proteger servicios default
+-- Crear la función del trigger para proteger servicios default
 CREATE OR REPLACE FUNCTION protect_default_services()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF OLD.service_id IN (1, 2, 3, 4, 5) THEN
-        RAISE EXCEPTION 'No se puede eliminar o modificar un servicio predeterminado.';
+    IF OLD.name IN ('Zumba', 'Pilates', 'Natación', 'Yoga', 'Indoor Cycling') THEN
+        RAISE EXCEPTION 'No se puede eliminar o modificar un servicio predeterminado: %.', OLD.name;
     END IF;
     RETURN OLD;
 END;
@@ -50,4 +48,3 @@ CREATE TRIGGER trg_protect_default_services
 BEFORE DELETE OR UPDATE ON Service
 FOR EACH ROW
 EXECUTE FUNCTION protect_default_services();
-
