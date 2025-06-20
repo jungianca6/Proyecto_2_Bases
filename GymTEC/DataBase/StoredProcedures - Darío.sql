@@ -1,7 +1,7 @@
 /* Stored Procedures necesarios para todo jeje */
 
 
-
+----------------------  Copiar schedule ----------------------
 CREATE OR REPLACE FUNCTION sp_copy_schedule(
     in_branch_name TEXT,
     in_start_week TEXT,
@@ -46,5 +46,69 @@ BEGIN
         end_time := TO_CHAR(r.end_time, 'HH24:MI');
         RETURN NEXT;
     END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  ver workout plan ----------------------
+CREATE OR REPLACE FUNCTION sp_view_workout_plan(in_client_id INT)
+RETURNS TABLE (
+    day TEXT,
+    exercise_name TEXT,
+    sets INT,
+    repetitions INT,
+    notes TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        wp.period::TEXT AS day,
+        wp.description::TEXT AS exercise_name,
+        3::INT AS sets,
+        12::INT AS repetitions,
+        'Ejercicio general'::TEXT AS notes
+    FROM Work_Plan wp
+    WHERE wp.client_id = in_client_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  create workout plan ----------------------
+CREATE OR REPLACE FUNCTION sp_create_workout_plan(
+    in_client_id TEXT,
+    in_description TEXT,
+    in_period TEXT,
+    in_branch_name TEXT,
+    in_day TEXT,
+    in_exercise_name TEXT,
+    in_sets INTEGER,
+    in_repetitions INTEGER,
+    in_notes TEXT
+) RETURNS VOID AS $$
+DECLARE
+    v_branch_id INT;
+BEGIN
+    SELECT branch_id INTO v_branch_id
+    FROM Branch
+    WHERE name = in_branch_name;
+
+    IF v_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal no encontrada: %', in_branch_name;
+    END IF;
+
+    INSERT INTO Work_Plan(
+        description, period, branch_id, client_id, day, exercise_name, sets, repetitions, notes
+    )
+    VALUES (
+        in_description,
+        in_period,
+        v_branch_id,
+        CAST(in_client_id AS INT),
+        in_day,
+        in_exercise_name,
+        in_sets,
+        in_repetitions,
+        in_notes
+    );
 END;
 $$ LANGUAGE plpgsql;

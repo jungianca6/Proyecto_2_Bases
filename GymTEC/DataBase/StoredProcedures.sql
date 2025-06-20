@@ -808,6 +808,147 @@ BEGIN
 END;	
 $$ LANGUAGE plpgsql;
 
+----------------------  Product insert or edit ----------------------
+
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_product(
+    in_name TEXT,
+    in_barcode TEXT,
+    in_description TEXT,
+    in_cost INT
+)
+RETURNS VOID AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM Product WHERE barcode = in_barcode) THEN
+        -- Actualizar producto existente
+        UPDATE Product
+        SET name = in_name,
+            description = in_description,
+            cost = in_cost
+        WHERE barcode = in_barcode;
+    ELSE
+        -- Insertar nuevo producto con store_id = 1 por defecto
+        INSERT INTO Product (name, barcode, description, cost, is_active, store_id)
+        VALUES (in_name, in_barcode, in_description, in_cost, TRUE, 1);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------  delete Product ----------------------
+
+CREATE OR REPLACE FUNCTION sp_delete_product(
+    in_barcode TEXT
+)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM Product
+    WHERE barcode = in_barcode;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------  get Products ----------------------
+
+CREATE OR REPLACE FUNCTION sp_get_product(
+    in_barcode TEXT
+)
+RETURNS TABLE (
+    product_name TEXT,
+    barcode TEXT,
+    description TEXT,
+    cost INT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.name::TEXT AS product_name, 
+        p.barcode::TEXT, 
+        p.description::TEXT, 
+        p.cost::INT           
+    FROM Product p
+    WHERE p.barcode = in_barcode
+    LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+----------------------  insert_or_edit_spa_treatment ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_spa_treatment(
+    in_id INT,
+    in_name TEXT
+)
+RETURNS VOID AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM Spa_Treatment WHERE treatment_id = in_id) THEN
+        UPDATE Spa_Treatment
+        SET name = in_name
+        WHERE treatment_id = in_id;
+    ELSE
+        INSERT INTO Spa_Treatment(treatment_id, name, description)
+        VALUES (in_id, in_name, 'Descripción por defecto');
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  delete_spa_treatment ----------------------
+
+CREATE OR REPLACE FUNCTION sp_delete_spa_treatment(
+    in_id INT
+)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM Spa_Treatment
+    WHERE treatment_id = in_id;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------  consult_spa_treatment ----------------------
+
+DROP FUNCTION IF EXISTS sp_get_spa_treatment(INT);
+
+CREATE OR REPLACE FUNCTION sp_get_spa_treatment(
+    in_id INT
+)
+RETURNS TABLE (
+    treatment_id INT,
+    treatment_name VARCHAR(100)  -- Cambiar TEXT por VARCHAR(100)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT st.treatment_id, st.name
+    FROM Spa_Treatment AS st
+    WHERE st.treatment_id = in_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ----------------------  sp_associate_spa_treatment ----------------------
+DROP FUNCTION IF EXISTS sp_associate_spa_treatment(INT, TEXT);
+
+CREATE OR REPLACE FUNCTION sp_associate_spa_treatment(
+    in_treatment_id INT,
+    in_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    v_branch_id INT;
+BEGIN
+    -- Buscar el ID de la sucursal por nombre
+    SELECT branch_id INTO v_branch_id
+    FROM Branch
+    WHERE name = in_branch_name;
+
+    IF v_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal con nombre "%" no encontrada', in_branch_name;
+    END IF;
+
+    -- Insertar asociación sin duplicados
+    INSERT INTO Spa_Treatment_Branch (treatment_id, branch_id)
+    VALUES (in_treatment_id, v_branch_id)
+    ON CONFLICT DO NOTHING;
+END;
+$$ LANGUAGE plpgsql;
+
+
 ----------------------  insertar payroll planilla spreadsheet----------------------
 CREATE OR REPLACE FUNCTION sp_manage_payroll_type(
     in_description TEXT,

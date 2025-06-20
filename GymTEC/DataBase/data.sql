@@ -8,8 +8,11 @@ CREATE TABLE Position (
 -- 2. Table Spreadsheet
 CREATE TABLE Spreadsheet (
     spreadsheet_id SERIAL PRIMARY KEY,
-    salary NUMERIC(10,2) NOT NULL,
-    position_id INT NOT NULL REFERENCES Position(position_id)
+    position_id INT NOT NULL REFERENCES Position(position_id),
+	hours_worked INT,
+	classes_taught INT,
+	houtly_rate INT,
+	class_rate INT
 );
 
 -- 3. Table Branch
@@ -68,6 +71,7 @@ CREATE TABLE Work_Plan (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     branch_id INT NOT NULL REFERENCES Branch(branch_id)
+    client_id INT NOT NULL REFERENCES Client(client_id)
 );
 
 -- 9. Table Employee
@@ -81,7 +85,6 @@ CREATE TABLE Employee (
     username VARCHAR(100) NOT NULL,            
     password VARCHAR(100) NOT NULL,
     salary INT NOT NULL,
-    bank_account VARCHAR(50) NOT NULL DEFAULT 'TEMP',
     position_id INT NOT NULL REFERENCES Position(position_id),
     spreadsheet_id INT NOT NULL REFERENCES Spreadsheet(spreadsheet_id),
     branch_id INT NOT NULL REFERENCES Branch(branch_id)
@@ -139,6 +142,10 @@ CREATE TABLE Spa_Treatment (
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200) NOT NULL
 );
+
+
+
+
 
 -- Product - Store
 CREATE TABLE Product_Store (
