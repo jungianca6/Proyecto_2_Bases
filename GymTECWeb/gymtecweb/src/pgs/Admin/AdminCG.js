@@ -15,11 +15,11 @@ function AdminCG() {
 
     const handleSubmit = () => {
         const payload = {
-            origin_branch_name: formData.sucursalOrigen,
-            destination_branch_name: formData.sucursalDestino
+            existing_branch_name: formData.sucursalOrigen,
+            new_branch_name: formData.sucursalDestino
         };
 
-        axios.post("http://localhost:8000/copiar_gimnasio", payload)
+        axios.post("https://localhost:7155/Branch/copy_branch", payload)
             .then((res) => {
                 if (res.data.status) {
                     alert("Copia realizada exitosamente.");
