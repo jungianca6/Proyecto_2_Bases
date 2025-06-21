@@ -11,7 +11,7 @@ CREATE TABLE Spreadsheet (
     position_id INT NOT NULL REFERENCES Position(position_id),
 	hours_worked INT,
 	classes_taught INT,
-	houtly_rate INT,
+	hourly_rate INT,
 	class_rate INT,
 	description TEXT
 );

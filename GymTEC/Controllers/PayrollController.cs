@@ -23,13 +23,15 @@ namespace GymTEC.Controllers
             var parameters = new Dictionary<string, object>
                 {
                     { "in_branch_name", input.branch_name },
-                    { "in_description", input.description } // aunque no se devuelva, puede usarse internamente
+                    { "in_description", input.description },
+                    { "in_start_date", input.start_date },    // debe ser string con formato "yyyy-MM-dd"
+                    { "in_end_date", input.end_date }
                 };
 
             try
             {
                 var result = _databaseService.Query2<EmployeePayrollInfo>(
-                    "SELECT * FROM sp_generate_payroll(@in_branch_name, @in_description)", parameters);
+                    "SELECT * FROM sp_generate_payroll(@in_branch_name, @in_description, @in_start_date, @in_end_date)", parameters);
 
                 var data_output = new Data_output_generate_payroll
                 {
