@@ -2,6 +2,7 @@
 {
     public class Data_input_register_class
     {
+        public string client_id { get; set; }
         public string class_date { get; set; }          // Fecha cuando se realizará la clase (yyyy-MM-dd)
         public string start_time { get; set; }          // Fecha de inicio del período de la clase (yyyy-MM-dd)
         public string end_time { get; set; }            // Fecha de fin del período de la clase (yyyy-MM-dd)

@@ -22,24 +22,25 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<Data_output_register_class>> RegisterClass([FromBody] Data_input_register_class input)
         {
             var parameters = new Dictionary<string, object>
-            {
-                { "in_class_date", input.class_date },      // formato: "YYYY-MM-DD"
-                { "in_start_time", input.start_time },      // formato: "HH:MM:SS"
-                { "in_end_time", input.end_time },          // formato: "HH:MM:SS"
-                { "in_instructor", input.instructor },
-                { "in_available_spots", input.available_spots }
-            };
+                {
+                    { "in_client_id", input.client_id },
+                    { "in_class_date", input.class_date },      // "YYYY-MM-DD"
+                    { "in_start", input.start_time },           // "HH:MM:SS"
+                    { "in_end", input.end_time },
+                    { "in_instructor_name", input.instructor },
+                    { "in_available_spots", input.available_spots.ToString() }
+                };
 
             try
             {
-                _databaseService.ExecuteFunction("SELECT sp_register_class(@in_class_date, @in_start_time, @in_end_time, @in_instructor, @in_available_spots)", parameters);
+                _databaseService.ExecuteFunction("SELECT sp_register_class(@in_client_id, @in_class_date, @in_start, @in_end, @in_instructor_name, @in_available_spots)", parameters);
 
                 return Ok(new Data_response<Data_output_register_class>
                 {
                     status = true,
                     data = new Data_output_register_class
                     {
-                        message = "Clase registrada exitosamente"
+                        message = "Clase registrada y asistencia anotada correctamente"
                     }
                 });
             }

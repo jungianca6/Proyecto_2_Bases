@@ -235,42 +235,66 @@ $$ LANGUAGE plpgsql;
 
 ---------------------- Para registrar Clases ----------------------
 CREATE OR REPLACE FUNCTION sp_register_class(
-    in_class_date DATE,
+    in_client_id TEXT,
+    in_class_date TEXT,
     in_start TEXT,
     in_end TEXT,
     in_instructor_name TEXT,
-    in_available_spots INT
+    in_available_spots TEXT
 )
 RETURNS VOID AS
 $$
 DECLARE
     emp_id INT;
-    plan_id INT;
+    work_plan_id INT;
+    new_class_id INT;  -- <- cambio aquí
+    client_id_int INT;
 BEGIN
-    -- Buscar el ID del instructor
+    client_id_int := in_client_id::INT;
+
     SELECT employee_id INTO emp_id
-    FROM Employee
+    FROM Employee 
     WHERE name = in_instructor_name;
 
     IF emp_id IS NULL THEN
         RAISE EXCEPTION 'Instructor no encontrado';
     END IF;
 
-    -- Obtener plan de trabajo del instructor (ejemplo: usar el primero)
-    SELECT plan_id INTO plan_id
+    SELECT plan_id INTO work_plan_id
     FROM Work_Plan
-    WHERE employee_id = emp_id
+    WHERE client_id = client_id_int
     LIMIT 1;
 
-    IF plan_id IS NULL THEN
+    IF work_plan_id IS NULL THEN
         RAISE EXCEPTION 'No hay plan de trabajo asignado';
     END IF;
 
-    -- Insertar en la tabla Class
-    INSERT INTO Class (type, is_group, max_capacity, date, start_time, end_time, plan_id, employee_id)
-    VALUES ('General', TRUE, in_available_spots, in_class_date, in_start, in_end, plan_id, emp_id);
+    INSERT INTO Class (
+        type, is_group, max_capacity, date, start_time, end_time, plan_id, employee_id
+    )
+    VALUES (
+        'General',
+        TRUE,
+        in_available_spots::INT,
+        TO_DATE(in_class_date, 'YYYY-MM-DD'),
+        in_start::TIME,
+        in_end::TIME,
+        work_plan_id,
+        emp_id
+    )
+    RETURNING class_id INTO new_class_id;
+
+    INSERT INTO Class_Attendance (client_id, class_id, date, time)
+    VALUES (
+        client_id_int,
+        new_class_id,
+        TO_DATE(in_class_date, 'YYYY-MM-DD'),
+        in_start::TIME
+    );
 END;
 $$ LANGUAGE plpgsql;
+
+
 
 
 ---------------------- Para search Clases ----------------------
@@ -537,6 +561,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+
 ----------------------  editar employee ----------------------
 CREATE OR REPLACE FUNCTION sp_edit_employee(
     in_employee_id TEXT,
@@ -593,6 +618,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+
 ----------------------  delete employee ----------------------
 CREATE OR REPLACE FUNCTION sp_delete_employee(
     in_employee_id TEXT
@@ -633,7 +659,7 @@ BEGIN
     RETURN QUERY
     SELECT 
         e.employee_id,
-        e.name::TEXT,           -- ← Cast explícito
+        e.name::TEXT,          
         e.province::TEXT,
         e.canton::TEXT,
         e.district::TEXT,
