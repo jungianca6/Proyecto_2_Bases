@@ -34,17 +34,17 @@ EXECUTE FUNCTION protect_default_positions();
 
 
 -- Crear la función del trigger para proteger servicios default
-CREATE OR REPLACE FUNCTION protect_default_services()
+CREATE OR REPLACE FUNCTION protect_default_branches()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF OLD.name IN ('Zumba', 'Pilates', 'Natación', 'Yoga', 'Indoor Cycling') THEN
-        RAISE EXCEPTION 'No se puede eliminar o modificar un servicio predeterminado: %.', OLD.name;
+    IF TRIM(OLD.name) IN ('Sucursal Central', 'Sucursal Cartago', 'Sucursal Heredia') THEN
+        RAISE EXCEPTION 'No se puede eliminar o modificar una sucursal predeterminada: %.', OLD.name;
     END IF;
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_protect_default_services
-BEFORE DELETE OR UPDATE ON Service
+CREATE TRIGGER trg_protect_default_branches
+BEFORE DELETE OR UPDATE ON Branch
 FOR EACH ROW
-EXECUTE FUNCTION protect_default_services();
+EXECUTE FUNCTION protect_default_branches();

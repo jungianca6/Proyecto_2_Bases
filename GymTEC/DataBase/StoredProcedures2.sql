@@ -160,3 +160,79 @@ BEGIN
     );
 END;
 $$ LANGUAGE plpgsql;
+
+
+----------------------  create or edit Servicio ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_service(
+    in_service_name TEXT,
+    in_description TEXT,
+    in_class_name TEXT
+) RETURNS VOID AS $$
+DECLARE
+    v_class_id INT;
+    existing_id INT;
+BEGIN
+    -- Buscar la clase por su tipo
+    SELECT c.class_id INTO STRICT v_class_id
+	FROM Class c
+	WHERE c.type = in_class_name
+	ORDER BY c.date DESC
+	LIMIT 1;
+
+    IF v_class_id IS NULL THEN
+        RAISE EXCEPTION 'Clase no encontrada: %', in_class_name;
+    END IF;
+
+    -- Verificar si ya existe un servicio con ese nombre
+    SELECT service_id INTO existing_id
+    FROM Service
+    WHERE name = in_service_name;
+
+    -- Si existe, actualizar
+    IF existing_id IS NOT NULL THEN
+        UPDATE Service
+        SET description = in_description,
+            class_id = v_class_id
+        WHERE service_id = existing_id;
+    ELSE
+        -- Si no existe, insertar
+        INSERT INTO Service(name, description, class_id)
+        VALUES (in_service_name, in_description, v_class_id);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  eliminar Servicio ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_service_by_name(in_name TEXT)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM Service
+    WHERE name = in_name;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No se encontró un servicio con el nombre: %', in_name;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+----------------------  get Servicio ----------------------
+CREATE OR REPLACE FUNCTION sp_get_service_by_name(in_name TEXT)
+RETURNS TABLE (
+    service_name TEXT,
+    description TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.type::TEXT AS service_name,
+        s.description::TEXT
+    FROM Service s
+    JOIN Class c ON s.class_id = c.class_id
+    WHERE s.name = in_name
+    LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
