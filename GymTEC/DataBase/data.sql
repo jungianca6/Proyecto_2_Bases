@@ -12,7 +12,8 @@ CREATE TABLE Spreadsheet (
 	hours_worked INT,
 	classes_taught INT,
 	houtly_rate INT,
-	class_rate INT
+	class_rate INT,
+	description TEXT
 );
 
 -- 3. Table Branch
@@ -142,10 +143,6 @@ CREATE TABLE Spa_Treatment (
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200) NOT NULL
 );
-
-
-
-
 
 -- Product - Store
 CREATE TABLE Product_Store (

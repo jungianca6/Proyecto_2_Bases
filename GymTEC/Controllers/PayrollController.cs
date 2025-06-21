@@ -21,14 +21,15 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<Data_output_generate_payroll>> GeneratePayroll([FromBody] Data_input_generate_payroll input)
         {
             var parameters = new Dictionary<string, object>
-    {
-        { "in_branch_name", input.branch_name }
-    };
+                {
+                    { "in_branch_name", input.branch_name },
+                    { "in_description", input.description } // aunque no se devuelva, puede usarse internamente
+                };
 
             try
             {
                 var result = _databaseService.Query2<EmployeePayrollInfo>(
-                    "SELECT * FROM sp_generate_payroll(@in_branch_name)", parameters);
+                    "SELECT * FROM sp_generate_payroll(@in_branch_name, @in_description)", parameters);
 
                 var data_output = new Data_output_generate_payroll
                 {
@@ -56,21 +57,22 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<string>> ManagePayrollType([FromBody] Data_input_manage_payroll_type input)
         {
             var parameters = new Dictionary<string, object>
-    {
-        { "in_description", input.description },
-        { "in_puesto", input.puesto },
-        { "in_hourly_rate", input.hourly_payment },
-        { "in_class_rate", input.group_class_payment }
-    };
+                {
+                    { "in_description", input.description },
+                    { "in_puesto", input.puesto },
+                    { "in_hourly_rate", input.hourly_payment },
+                    { "in_class_rate", input.group_class_payment },
+                    { "in_monthly_payment", input.monthly_payment }
+                };
 
             try
             {
-                _databaseService.ExecuteFunction("SELECT sp_manage_payroll_type(@in_description, @in_puesto, @in_hourly_rate, @in_class_rate)", parameters);
+                _databaseService.ExecuteFunction("SELECT sp_manage_payroll_type(@in_description, @in_puesto, @in_hourly_rate, @in_class_rate, @in_monthly_payment)", parameters);
 
                 return Ok(new Data_response<string>
                 {
                     status = true,
-                    data = $"Tipo de planilla '{input.puesto}' guardado y calculado correctamente."
+                    data = $"Tipo de planilla '{input.puesto}' gestionado correctamente."
                 });
             }
             catch (Exception ex)
