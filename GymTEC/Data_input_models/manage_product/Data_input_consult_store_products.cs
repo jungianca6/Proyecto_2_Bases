@@ -2,6 +2,6 @@
 {
     public class Data_input_consult_store_products
     {
-        public string branch_name { get; set; }
+        public string store_name { get; set; }
     }
 }

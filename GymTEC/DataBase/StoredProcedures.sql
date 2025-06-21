@@ -971,4 +971,119 @@ BEGIN
         v_employee_id
     );
 END;
+$$ LANGUAGE plpgsql;   
+
+
+
+
+
+
+
+------------------ asociar product y store ----------------
+
+
+
+
+DROP FUNCTION IF EXISTS sp_associate_store_product(TEXT, TEXT, TEXT, INT);
+
+CREATE OR REPLACE FUNCTION sp_associate_store_product(
+    in_barcode TEXT,
+    in_store_name TEXT,
+    in_date TEXT,
+    in_amount INT
+)
+RETURNS VOID AS $$
+DECLARE
+    v_product_id INT;
+    v_store_id INT;
+    v_entry_date DATE;
+BEGIN
+    -- Buscar el ID de la tienda
+    SELECT store_id INTO v_store_id
+    FROM Store
+    WHERE name = in_store_name;
+
+    IF v_store_id IS NULL THEN
+        RAISE EXCEPTION 'Tienda con nombre "%" no encontrada.', in_store_name;
+    END IF;
+
+    -- Buscar el ID del producto
+    SELECT product_id INTO v_product_id
+    FROM Product
+    WHERE barcode = in_barcode;
+
+    IF v_product_id IS NULL THEN
+        RAISE EXCEPTION 'Producto con código de barras "%" no encontrado.', in_barcode;
+    END IF;
+
+    -- Convertir fecha
+    v_entry_date := TO_DATE(in_date, 'YYYY-MM-DD');
+
+    -- Insertar la asociación (reemplazar cantidad y fecha si ya existe)
+    INSERT INTO Product_Store (product_id, store_id, quantity, entry_date)
+    VALUES (v_product_id, v_store_id, in_amount, v_entry_date)
+    ON CONFLICT (product_id, store_id)
+    DO UPDATE SET quantity = EXCLUDED.quantity, entry_date = EXCLUDED.entry_date;
+END;
+$$ LANGUAGE plpgsql;    
+
+
+
+
+
+
+
+------------------ consulta de asocie product y store ----------------
+
+
+
+DROP FUNCTION IF EXISTS sp_get_associated_store_products(TEXT);
+
+CREATE OR REPLACE FUNCTION sp_get_associated_store_products(p_store_name TEXT)
+RETURNS TABLE(barcode TEXT, product_name TEXT, entry_date TEXT, amount INT) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.barcode::TEXT,
+        p.name::TEXT,
+        TO_CHAR(ps.entry_date, 'YYYY-MM-DD')::TEXT,
+        ps.quantity
+    FROM Product_Store ps
+    JOIN Product p ON p.product_id = ps.product_id
+    JOIN Store s ON s.store_id = ps.store_id
+    WHERE s.name = p_store_name;
+END;
+$$ LANGUAGE plpgsql;    
+
+
+
+
+DROP FUNCTION IF EXISTS sp_get_not_associated_store_products(TEXT);
+
+CREATE OR REPLACE FUNCTION sp_get_not_associated_store_products(p_store_name TEXT)
+RETURNS TABLE(barcode TEXT, product_name TEXT, entry_date TEXT, amount INT) AS $$
+DECLARE
+    v_store_id INT;
+BEGIN
+    SELECT store_id INTO v_store_id
+    FROM Store
+    WHERE name = p_store_name;
+
+    IF v_store_id IS NULL THEN
+        RAISE EXCEPTION 'No se encontró la tienda con nombre "%"', p_store_name;
+    END IF;
+
+    RETURN QUERY
+    SELECT 
+        p.barcode::TEXT,
+        p.name::TEXT,
+        NULL::TEXT AS entry_date,
+        NULL::INT AS amount
+    FROM Product p
+    WHERE p.product_id NOT IN (
+        SELECT ps.product_id
+        FROM Product_Store ps
+        WHERE ps.store_id = v_store_id
+    );
+END;
 $$ LANGUAGE plpgsql;
