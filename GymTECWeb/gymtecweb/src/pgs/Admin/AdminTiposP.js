@@ -151,7 +151,7 @@ function AdminTiposP() {
                         width: "100%"
                     }}>
                         <h2>Resultado de Consulta</h2>
-                        <p><strong>Nombre del Puesto:</strong> {consultaData.job_name}</p>
+                        <p><strong>Nombre del Puesto:</strong> {consultaData.puesto}</p>
                         <p><strong>Descripción:</strong> {consultaData.description}</p>
                     </div>
                 )}
