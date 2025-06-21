@@ -365,3 +365,5 @@ FodyWeavers.xsd
 /GymTEC/bin
 /GymTEC/obj
 /.vs
+/GymTEC/obj
+/.vs
