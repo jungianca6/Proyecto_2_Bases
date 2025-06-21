@@ -31,7 +31,7 @@ function InstructorCrearPlan() {
 
             console.log("Datos que se enviarán al backend:", formData);
 
-            const res = await axios.post("http://localhost:8000/crear_plan_trabajo", formData);
+            const res = await axios.post("https://localhost:7155/WorkoutPlan/create_workout_plan", formData);
 
             if (res.data.status) {
                 alert("Plan agregado exitosamente.");
