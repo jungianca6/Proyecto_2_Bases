@@ -16,7 +16,7 @@ function ClientePlanTrabajo() {
 
     const handleSubmit = async () => {
         try {
-            const res = await axios.post("http://localhost:8000/ver_plan_trabajo", {
+            const res = await axios.post("https://localhost:7155/WorkoutPlan/view_workout_plan", {
                 client_id: cedula
             });
 
