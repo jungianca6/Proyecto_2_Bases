@@ -85,3 +85,27 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+
+------------------ Delete Payroll ------------------
+CREATE OR REPLACE FUNCTION sp_delete_payroll_type(
+    in_puesto TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    pos_id INT;
+BEGIN
+    -- Obtener el ID del puesto
+    SELECT position_id INTO pos_id
+    FROM Position
+    WHERE name = in_puesto;
+
+    IF pos_id IS NULL THEN
+        RAISE EXCEPTION 'El puesto "%" no existe.', in_puesto;
+    END IF;
+
+    -- Eliminar de la tabla Spreadsheet
+    DELETE FROM Spreadsheet
+    WHERE position_id = pos_id;
+END;
+$$ LANGUAGE plpgsql;

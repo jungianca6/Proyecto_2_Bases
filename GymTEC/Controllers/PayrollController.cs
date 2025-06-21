@@ -126,7 +126,12 @@ namespace GymTEC.Controllers
             try
             {
                 var result = _databaseService.QuerySingle<Data_output_get_payroll_type>(
-                    "SELECT name AS puesto, description FROM Position WHERE name = @in_position_name",
+                    @"SELECT 
+                p.name AS puesto,
+                s.description
+              FROM Position p
+              LEFT JOIN Spreadsheet s ON p.position_id = s.position_id
+              WHERE p.name = @in_position_name",
                     parameters
                 );
 
