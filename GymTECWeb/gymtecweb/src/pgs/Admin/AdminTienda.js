@@ -6,14 +6,12 @@ function AdminTienda() {
     const [consultaData, setConsultaData] = useState(null);
     const [formData, setFormData] = useState({
         nombreTienda: "",
-        nombreSucursal: "",
-        is_active: false
+        nombreSucursal: ""
     });
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        const val = type === "checkbox" ? checked : value;
-        setFormData((prev) => ({ ...prev, [name]: val }));
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (accion) => {
@@ -23,13 +21,13 @@ function AdminTienda() {
             data = {
                 branch_name: formData.nombreSucursal,
                 store_name: formData.nombreTienda,
-                is_active: formData.is_active,
+                is_active: true // Activación automática
             };
         } else if (accion === "consultar") {
             data = {
                 branch_name: formData.nombreSucursal,
             };
-        }else if (accion === "eliminar") {
+        } else if (accion === "eliminar") {
             data = {
                 store_name: formData.nombreTienda,
             };
@@ -60,10 +58,9 @@ function AdminTienda() {
                 if (accion === "consultar") {
                     if (res.data.status && res.data.data) {
                         setConsultaData(res.data.data);
-                        console.log("Datos recibidos del backend:", res.data);
                     } else {
                         setConsultaData(null);
-                        alert("");
+                        alert("No se encontraron datos.");
                     }
                 } else {
                     alert(`Tienda ${accion} correctamente`);
@@ -104,19 +101,8 @@ function AdminTienda() {
                         style={{ marginBottom: "1rem" }}
                     />
 
-                    <label className={styles.label}>
-                        <input
-                            type="checkbox"
-                            name="is_active"
-                            checked={formData.is_active}
-                            onChange={handleChange}
-                            style={{ marginRight: "0.5rem" }}
-                        />
-                        ¿Está activa?
-                    </label>
-
                     <div className={styles.buttonRow}>
-                        <button type="button" onClick={() => handleSubmit("crear")}>Crear</button>
+                        <button type="button" onClick={() => handleSubmit("insertar")}>Crear</button>
                         <button type="button" onClick={() => handleSubmit("editar")}>Editar</button>
                         <button type="button" onClick={() => handleSubmit("eliminar")}>Eliminar</button>
                         <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
@@ -124,10 +110,10 @@ function AdminTienda() {
                 </form>
 
                 <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
-                    Para eliminar una tienda, se requiere el nombre. Para consultas, se requiere el nombre de sucursal
+                    Para eliminar una tienda, se requiere el nombre. Para consultas, se requiere el nombre de sucursal.
                 </p>
 
-                {consultaData && (
+                {consultaData && consultaData.length > 0 && (
                     <div style={{
                         marginTop: "2rem",
                         backgroundColor: "white",
@@ -138,10 +124,13 @@ function AdminTienda() {
                         width: "100%"
                     }}>
                         <h2>Resultado de Consulta</h2>
-                        <p><strong>ID de tienda:</strong> {consultaData.store_id}</p>
-                        <p><strong>Nombre de tienda:</strong> {consultaData.store_name}</p>
-                        <p><strong>Sucursal:</strong> {consultaData.branch_name}</p>
-                        <p><strong>Estado:</strong> {consultaData.is_active ? "Activa" : "Inactiva"}</p>
+                        {consultaData.map((tienda, index) => (
+                            <div key={index} style={{ marginBottom: "1rem", borderBottom: "1px solid #ccc", paddingBottom: "1rem" }}>
+                                <p><strong>Nombre de tienda:</strong> {tienda.name}</p>
+                                <p><strong>Sucursal:</strong> {tienda.branch_name}</p>
+                                <p><strong>Estado:</strong> {tienda.is_active ? "Activa" : "Inactiva"}</p>
+                            </div>
+                        ))}
                     </div>
                 )}
             </main>
