@@ -240,9 +240,9 @@ namespace GymTEC.Controllers
             _logger.LogInformation("Received consult_branch request for branch: {Name}", input.name);
 
             var parameters = new Dictionary<string, object>
-    {
-        { "in_name", input.name }
-    };
+            {
+                { "in_name", input.name }
+            };
 
             var result = _databaseService.ExecuteFunction("SELECT * FROM sp_consult_branch(@in_name)", parameters);
 
@@ -277,6 +277,40 @@ namespace GymTEC.Controllers
                 status = true,
                 data = data_Output
             });
+        }
+
+        // ---------------------- copy_branch ----------------------
+        [HttpPost("copy_branch")]
+        public ActionResult<Data_response<string>> CopyBranch([FromBody] Data_input_copy_branch input)
+        {
+            _logger.LogInformation("Received copy_branch request: from '{OldBranch}' to '{NewBranch}'", input.existing_branch_name, input.new_branch_name);
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "in_old_branch_name", input.existing_branch_name },
+                { "in_new_branch_name", input.new_branch_name }
+            };
+
+            try
+            {
+                _databaseService.ExecuteFunction("SELECT sp_copy_entire_branch(@in_old_branch_name, @in_new_branch_name)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = $"Sucursal '{input.existing_branch_name}' copiada exitosamente como '{input.new_branch_name}'."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error copying branch from '{OldBranch}' to '{NewBranch}'", input.existing_branch_name, input.new_branch_name);
+
+                return BadRequest(new Data_response<string>
+                {
+                    status = false,
+                    data = $"Error al copiar la sucursal: {ex.Message}"
+                });
+            }
         }
 
 

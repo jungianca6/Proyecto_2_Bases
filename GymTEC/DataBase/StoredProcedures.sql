@@ -972,3 +972,257 @@ BEGIN
     );
 END;
 $$ LANGUAGE plpgsql;
+
+----------------- Copy Branch-------------------
+
+-- ---------------------- sp_copy_entire_branch ----------------------
+-- Crea una nueva sucursal y copia:
+-- 1. Tratamientos del spa
+-- 2. Tienda y productos
+-- 3. Clases (sin instructor)
+-- 4. Inventario
+-- La sucursal nueva se crea primero con valores genéricos.
+
+CREATE OR REPLACE FUNCTION sp_copy_entire_branch(
+    in_old_branch_name TEXT,
+    in_new_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    new_branch_id INT;
+BEGIN
+    -- Paso 1: Crear sucursal nueva con nombre especificado
+    new_branch_id := sp_copy_branch(in_old_branch_name, in_new_branch_name);
+
+    -- Paso 2: Copiar tratamientos del spa
+    PERFORM sp_copy_spa_treatments(in_old_branch_name, in_new_branch_name);
+
+    -- Paso 3: Copiar tienda y productos
+    PERFORM sp_copy_store_and_products(in_old_branch_name, in_new_branch_name);
+
+    -- Paso 4: Copiar clases sin instructor (misma plan_id)
+    PERFORM sp_copy_classes_by_branch_names(in_old_branch_name, in_new_branch_name);
+
+    -- Paso 5: Copiar inventario
+    PERFORM sp_copy_inventory(in_old_branch_name, in_new_branch_name);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+-- ---------------------- sp_copy_branch ----------------------
+-- Crea una nueva sucursal con el nombre nuevo dado.
+-- Los demás campos propios de la sucursal se asignan valores genéricos por defecto,
+-- porque no se deben copiar del original y no permiten NULL.
+
+CREATE OR REPLACE FUNCTION sp_copy_branch(
+    in_old_branch_name TEXT,   -- parámetro para identificar sucursal original (no se usa para copiar datos)
+    in_new_branch_name TEXT    -- nombre de la nueva sucursal
+)
+RETURNS INT AS $$
+DECLARE
+    new_branch_id INT;
+BEGIN
+    -- Insertar nueva sucursal con sólo el nombre nuevo,
+    -- los demás campos con valores genéricos o vacíos (ajustar según convenga)
+    INSERT INTO Branch (
+        name,
+        province,
+        canton,
+        district,
+        email,
+        phone1,
+        phone2,
+        opening_date,
+        opening_hours
+    )
+    VALUES (
+        in_new_branch_name,
+        'N/A',          -- provincia
+        'N/A',          -- cantón
+        'N/A',          -- distrito
+        'noemail@na.com',   -- email genérico
+        '00000000',     -- phone1 genérico
+        '00000000',     -- phone2 genérico
+        CURRENT_DATE,   -- fecha actual para apertura
+        '00:00-00:00'  -- horario genérico
+    )
+    RETURNING branch_id INTO new_branch_id;
+
+    RETURN new_branch_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ---------------------- sp_copy_spa_treatments ----------------------
+CREATE OR REPLACE FUNCTION sp_copy_spa_treatments(
+    original_branch_name TEXT,
+    new_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    original_branch_id INT;
+    new_branch_id INT;
+BEGIN
+    -- Obtener branch_id de la sucursal original
+    SELECT branch_id INTO original_branch_id FROM Branch WHERE name = original_branch_name;
+    IF original_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal original "%" no encontrada', original_branch_name;
+    END IF;
+
+    -- Obtener branch_id de la sucursal nueva
+    SELECT branch_id INTO new_branch_id FROM Branch WHERE name = new_branch_name;
+    IF new_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal nueva "%" no encontrada', new_branch_name;
+    END IF;
+
+    -- Insertar asociaciones evitando duplicados
+    INSERT INTO Spa_Treatment_Branch (treatment_id, branch_id)
+    SELECT treatment_id, new_branch_id
+    FROM Spa_Treatment_Branch
+    WHERE branch_id = original_branch_id
+    ON CONFLICT DO NOTHING;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ---------------------- sp_copy_store_and_products ----------------------
+CREATE OR REPLACE FUNCTION sp_copy_store_and_products(
+    old_branch_name TEXT,
+    new_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    old_branch_id INT;
+    new_branch_id INT;
+    old_store RECORD;
+    new_store_id INT;
+BEGIN
+    -- Obtener branch_id de la sucursal original
+    SELECT branch_id INTO old_branch_id FROM Branch WHERE name = old_branch_name;
+    IF old_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal original "%" no encontrada', old_branch_name;
+    END IF;
+
+    -- Obtener branch_id de la sucursal nueva
+    SELECT branch_id INTO new_branch_id FROM Branch WHERE name = new_branch_name;
+    IF new_branch_id IS NULL THEN
+        RAISE EXCEPTION 'Sucursal nueva "%" no encontrada', new_branch_name;
+    END IF;
+
+    -- Obtener tienda original
+    SELECT * INTO old_store FROM Store WHERE branch_id = old_branch_id;
+
+    IF NOT FOUND THEN
+        RAISE NOTICE 'No hay tienda para la sucursal original %', old_branch_id;
+        RETURN;
+    END IF;
+
+    -- Insertar tienda nueva
+    INSERT INTO Store (name, is_active, branch_id)
+    VALUES (old_store.name, old_store.is_active, new_branch_id)
+    RETURNING store_id INTO new_store_id;
+
+    -- Copiar productos de la tienda original asignándolos a la nueva tienda
+    INSERT INTO Product (name, cost, barcode, description, is_active, store_id)
+    SELECT name, cost, barcode, description, is_active, new_store_id
+    FROM Product
+    WHERE store_id = old_store.store_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- ---------------------- sp_copy_classes_by_branch_names ----------------------
+
+CREATE OR REPLACE FUNCTION sp_copy_classes_by_branch_names(
+    in_old_branch_name TEXT,
+    in_new_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    rec RECORD;
+    old_branch_id INT;
+    new_branch_id INT;
+BEGIN
+    -- Obtener IDs de sucursal por nombre
+    SELECT branch_id INTO old_branch_id FROM Branch WHERE name = in_old_branch_name;
+    IF old_branch_id IS NULL THEN
+        RAISE EXCEPTION 'No existe la sucursal original: %', in_old_branch_name;
+    END IF;
+
+    SELECT branch_id INTO new_branch_id FROM Branch WHERE name = in_new_branch_name;
+    IF new_branch_id IS NULL THEN
+        RAISE EXCEPTION 'No existe la sucursal destino: %', in_new_branch_name;
+    END IF;
+
+    -- Recorrer todas las clases que pertenecen a empleados de la sucursal original
+    FOR rec IN
+        SELECT c.*
+        FROM Class c
+        JOIN Employee e ON c.employee_id = e.employee_id
+        WHERE e.branch_id = old_branch_id
+    LOOP
+        -- Insertar clase nueva en la base, sin instructor, mismo plan_id
+        INSERT INTO Class (type, is_group, max_capacity, date, start_time, end_time, plan_id, employee_id)
+        VALUES (
+            rec.type,
+            rec.is_group,
+            rec.max_capacity,
+            rec.date,
+            rec.start_time,
+            rec.end_time,
+            rec.plan_id,
+            NULL  -- sin instructor asignado
+        );
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- ---------------------- sp_copy_inventory ----------------------
+-- Copia el inventario de una sucursal a otra, manteniendo el mismo tipo de equipo.
+-- Evita duplicados por número de serie.
+
+CREATE OR REPLACE FUNCTION sp_copy_inventory(
+    in_old_branch_name TEXT,
+    in_new_branch_name TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    old_branch_id INT;
+    new_branch_id INT;
+    item RECORD;
+BEGIN
+    -- Obtener los IDs de las sucursales por nombre
+    SELECT branch_id INTO old_branch_id FROM Branch WHERE name = in_old_branch_name;
+    IF NOT FOUND THEN
+        RAISE NOTICE 'Sucursal original % no encontrada', in_old_branch_name;
+        RETURN;
+    END IF;
+
+    SELECT branch_id INTO new_branch_id FROM Branch WHERE name = in_new_branch_name;
+    IF NOT FOUND THEN
+        RAISE NOTICE 'Sucursal nueva % no encontrada', in_new_branch_name;
+        RETURN;
+    END IF;
+
+    -- Iterar sobre cada equipo de la sucursal original
+    FOR item IN
+        SELECT * FROM Inventory WHERE branch_id = old_branch_id
+    LOOP
+        -- Insertar solo si el número de serie no existe ya en la sucursal nueva
+        IF NOT EXISTS (
+            SELECT 1 FROM Inventory
+            WHERE serial_number = item.serial_number AND branch_id = new_branch_id
+        ) THEN
+            INSERT INTO Inventory (description, brand, serial_number, cost, equipment_type_id, branch_id)
+            VALUES (
+                item.description,
+                item.brand,
+                item.serial_number,
+                item.cost,
+                item.equipment_type_id,
+                new_branch_id
+            );
+        END IF;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;

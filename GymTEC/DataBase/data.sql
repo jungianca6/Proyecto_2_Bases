@@ -67,13 +67,16 @@ CREATE TABLE Inventory (
 -- 8. Table Work_Plan
 CREATE TABLE Work_Plan (
     plan_id SERIAL PRIMARY KEY,
-    description VARCHAR(200) NOT NULL,
-    period VARCHAR(50) NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
-    branch_id INT NOT NULL REFERENCES Branch(branch_id)
+	day VARCHAR(200),
+	exercise_name VARCHAR(200),
+    period VARCHAR(50),
+	notes TEXT,
+	sets INT,
+	repetitions INT,
     client_id INT NOT NULL REFERENCES Client(client_id)
 );
+
+
 
 -- 9. Table Employee
 CREATE TABLE Employee (
@@ -102,7 +105,7 @@ CREATE TABLE Class (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     plan_id INT NOT NULL REFERENCES Work_Plan(plan_id),
-    employee_id INT NOT NULL REFERENCES Employee(employee_id)
+    employee_id INT REFERENCES Employee(employee_id)
 );
 
 -- 11. Table Service
@@ -176,6 +179,15 @@ CREATE TABLE Admin (
 	username VARCHAR(100) NOT NULL,
 	password VARCHAR(100) NOT NULL
 )
+
+-- Branch - Spa_Treatment (Spa_Treatment--Branch)
+CREATE TABLE Spa_Treatment_Branch (
+    treatment_id INT NOT NULL,
+    branch_id INT NOT NULL,
+    PRIMARY KEY (treatment_id, branch_id),
+    FOREIGN KEY (treatment_id) REFERENCES Spa_Treatment(treatment_id) ON DELETE CASCADE,
+    FOREIGN KEY (branch_id) REFERENCES Branch(branch_id) ON DELETE CASCADE
+);
 
 
 -- Client - Product (Insert or Edit)
