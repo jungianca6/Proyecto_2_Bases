@@ -23,6 +23,7 @@ import AdminAsociacionProducto from "./pgs/Admin/AdminAsociacionProducto";
 import AdminCreacionClases from "./pgs/Admin/AdminCreacionClases";
 import InstructorCrearPlan from "./pgs/Instructor/InstructorCrearPlan";
 import InstructorRegistroClase from "./pgs/Instructor/InstructorRegistroClase";
+import AdminTienda  from "./pgs/Admin/AdminTienda";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -56,6 +57,7 @@ function App() {
                 <Route path="/admin/calendario" element={user?.rol === "Admin" ? <AdminCalendario /> : <Navigate to="/login" />} />
                 <Route path="/admin/copiar-gimnasio" element={user?.rol === "Admin" ? <AdminCG /> : <Navigate to="/login" />} />
                 <Route path="/admin/configuracion" element={user?.rol === "Admin" ? <AdminConfiguracion /> : <Navigate to="/login" />} />
+                <Route path="/admin/tiendas" element={user?.rol === "Admin" ? <AdminTienda /> : <Navigate to="/login" />} />
 
                 <Route path="/admin/configuracion/asociaciontratamiento"
                        element={user?.rol === "Admin" ? <AdminAsociacionTratamiento /> : <Navigate to="/login" />} />
