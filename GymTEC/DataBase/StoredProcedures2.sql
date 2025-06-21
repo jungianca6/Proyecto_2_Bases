@@ -124,13 +124,13 @@ RETURNS TABLE (
 BEGIN
     RETURN QUERY
     SELECT 
-        wp.period::TEXT AS day,
-        wp.description::TEXT AS exercise_name,
-        3::INT AS sets,
-        12::INT AS repetitions,
-        'Ejercicio general'::TEXT AS notes
+        wp.day::TEXT,
+        wp.exercise_name::TEXT,
+        wp.sets,
+        wp.repetitions,
+        wp.notes::TEXT
     FROM Work_Plan wp
-    WHERE wp.client_id = in_client_id;Add commentMore actions
+    WHERE wp.client_id = in_client_id;
 END;
 $$ LANGUAGE plpgsql;
 
