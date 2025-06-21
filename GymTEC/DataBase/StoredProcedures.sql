@@ -748,9 +748,25 @@ DROP FUNCTION IF EXISTS sp_delete_spa_treatment(TEXT);
 
 CREATE OR REPLACE FUNCTION sp_delete_spa_treatment(in_name TEXT)
 RETURNS VOID AS $$
+DECLARE
+    v_treatment_id INT;
 BEGIN
-    DELETE FROM Spa_Treatment
+    -- Obtener el ID del tratamiento basado en el nombre
+    SELECT treatment_id INTO v_treatment_id
+    FROM Spa_Treatment
     WHERE name = in_name;
+
+    IF v_treatment_id IS NULL THEN
+        RAISE EXCEPTION 'No se encontró tratamiento con el nombre %', in_name;
+    END IF;
+
+    -- Eliminar asociaciones en la tabla intermedia
+    DELETE FROM Spa_Treatment_Branch
+    WHERE treatment_id = v_treatment_id;
+
+    -- Eliminar el tratamiento
+    DELETE FROM Spa_Treatment
+    WHERE treatment_id = v_treatment_id;
 END;
 $$ LANGUAGE plpgsql;
 
