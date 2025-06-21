@@ -9,7 +9,8 @@ function InstructorCrearPlan() {
         exercise_name: "",
         sets: 1,
         repetitions: 1,
-        notes: ""
+        notes: "",
+        period: "Semanal" // Valor por defecto válido
     });
 
     const [instructorCedula, setInstructorCedula] = useState("");
@@ -46,7 +47,8 @@ function InstructorCrearPlan() {
                     exercise_name: "",
                     sets: 1,
                     repetitions: 1,
-                    notes: ""
+                    notes: "",
+                    period: "Semanal"
                 });
             } else {
                 alert("No se pudo agregar el plan.");
@@ -56,7 +58,6 @@ function InstructorCrearPlan() {
             alert("Error al enviar el plan al servidor.");
         }
     };
-
 
     return (
         <div className={styles.container}>
@@ -130,6 +131,17 @@ function InstructorCrearPlan() {
                         className={styles.input}
                         rows={3}
                     />
+
+                    <label className={styles.label}>Periodo</label>
+                    <select
+                        name="period"
+                        value={formData.period}
+                        onChange={handleChange}
+                        className={styles.input}
+                    >
+                        <option>Semanal</option>
+                        <option>Mensual</option>
+                    </select>
 
                     <div className={styles.buttonRow}>
                         <button type="button" className={styles.button} onClick={handleSubmit}>

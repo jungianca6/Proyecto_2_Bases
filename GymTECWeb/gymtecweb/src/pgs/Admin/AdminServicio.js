@@ -5,7 +5,7 @@ import axios from "axios";
 function AdminServicio() {
     const [consultaData, setConsultaData] = useState(null);
     const [formData, setFormData] = useState({
-        identificador: "",
+        nombre: "",
         descripcion: ""
     });
 
@@ -19,11 +19,15 @@ function AdminServicio() {
 
         if (accion === "insertar" || accion === "editar") {
             data = {
-                service_id: formData.identificador,
-                description: formData.descripcion
+                service_name: formData.nombre,
+                description: formData.descripcion,
+                class_name: formData.nombre
             };
         } else if (accion === "eliminar" || accion === "consultar") {
-            data = { service_id: formData.identificador };
+            data = { service_name: formData.nombre,
+                    description: "",
+                    class_name: ""
+             };
         }
 
         let url = "";
@@ -74,12 +78,12 @@ function AdminServicio() {
             <main className={styles.main}>
                 <h1 className={styles.welcome}>Gestión de Servicios</h1>
                 <form className={styles.form}>
-                    <label htmlFor="identificador" className={styles.label}>Identificador único</label>
+                    <label htmlFor="nombre" className={styles.label}>Nombre del servicio</label>
                     <input
                         type="text"
-                        id="identificador"
-                        name="identificador"
-                        value={formData.identificador}
+                        id="nombre"
+                        name="nombre"
+                        value={formData.nombre}
                         onChange={handleChange}
                         style={{ marginBottom: "1rem" }}
                     />
@@ -103,7 +107,7 @@ function AdminServicio() {
                 </form>
 
                 <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
-                    Para eliminar o consultar solo se necesita ingresar el identificador del servicio.
+                    Para eliminar o consultar solo se necesita ingresar el nombre del servicio.
                 </p>
 
                 {consultaData && (
@@ -117,7 +121,7 @@ function AdminServicio() {
                         width: "100%"
                     }}>
                         <h2>Resultado de Consulta</h2>
-                        <p><strong>Identificador:</strong> {consultaData.service_id}</p>
+                        <p><strong>Nombre:</strong> {consultaData.service_name}</p>
                         <p><strong>Descripción:</strong> {consultaData.description}</p>
                     </div>
                 )}
