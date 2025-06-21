@@ -21,7 +21,7 @@ function AdminPuesto() {
             data = {
                 position_name: formData.nombre,
                 description: formData.descripcion,
-                position_id: formData.identificador
+                position_id: ""
             };
         } else if (accion === "eliminar" || accion === "consultar") {
             data = {
@@ -100,16 +100,6 @@ function AdminPuesto() {
                         style={{ marginBottom: "1rem" }}
                     />
 
-                    <label htmlFor="identificador" className={styles.label}>Identificador único</label>
-                    <input
-                        type="text"
-                        id="identificador"
-                        name="identificador"
-                        value={formData.identificador}
-                        onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
-                    />
-
                     <div className={styles.buttonRow}>
                         <button type="button" onClick={() => handleSubmit("insertar")}>Insertar</button>
                         <button type="button" onClick={() => handleSubmit("editar")}>Editar</button>
@@ -135,7 +125,6 @@ function AdminPuesto() {
                         <h2>Resultado de Consulta</h2>
                         <p><strong>Nombre del Puesto:</strong> {consultaData.position_name}</p>
                         <p><strong>Descripción:</strong> {consultaData.description}</p>
-                        <p><strong>Identificador:</strong> {consultaData.position_id}</p>
                     </div>
                 )}
             </main>

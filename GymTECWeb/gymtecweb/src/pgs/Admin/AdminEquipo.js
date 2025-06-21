@@ -77,7 +77,7 @@ function AdminEquipo() {
             <main className={styles.main}>
                 <h1 className={styles.welcome}>Gestión de Tipos de Equipo</h1>
                 <form className={styles.form}>
-                    <label htmlFor="identificador" className={styles.label}>Identificador único</label>
+                    <label htmlFor="identificador" className={styles.label}>Nombre del tipo de equipo</label>
                     <input
                         type="text"
                         id="identificador"
@@ -106,7 +106,7 @@ function AdminEquipo() {
                 </form>
 
                 <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
-                    Para eliminar o consultar solo se necesita ingresar el identificador del tipo de equipo.
+                    Para eliminar o consultar solo se necesita ingresar el nombre del tipo de equipo.
                 </p>
 
                 {consultaData && (
@@ -120,7 +120,7 @@ function AdminEquipo() {
                         width: "100%"
                     }}>
                         <h2>Resultado de Consulta</h2>
-                        <p><strong>Identificador:</strong> {consultaData.equipment_type_id}</p>
+                        <p><strong>Nombre:</strong> {consultaData.name}</p>
                         <p><strong>Descripción:</strong> {consultaData.description}</p>
                     </div>
                 )}
