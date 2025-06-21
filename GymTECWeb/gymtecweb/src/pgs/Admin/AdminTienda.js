@@ -5,12 +5,15 @@ import axios from "axios";
 function AdminTienda() {
     const [consultaData, setConsultaData] = useState(null);
     const [formData, setFormData] = useState({
-
+        nombreTienda: "",
+        nombreSucursal: "",
+        is_active: false
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        const val = type === "checkbox" ? checked : value;
+        setFormData((prev) => ({ ...prev, [name]: val }));
     };
 
     const handleSubmit = (accion) => {
@@ -18,27 +21,33 @@ function AdminTienda() {
 
         if (accion === "insertar" || accion === "editar") {
             data = {
-
+                branch_name: formData.nombreSucursal,
+                store_name: formData.nombreTienda,
+                is_active: formData.is_active,
             };
-        } else if (accion === "eliminar" || accion === "consultar") {
+        } else if (accion === "consultar") {
             data = {
-
+                branch_name: formData.nombreSucursal,
+            };
+        }else if (accion === "eliminar") {
+            data = {
+                store_name: formData.nombreTienda,
             };
         }
 
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "";
+                url = "https://localhost:7155/StoreProduct/insert_store";
                 break;
             case "editar":
-                url = "";
-                break;
-            case "eliminar":
-                url = "";
+                url = "https://localhost:7155/StoreProduct/edit_store";
                 break;
             case "consultar":
-                url = "";
+                url = "https://localhost:7155/StoreProduct/get/stores";
+                break;
+            case "eliminar":
+                url = "https://localhost:7155/StoreProduct/delete/store";
                 break;
             default:
                 return;
@@ -57,12 +66,12 @@ function AdminTienda() {
                         alert("");
                     }
                 } else {
-                    alert(`Equipo ${accion} correctamente`);
+                    alert(`Tienda ${accion} correctamente`);
                 }
             })
             .catch((err) => {
                 console.error(`Error al ${accion}:`, err);
-                alert(`Error al ${accion} equipo`);
+                alert(`Error al ${accion} tienda`);
             });
     };
 
@@ -75,42 +84,12 @@ function AdminTienda() {
             <main className={styles.main}>
                 <h1 className={styles.welcome}>Gestión de tiendas</h1>
                 <form className={styles.form}>
-                    <label htmlFor="tipoEquipo" className={styles.label}>Tipo de equipo</label>
+                    <label htmlFor="nombreTienda" className={styles.label}>Nombre de tienda</label>
                     <input
                         type="text"
-                        id="tipoEquipo"
-                        name="tipoEquipo"
-                        value={formData.tipoEquipo}
-                        onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
-                    />
-
-                    <label htmlFor="marca" className={styles.label}>Marca</label>
-                    <input
-                        type="text"
-                        id="marca"
-                        name="marca"
-                        value={formData.marca}
-                        onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
-                    />
-
-                    <label htmlFor="numeroSerie" className={styles.label}>Número de serie</label>
-                    <input
-                        type="text"
-                        id="numeroSerie"
-                        name="numeroSerie"
-                        value={formData.numeroSerie}
-                        onChange={handleChange}
-                        style={{ marginBottom: "1rem" }}
-                    />
-
-                    <label htmlFor="costo" className={styles.label}>Costo</label>
-                    <input
-                        type="number"
-                        id="costo"
-                        name="costo"
-                        value={formData.costo}
+                        id="nombreTienda"
+                        name="nombreTienda"
+                        value={formData.nombreTienda}
                         onChange={handleChange}
                         style={{ marginBottom: "1rem" }}
                     />
@@ -125,8 +104,19 @@ function AdminTienda() {
                         style={{ marginBottom: "1rem" }}
                     />
 
+                    <label className={styles.label}>
+                        <input
+                            type="checkbox"
+                            name="is_active"
+                            checked={formData.is_active}
+                            onChange={handleChange}
+                            style={{ marginRight: "0.5rem" }}
+                        />
+                        ¿Está activa?
+                    </label>
+
                     <div className={styles.buttonRow}>
-                        <button type="button" onClick={() => handleSubmit("insertar")}>Insertar</button>
+                        <button type="button" onClick={() => handleSubmit("crear")}>Crear</button>
                         <button type="button" onClick={() => handleSubmit("editar")}>Editar</button>
                         <button type="button" onClick={() => handleSubmit("eliminar")}>Eliminar</button>
                         <button type="button" onClick={() => handleSubmit("consultar")}>Consultar</button>
@@ -134,7 +124,7 @@ function AdminTienda() {
                 </form>
 
                 <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
-                    Para eliminar o consultar solo se necesita el número de serie del equipo.
+                    Para eliminar una tienda, se requiere el nombre. Para consultas, se requiere el nombre de sucursal
                 </p>
 
                 {consultaData && (
@@ -148,11 +138,10 @@ function AdminTienda() {
                         width: "100%"
                     }}>
                         <h2>Resultado de Consulta</h2>
-                        <p><strong>Tipo de equipo:</strong> {consultaData.equipment_type}</p>
-                        <p><strong>Marca:</strong> {consultaData.brand}</p>
-                        <p><strong>Número de serie:</strong> {consultaData.serial_number}</p>
-                        <p><strong>Costo:</strong> ₡{consultaData.cost.toLocaleString()}</p>
+                        <p><strong>ID de tienda:</strong> {consultaData.store_id}</p>
+                        <p><strong>Nombre de tienda:</strong> {consultaData.store_name}</p>
                         <p><strong>Sucursal:</strong> {consultaData.branch_name}</p>
+                        <p><strong>Estado:</strong> {consultaData.is_active ? "Activa" : "Inactiva"}</p>
                     </div>
                 )}
             </main>
