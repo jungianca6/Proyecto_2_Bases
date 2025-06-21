@@ -971,6 +971,254 @@ BEGIN
         v_employee_id
     );
 END;
+$$ LANGUAGE plpgsql;   
+
+
+
+
+
+
+
+------------------ asociar product y store ----------------
+
+
+
+
+DROP FUNCTION IF EXISTS sp_associate_store_product(TEXT, TEXT, TEXT, INT);
+
+CREATE OR REPLACE FUNCTION sp_associate_store_product(
+    in_barcode TEXT,
+    in_store_name TEXT,
+    in_date TEXT,
+    in_amount INT
+)
+RETURNS VOID AS $$
+DECLARE
+    v_product_id INT;
+    v_store_id INT;
+    v_entry_date DATE;
+BEGIN
+    -- Buscar el ID de la tienda
+    SELECT store_id INTO v_store_id
+    FROM Store
+    WHERE name = in_store_name;
+
+    IF v_store_id IS NULL THEN
+        RAISE EXCEPTION 'Tienda con nombre "%" no encontrada.', in_store_name;
+    END IF;
+
+    -- Buscar el ID del producto
+    SELECT product_id INTO v_product_id
+    FROM Product
+    WHERE barcode = in_barcode;
+
+    IF v_product_id IS NULL THEN
+        RAISE EXCEPTION 'Producto con código de barras "%" no encontrado.', in_barcode;
+    END IF;
+
+    -- Convertir fecha
+    v_entry_date := TO_DATE(in_date, 'YYYY-MM-DD');
+
+    -- Insertar la asociación (reemplazar cantidad y fecha si ya existe)
+    INSERT INTO Product_Store (product_id, store_id, quantity, entry_date)
+    VALUES (v_product_id, v_store_id, in_amount, v_entry_date)
+    ON CONFLICT (product_id, store_id)
+    DO UPDATE SET quantity = EXCLUDED.quantity, entry_date = EXCLUDED.entry_date;
+END;
+$$ LANGUAGE plpgsql;    
+
+
+
+
+
+
+
+------------------ consulta de asocie product y store ----------------
+
+
+
+DROP FUNCTION IF EXISTS sp_get_associated_store_products(TEXT);
+
+CREATE OR REPLACE FUNCTION sp_get_associated_store_products(p_store_name TEXT)
+RETURNS TABLE(barcode TEXT, product_name TEXT, entry_date TEXT, amount INT) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.barcode::TEXT,
+        p.name::TEXT,
+        TO_CHAR(ps.entry_date, 'YYYY-MM-DD')::TEXT,
+        ps.quantity
+    FROM Product_Store ps
+    JOIN Product p ON p.product_id = ps.product_id
+    JOIN Store s ON s.store_id = ps.store_id
+    WHERE s.name = p_store_name;
+END;
+$$ LANGUAGE plpgsql;    
+
+
+
+
+DROP FUNCTION IF EXISTS sp_get_not_associated_store_products(TEXT);
+
+CREATE OR REPLACE FUNCTION sp_get_not_associated_store_products(p_store_name TEXT)
+RETURNS TABLE(barcode TEXT, product_name TEXT, entry_date TEXT, amount INT) AS $$
+DECLARE
+    v_store_id INT;
+BEGIN
+    SELECT store_id INTO v_store_id
+    FROM Store
+    WHERE name = p_store_name;
+
+    IF v_store_id IS NULL THEN
+        RAISE EXCEPTION 'No se encontró la tienda con nombre "%"', p_store_name;
+    END IF;
+
+    RETURN QUERY
+    SELECT 
+        p.barcode::TEXT,
+        p.name::TEXT,
+        NULL::TEXT AS entry_date,
+        NULL::INT AS amount
+    FROM Product p
+    WHERE p.product_id NOT IN (
+        SELECT ps.product_id
+        FROM Product_Store ps
+        WHERE ps.store_id = v_store_id
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+------------------ instert store ----------------
+
+
+
+
+
+
+
+
+ -- Procedimiento para insertar una tienda asociada a una sucursal
+CREATE OR REPLACE FUNCTION sp_insert_store(
+    in_branch_name TEXT,
+    in_store_name TEXT,
+    in_is_active BOOLEAN
+)
+RETURNS VOID AS $$
+DECLARE
+    branch_id_found INT;
+BEGIN
+    -- Buscar el ID de la sucursal
+    SELECT branch_id INTO branch_id_found
+    FROM Branch
+    WHERE name = in_branch_name;
+
+    -- Validar si la sucursal existe
+    IF branch_id_found IS NULL THEN
+        RAISE EXCEPTION 'Sucursal con nombre "%" no encontrada', in_branch_name;
+    END IF;
+
+    -- Insertar la tienda con el ID de la sucursal
+    INSERT INTO Store (name, is_active, branch_id)
+    VALUES (in_store_name, in_is_active, branch_id_found);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+------------------ edit store ----------------
+
+-- Procedimiento para editar el estado de una tienda
+CREATE OR REPLACE FUNCTION sp_edit_store(
+    in_branch_name TEXT,
+    in_store_name TEXT,
+    in_is_active BOOLEAN
+)
+RETURNS VOID AS $$
+DECLARE
+    branch_id_found INT;
+    store_id_found INT;
+BEGIN
+    -- Buscar el ID de la sucursal
+    SELECT branch_id INTO branch_id_found
+    FROM Branch
+    WHERE name = in_branch_name;
+
+    IF branch_id_found IS NULL THEN
+        RAISE EXCEPTION 'Sucursal "%" no encontrada', in_branch_name;
+    END IF;
+
+    -- Buscar el ID de la tienda dentro de esa sucursal
+    SELECT store_id INTO store_id_found
+    FROM Store
+    WHERE name = in_store_name AND branch_id = branch_id_found;
+
+    IF store_id_found IS NULL THEN
+        RAISE EXCEPTION 'Tienda "%" no encontrada en la sucursal "%"', in_store_name, in_branch_name;
+    END IF;
+
+    -- Actualizar el estado de la tienda
+    UPDATE Store
+    SET is_active = in_is_active
+    WHERE store_id = store_id_found;
+END;
+$$ LANGUAGE plpgsql;  
+
+
+
+
+
+------------------ get stores ----------------
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION sp_get_stores_by_branch_name(in_branch_name TEXT)
+RETURNS TABLE (
+    store_id INT,
+    name TEXT,
+    is_active BOOLEAN,
+    branch_name TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        s.store_id::INT,
+        s.name::TEXT,
+        s.is_active::BOOLEAN,
+        b.name::TEXT
+    FROM Store s
+    JOIN Branch b ON s.branch_id = b.branch_id
+    WHERE b.name = in_branch_name;
+END;
+$$ LANGUAGE plpgsql;
+
+------------------ delete stores ----------------
+
+
+
+CREATE OR REPLACE FUNCTION sp_delete_store_by_name(in_store_name TEXT)
+RETURNS BOOLEAN AS $$
+DECLARE
+    rows_affected INT;
+BEGIN
+    -- 1. Obtener el ID de la tienda
+    DELETE FROM product_store
+    WHERE store_id IN (
+        SELECT store_id FROM Store WHERE name = in_store_name
+    );
+
+    -- 2. Luego eliminar la tienda
+    DELETE FROM Store
+    WHERE name = in_store_name;
+
+    GET DIAGNOSTICS rows_affected = ROW_COUNT;
+    RETURN rows_affected > 0;
+END;
+$$ LANGUAGE plpgsql;
 $$ LANGUAGE plpgsql;
 
 ----------------- Copy Branch-------------------

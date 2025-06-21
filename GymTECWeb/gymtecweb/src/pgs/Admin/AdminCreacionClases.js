@@ -6,7 +6,6 @@ function AdminCreacionClases() {
     const [formData, setFormData] = useState({
         tipoClase: "",
         instructor: "",
-        grupal: false,
         capacidad: "",
         fecha: "",
         horaInicio: "",
@@ -18,20 +17,17 @@ function AdminCreacionClases() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleCheckboxChange = (e) => {
-        const { name, checked } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: checked }));
-    };
-
     const formatHora = (hora) => {
-        return hora.length === 5 ? `${hora}:00` : hora; 
+        return hora.length === 5 ? `${hora}:00` : hora;
     };
 
     const handleSubmit = () => {
+        const isGroupClass = parseInt(formData.capacidad) > 1;
+
         const data = {
             class_type: formData.tipoClase,
             instructor: formData.instructor,
-            is_group_class: formData.grupal, 
+            is_group_class: isGroupClass,
             capacity: parseInt(formData.capacidad),
             date: new Date(formData.fecha).toISOString().split("T")[0],
             start_time: formatHora(formData.horaInicio),
@@ -74,19 +70,7 @@ function AdminCreacionClases() {
                                 value={formData.capacidad}
                                 onChange={handleChange}
                             />
-
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "1rem" }}>
-                                <input
-                                    type="checkbox"
-                                    id="grupal"
-                                    name="grupal"
-                                    checked={formData.grupal}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <label htmlFor="grupal" className={styles.label}>Clase grupal</label>
-                            </div>
                         </div>
-
 
                         {/* Columna derecha */}
                         <div>

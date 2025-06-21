@@ -5,7 +5,7 @@ import styles from "./AdminPg.module.css";
 function AdminAsociacionTratamiento() {
     const [formData, setFormData] = useState({
         nombreSucursal: "",
-        identificador: ""
+        nombreTratamiento: ""
     });
 
     const [asociados, setAsociados] = useState([]);
@@ -19,7 +19,7 @@ function AdminAsociacionTratamiento() {
     const handleSubmit = (accion) => {
         if (accion === "Agregar") {
             const data = {
-                treatment_id: parseInt(formData.identificador),
+                treatment_name: formData.nombreTratamiento,
                 branch_name: formData.nombreSucursal
             };
 
@@ -35,7 +35,7 @@ function AdminAsociacionTratamiento() {
         } else if (accion === "Ver tratamientos") {
             const data = { branch_name: formData.nombreSucursal };
 
-            axios.post("https://localhost:7155/SpaTreatment/consult_spa_treatments", data)
+            axios.post("https://localhost:7155/SpaTreatment/consult_associate_spa_treatments", data)
                 .then(res => {
                     if (res.data.status && res.data.data) {
                         setAsociados(res.data.data.associated || []);
@@ -62,12 +62,12 @@ function AdminAsociacionTratamiento() {
             <main className={styles.main}>
                 <h1 className={styles.welcome}>Asociación de Tratamientos de Spa</h1>
                 <form className={styles.form}>
-                    <label htmlFor="identificador" className={styles.label}>Identificador de tratamiento</label>
+                    <label htmlFor="nombreTratamiento" className={styles.label}>Nombre del tratamiento</label>
                     <input
-                        type="number"
-                        id="identificador"
-                        name="identificador"
-                        value={formData.identificador}
+                        type="text"
+                        id="nombreTratamiento"
+                        name="nombreTratamiento"
+                        value={formData.nombreTratamiento}
                         onChange={handleChange}
                         style={{ marginBottom: "1rem" }}
                     />
@@ -95,7 +95,7 @@ function AdminAsociacionTratamiento() {
                             <ul>
                                 {asociados.map(t => (
                                     <li key={t.treatment_id}>
-                                        {t.treatment_name} (ID: {t.treatment_id})
+                                        {t.treatment_name} 
                                     </li>
                                 ))}
                             </ul>
@@ -108,7 +108,7 @@ function AdminAsociacionTratamiento() {
                             <ul>
                                 {noAsociados.map(t => (
                                     <li key={t.treatment_id}>
-                                        {t.treatment_name} (ID: {t.treatment_id})
+                                        {t.treatment_name} 
                                     </li>
                                 ))}
                             </ul>

@@ -7,7 +7,6 @@ function InstructorPg() {
         { nombre: "Búsqueda de clientes", ruta: "/instructor/busqueda-clientes" },
         { nombre: "Asignarse a cliente", ruta: "/instructor/asignar-cliente" },
         { nombre: "Creación de plan de trabajo", ruta: "/instructor/crear-plan" },
-        { nombre: "Registro de Clase", ruta: "/instructor/registro-clase" }
     ];
 
     return (

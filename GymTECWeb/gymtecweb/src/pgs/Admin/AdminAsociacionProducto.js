@@ -5,7 +5,8 @@ import styles from "./AdminPg.module.css";
 function AdminAsociacionProducto() {
     const [formData, setFormData] = useState({
         nombreSucursal: "",
-        codigoBarras: ""
+        codigoBarras: "",
+        amaunt: 0
     });
 
     const [asociados, setAsociados] = useState([]);
@@ -20,10 +21,12 @@ function AdminAsociacionProducto() {
         if (accion === "Agregar") {
             const data = {
                 barcode: formData.codigoBarras,
-                branch_name: formData.nombreSucursal
+                store_name: formData.nombreSucursal,
+                date: new Date().toISOString().split("T")[0], // formato YYYY-MM-DD
+                amaunt: parseInt(formData.amaunt)
             };
 
-            axios.post("http://TU_BACKEND/asociacion_producto/agregar", data)
+            axios.post("https://localhost:7155/StoreProduct/associate_store_product", data)
                 .then(() => {
                     alert("Producto agregado correctamente.");
                 })
@@ -33,10 +36,10 @@ function AdminAsociacionProducto() {
                 });
         } else if (accion === "Productos asociados") {
             const data = {
-                branch_name: formData.nombreSucursal
+                store_name: formData.nombreSucursal
             };
 
-            axios.post("http://TU_BACKEND/asociacion_producto/consultar", data)
+            axios.post("https://localhost:7155/StoreProduct/consult_store_products", data)
                 .then((res) => {
                     if (res.data.status && res.data.data) {
                         setAsociados(res.data.data.associated_products || []);
@@ -63,7 +66,7 @@ function AdminAsociacionProducto() {
             <main className={styles.main}>
                 <h1 className={styles.welcome}>Asociación de productos a tienda del gimnasio</h1>
                 <form className={styles.form}>
-                    <label htmlFor="nombreSucursal" className={styles.label}>Nombre de sucursal</label>
+                    <label htmlFor="nombreSucursal" className={styles.label}>Nombre de la tienda</label>
                     <input
                         type="text"
                         id="nombreSucursal"
@@ -80,6 +83,17 @@ function AdminAsociacionProducto() {
                         name="codigoBarras"
                         value={formData.codigoBarras}
                         onChange={handleChange}
+                        style={{ marginBottom: "1rem" }}
+                    />
+
+                    <label htmlFor="amaunt" className={styles.label}>Cantidad disponible</label>
+                    <input
+                        type="number"
+                        id="amaunt"
+                        name="amaunt"
+                        value={formData.amaunt}
+                        onChange={handleChange}
+                        min={0}
                         style={{ marginBottom: "1rem" }}
                     />
 

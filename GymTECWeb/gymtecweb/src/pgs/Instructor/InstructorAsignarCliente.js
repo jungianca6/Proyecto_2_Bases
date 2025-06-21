@@ -20,7 +20,7 @@ function InstructorAsignarCliente() {
         }
 
         try {
-            const res = await axios.post("http://localhost:8000/asignar_instructor", {
+            const res = await axios.post("https://localhost:7155/Trainer/assign_trainer", {
                 trainer_id: instructorCedula,
                 client_id: clienteCedula
             });

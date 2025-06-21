@@ -10,6 +10,7 @@ function AdminPg() {
         { nombre: "Tipos de planilla", ruta: "/admin/tipos-planilla" },
         { nombre: "Empleados", ruta: "/admin/empleado" },
         { nombre: "Servicios", ruta: "/admin/servicio" },
+        { nombre: "Tiendas", ruta: "/admin/tiendas" },
         { nombre: "Tipos de equipo", ruta: "/admin/equipo" },
         { nombre: "Inventario", ruta: "/admin/inventario" },
         { nombre: "Productos", ruta: "/admin/producto" },

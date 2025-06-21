@@ -72,9 +72,7 @@ namespace GymTEC.Controllers
             var parameters = new Dictionary<string, object>
                 {
                     { "in_client_id", input.client_id },
-                    { "in_description", input.description },
                     { "in_period", input.period },
-                    { "in_branch_name", input.branch_name },
                     { "in_day", input.day },
                     { "in_exercise_name", input.exercise_name },
                     { "in_sets", input.sets },
@@ -84,7 +82,7 @@ namespace GymTEC.Controllers
 
             try
             {
-                _databaseService.ExecuteFunction("SELECT sp_create_workout_plan(@in_client_id, @in_description, @in_period, @in_branch_name, @in_day, @in_exercise_name, @in_sets, @in_repetitions, @in_notes)", parameters);
+                _databaseService.ExecuteFunction("SELECT sp_create_workout_plan(@in_client_id, @in_period, @in_day, @in_exercise_name, @in_sets, @in_repetitions, @in_notes)", parameters);
 
                 return Ok(new Data_response<string>
                 {

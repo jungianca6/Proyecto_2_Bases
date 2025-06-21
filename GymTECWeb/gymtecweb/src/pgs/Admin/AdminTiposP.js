@@ -5,7 +5,7 @@ import axios from "axios";
 function AdminTiposP() {
     const [formData, setFormData] = useState({
         descripcion: "",
-        identificador: "",
+        nombrePuesto: "",   
         pagoMensual: "",
         pagoHora: "",
         pagoClase: ""
@@ -24,30 +24,30 @@ function AdminTiposP() {
         if (accion === "insertar" || accion === "editar") {
             data = {
                 description: formData.descripcion,
-                identifier: formData.identificador,
+                puesto: formData.nombrePuesto, 
                 monthly_payment: parseFloat(formData.pagoMensual),
                 hourly_payment: parseFloat(formData.pagoHora),
                 group_class_payment: parseFloat(formData.pagoClase)
             };
         } else if (accion === "eliminar" || accion === "consultar") {
             data = {
-                identifier: formData.identificador
+                puesto: formData.nombrePuesto 
             };
         }
 
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "http://localhost:8000/tipos_planilla/insertar";
+                url = "https://localhost:7155/Payroll/manage_payroll_type";
                 break;
             case "editar":
-                url = "http://localhost:8000/tipos_planilla/editar";
+                url = "https://localhost:7155/Payroll/manage_payroll_type";
                 break;
             case "eliminar":
-                url = "http://localhost:8000/tipos_planilla/eliminar";
+                url = "https://localhost:7155/Payroll/delete_payroll_type";
                 break;
             case "consultar":
-                url = "http://localhost:8000/tipos_planilla/consultar";
+                url = "https://localhost:7155/Payroll/get_payroll_type";
                 break;
             default:
                 return;
@@ -92,12 +92,12 @@ function AdminTiposP() {
                         onChange={handleChange}
                     />
 
-                    <label htmlFor="identificador" className={styles.label}>Identificador</label>
+                    <label htmlFor="nombrePuesto" className={styles.label}>Nombre de Puesto</label>
                     <input
                         type="text"
-                        id="identificador"
-                        name="identificador"
-                        value={formData.identificador}
+                        id="nombrePuesto"
+                        name="nombrePuesto"
+                        value={formData.nombrePuesto}
                         onChange={handleChange}
                     />
 
@@ -119,7 +119,7 @@ function AdminTiposP() {
                         onChange={handleChange}
                     />
 
-                    <label htmlFor="pagoClase" className={styles.label}>Pago por clase (grupal)</label>
+                    <label htmlFor="pagoClase" className={styles.label}>Pago por clase</label>
                     <input
                         type="number"
                         id="pagoClase"
@@ -137,7 +137,7 @@ function AdminTiposP() {
                 </form>
 
                 <p style={{ marginTop: "2rem", fontStyle: "italic", color: "white" }}>
-                    Para eliminar o consultar solo se necesita ingresar el identificador.
+                    Para eliminar o consultar solo se necesita ingresar el nombre del puesto.
                 </p>
 
                 {consultaData && (
@@ -151,7 +151,7 @@ function AdminTiposP() {
                         width: "100%"
                     }}>
                         <h2>Resultado de Consulta</h2>
-                        <p><strong>Identificador:</strong> {consultaData.identifier}</p>
+                        <p><strong>Nombre del Puesto:</strong> {consultaData.puesto}</p>
                         <p><strong>Descripción:</strong> {consultaData.description}</p>
                     </div>
                 )}

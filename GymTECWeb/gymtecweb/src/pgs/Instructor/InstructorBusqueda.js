@@ -8,7 +8,7 @@ function InstructorBusqueda() {
 
     const handleBuscar = async () => {
         try {
-            const res = await axios.get("http://localhost:8000/clientes_sin_instructor");
+            const res = await axios.get("https://localhost:7155/Trainer/clients_without_trainer");
 
             if (res.data.status && Array.isArray(res.data.data)) {
                 setClientes(res.data.data);
@@ -46,8 +46,7 @@ function InstructorBusqueda() {
                         ) : (
                             clientes.map((cliente, idx) => (
                                 <div key={idx} className={styles.exerciseCard}>
-                                    <p><strong>Nombre:</strong> {cliente.first_name}</p>
-                                    <p><strong>Apellidos:</strong> {cliente.last_name_1} {cliente.last_name_2}</p>
+                                    <p><strong>Nombre:</strong> {cliente.full_name}</p>
                                     <p><strong>Cédula:</strong> {cliente.id_number}</p>
                                 </div>
                             ))

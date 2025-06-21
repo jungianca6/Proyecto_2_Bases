@@ -34,6 +34,7 @@
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminTienda.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminTienda.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +102,7 @@
       <workItem from="1750040442629" duration="4105000" />
       <workItem from="1750125792959" duration="163000" />
       <workItem from="1750126113477" duration="657000" />
-      <workItem from="1750481381982" duration="4198000" />
+      <workItem from="1750481381982" duration="12876000" />
     </task>
     <servers />
   </component>

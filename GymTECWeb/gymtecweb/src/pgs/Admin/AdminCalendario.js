@@ -15,11 +15,16 @@ function AdminCalendario() {
     };
 
     const handleSubmit = async () => {
+        const formatDate = (dateStr) => {
+            const date = new Date(dateStr);
+            return date.toISOString().split("T")[0]; 
+        };
+
         try {
-            const response = await axios.post("http://localhost:8000/copiar_calendario", {
+            const response = await axios.post("https://localhost:7155/Schedule/copy_schedule", {
                 branch_name: formData.nombreSucursal,
-                start_week_date: formData.fechaInicio,
-                end_week_date: formData.fechaFin
+                start_week_date: formatDate(formData.fechaInicio),
+                end_week_date: formatDate(formData.fechaFin)
             });
 
             if (response.data.status) {
@@ -32,6 +37,7 @@ function AdminCalendario() {
             console.error(error);
         }
     };
+
 
     return (
         <div className={styles.container}>

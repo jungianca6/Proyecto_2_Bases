@@ -4,5 +4,8 @@
     {
         public string barcode { get; set; }
         public string product_name { get; set; }
+        public string entry_date { get; set; }
+        public int amount { get; set; }  // ✅ corregido
     }
+
 }

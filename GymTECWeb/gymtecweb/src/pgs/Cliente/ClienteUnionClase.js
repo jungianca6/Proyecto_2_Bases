@@ -27,6 +27,7 @@ function ClienteUnionClase() {
 
         try {
             const res = await axios.post("https://localhost:7155/ClassSearch/search_class", payload);
+            console.log("Respuesta del backend:", res.data);
             if (res.data.status) {
                 setClasesEncontradas(res.data.data);
             } else {
@@ -40,18 +41,36 @@ function ClienteUnionClase() {
     };
 
     const handleUnirse = async (clase) => {
+        const usuarioActual = JSON.parse(localStorage.getItem("usuario_actual"));
+
+        if (!usuarioActual || !usuarioActual.cedula) {
+            alert("No se pudo obtener la cédula del usuario logeado.");
+            return;
+        }
+
+        const clasePayload = {
+            client_id: String(usuarioActual.cedula),
+            class_date: new Date(clase.class_date).toISOString().split("T")[0],
+            start_time: clase.start_time,
+            end_time: clase.end_time,
+            instructor: clase.instructor,
+            available_spots: parseInt(clase.available_spots)
+        };
+
         try {
-            const res = await axios.post("https://localhost:7155/ClassRegistration/register_class", clase);
+            const res = await axios.post("https://localhost:7155/ClassRegistration/register_class", clasePayload);
+
             if (res.data.status) {
                 alert("Te has unido a la clase exitosamente.");
             } else {
-                alert("No fue posible unirse a la clase.");
+                alert("No fue posible unirse a la clase: " + (res.data.message || "Error desconocido"));
             }
         } catch (err) {
             console.error("Error al unirse a clase:", err);
             alert("Error de conexión al servidor.");
         }
     };
+
 
     return (
         <div className={styles.container}>
@@ -72,7 +91,7 @@ function ClienteUnionClase() {
                         style={{ marginBottom: "1rem" }}
                     />
 
-                    <label htmlFor="fechaInicio" className={styles.label}>Fecha de inicio</label>
+                    <label htmlFor="fechaInicio" className={styles.label}>Fecha inicial de búsqueda</label>
                     <input
                         type="date"
                         id="fechaInicio"
@@ -82,7 +101,7 @@ function ClienteUnionClase() {
                         style={{ marginBottom: "1rem" }}
                     />
 
-                    <label htmlFor="fechaFinal" className={styles.label}>Fecha de finalización</label>
+                    <label htmlFor="fechaFinal" className={styles.label}>Fecha final de búsqueda</label>
                     <input
                         type="date"
                         id="fechaFinal"
@@ -109,6 +128,8 @@ function ClienteUnionClase() {
                                 color: "#333"
                             }}>
                                 <p><strong>Fecha de clase:</strong> {clase.class_date}</p>
+                                <p><strong>Hora de inicio:</strong> {clase.start_time}</p>
+                                <p><strong>Hora de finalización:</strong> {clase.end_time}</p>
                                 <p><strong>Instructor:</strong> {clase.instructor}</p>
                                 <p><strong>Cupos disponibles:</strong> {clase.available_spots}</p>
 

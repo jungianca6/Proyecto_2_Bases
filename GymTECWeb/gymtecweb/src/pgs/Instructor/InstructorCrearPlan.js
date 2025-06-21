@@ -9,7 +9,8 @@ function InstructorCrearPlan() {
         exercise_name: "",
         sets: 1,
         repetitions: 1,
-        notes: ""
+        notes: "",
+        period: "Semanal" // Valor por defecto válido
     });
 
     const [instructorCedula, setInstructorCedula] = useState("");
@@ -28,10 +29,15 @@ function InstructorCrearPlan() {
 
     const handleSubmit = async () => {
         try {
+            const payload = {
+                ...formData,
+                sets: parseInt(formData.sets),
+                repetitions: parseInt(formData.repetitions)
+            };
 
-            console.log("Datos que se enviarán al backend:", formData);
+            console.log("Datos que se enviarán al backend:", payload);
 
-            const res = await axios.post("https://localhost:7155/WorkoutPlan/create_workout_plan", formData);
+            const res = await axios.post("https://localhost:7155/WorkoutPlan/create_workout_plan", payload);
 
             if (res.data.status) {
                 alert("Plan agregado exitosamente.");
@@ -41,7 +47,8 @@ function InstructorCrearPlan() {
                     exercise_name: "",
                     sets: 1,
                     repetitions: 1,
-                    notes: ""
+                    notes: "",
+                    period: "Semanal"
                 });
             } else {
                 alert("No se pudo agregar el plan.");
@@ -124,6 +131,17 @@ function InstructorCrearPlan() {
                         className={styles.input}
                         rows={3}
                     />
+
+                    <label className={styles.label}>Periodo</label>
+                    <select
+                        name="period"
+                        value={formData.period}
+                        onChange={handleChange}
+                        className={styles.input}
+                    >
+                        <option>Semanal</option>
+                        <option>Mensual</option>
+                    </select>
 
                     <div className={styles.buttonRow}>
                         <button type="button" className={styles.button} onClick={handleSubmit}>
