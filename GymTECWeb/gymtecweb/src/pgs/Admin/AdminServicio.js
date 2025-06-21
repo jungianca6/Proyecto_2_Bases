@@ -29,16 +29,16 @@ function AdminServicio() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "http://TU_BACKEND/servicios/insertar";
+                url = "https://localhost:7155/Service/insert_or_edit";
                 break;
             case "editar":
-                url = "http://TU_BACKEND/servicios/editar";
+                url = "https://localhost:7155/Service/insert_or_edit";
                 break;
             case "eliminar":
-                url = "http://TU_BACKEND/servicios/eliminar";
+                url = "https://localhost:7155/Service/delete";
                 break;
             case "consultar":
-                url = "http://TU_BACKEND/servicios/consultar";
+                url = "https://localhost:7155/Service/get";
                 break;
             default:
                 return;

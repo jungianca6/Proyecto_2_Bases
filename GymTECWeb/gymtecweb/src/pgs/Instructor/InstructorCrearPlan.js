@@ -28,10 +28,15 @@ function InstructorCrearPlan() {
 
     const handleSubmit = async () => {
         try {
+            const payload = {
+                ...formData,
+                sets: parseInt(formData.sets),
+                repetitions: parseInt(formData.repetitions)
+            };
 
-            console.log("Datos que se enviarán al backend:", formData);
+            console.log("Datos que se enviarán al backend:", payload);
 
-            const res = await axios.post("https://localhost:7155/WorkoutPlan/create_workout_plan", formData);
+            const res = await axios.post("https://localhost:7155/WorkoutPlan/create_workout_plan", payload);
 
             if (res.data.status) {
                 alert("Plan agregado exitosamente.");
@@ -51,6 +56,7 @@ function InstructorCrearPlan() {
             alert("Error al enviar el plan al servidor.");
         }
     };
+
 
     return (
         <div className={styles.container}>

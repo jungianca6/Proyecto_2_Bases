@@ -23,7 +23,7 @@ function AdminAsociacionProducto() {
                 branch_name: formData.nombreSucursal
             };
 
-            axios.post("http://TU_BACKEND/asociacion_producto/agregar", data)
+            axios.post("https://localhost:7155/StoreProduct/associate_store_product", data)
                 .then(() => {
                     alert("Producto agregado correctamente.");
                 })
@@ -36,7 +36,7 @@ function AdminAsociacionProducto() {
                 branch_name: formData.nombreSucursal
             };
 
-            axios.post("http://TU_BACKEND/asociacion_producto/consultar", data)
+            axios.post("https://localhost:7155/StoreProduct/consult_store_product", data)
                 .then((res) => {
                     if (res.data.status && res.data.data) {
                         setAsociados(res.data.data.associated_products || []);
