@@ -17,31 +17,21 @@ namespace GymTEC.Controllers
         {
             _databaseService = databaseService;
         }
+
+
         /// <summary>
         /// ----------------------  insert_spa_treatment ----------------------
-        /// Inserta o edita un tratamiento spa en la base de datos.
-        /// Esta operación verifica si el tratamiento ya existe mediante su ID; si existe, lo actualiza,
-        /// de lo contrario, inserta uno nuevo. 
+        /// Inserta un nuevo tratamiento spa con un nombre único.
         /// </summary>
         /// <param name="input">
-        /// Objeto que contiene los siguientes datos:
-        /// - treatment_id (int): identificador del tratamiento (0 o un número específico).
-        /// - treatment_name (string): nombre del tratamiento spa a registrar o modificar.
+        /// Objeto que contiene:
+        /// - treatment_name (string): nombre del tratamiento spa.
         /// </param>
         /// <returns>
         /// Retorna un objeto <see cref="Data_response{T}"/> que contiene:
-        /// - status (bool): true si la operación se realizó con éxito; false si ocurrió un error.
-        /// - data (Data_output_manage_spa_treatment): información del tratamiento registrado o editado.
-        /// En caso de error, se retorna un objeto con detalles del error y su causa.
-        /// </returns>
-        /// <summary>
-        /// Inserta un nuevo tratamiento spa con nombre único.
-        /// </summary>
-        /// <param name="input">Datos de entrada que contienen únicamente el nombre del tratamiento spa.</param>
-        /// <returns>
-        /// Respuesta con estado y datos del tratamiento insertado:
-        /// - status: true si fue exitoso.
-        /// - data: objeto con ID generado y nombre.
+        /// - status (bool): true si la operación fue exitosa.
+        /// - data: objeto con ID generado y nombre del tratamiento.
+        /// En caso de error, incluye información detallada.
         /// </returns>
         [HttpPost("insert_spa_treatment")]
         public ActionResult<Data_response<Data_output_manage_spa_treatment>> InsertSpaTreatment([FromBody] Data_input_manage_spa_treatment input)
@@ -53,9 +43,9 @@ namespace GymTEC.Controllers
 
             try
             {
-                // Ejecuta el stored procedure que retorna el ID generado
+                // Ejecuta el stored procedure que retorna el nuevo ID insertado
                 int generatedId = _databaseService.QuerySingle<int>(
-                    "SELECT sp_insert_or_edit_spa_treatment(@in_name)", parameters);
+                    "SELECT sp_insert_spa_treatment(@in_name)", parameters);
 
                 var data_output = new Data_output_manage_spa_treatment
                 {
@@ -83,44 +73,39 @@ namespace GymTEC.Controllers
 
         /// <summary>
         /// ----------------------  edit_spa_treatment ----------------------
-        /// Edita un tratamiento spa existente en la base de datos.
-        /// Internamente, utiliza el mismo procedimiento almacenado que el insert, ya que el procedimiento
-        /// diferencia entre insertar o editar según el valor del ID.
+        /// Edita un tratamiento spa existente mediante su ID.
         /// </summary>
         /// <param name="input">
-        /// Objeto con los datos del tratamiento a editar:
-        /// - treatment_id (int): identificador del tratamiento que se desea modificar.
-        /// - treatment_name (string): nuevo nombre o nombre actualizado del tratamiento.
+        /// Objeto que contiene:
+        /// - treatment_id (int): ID del tratamiento a editar.
+        /// - treatment_name (string): nuevo nombre del tratamiento.
         /// </param>
         /// <returns>
         /// Retorna un objeto <see cref="Data_response{T}"/> que contiene:
-        /// - status (bool): true si la operación fue exitosa; false si ocurrió un error.
-        /// - data (Data_output_manage_spa_treatment): objeto con los datos del tratamiento actualizado.
-        /// En caso de error, se devuelve una descripción del mismo y el mensaje de la excepción interna (si existe).
+        /// - status (bool): true si la operación fue exitosa.
+        /// - data: objeto con ID y nombre actualizado.
+        /// En caso de error, incluye información detallada.
         /// </returns>
         [HttpPost("edit_spa_treatment")]
         public ActionResult<Data_response<Data_output_manage_spa_treatment>> EditSpaTreatment([FromBody] Data_input_manage_spa_treatment input)
         {
-            // Crea el diccionario de parámetros que serán enviados al stored procedure
             var parameters = new Dictionary<string, object>
             {
-                { "in_id", input.treatment_id },        // ID del tratamiento a editar
-                { "in_name", input.treatment_name }     // Nombre actualizado del tratamiento
+                { "in_id", input.treatment_id },
+                { "in_name", input.treatment_name }
             };
 
             try
             {
-                // Ejecuta el stored procedure que inserta o actualiza el tratamiento spa
-                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_spa_treatment(@in_id, @in_name)", parameters);
+                // Ejecuta el procedimiento de edición
+                _databaseService.ExecuteFunction("SELECT sp_edit_spa_treatment(@in_id, @in_name)", parameters);
 
-                // Prepara los datos de salida que confirman la edición
                 var data_output = new Data_output_manage_spa_treatment
                 {
                     treatment_id = input.treatment_id,
                     treatment_name = input.treatment_name
                 };
 
-                // Retorna respuesta con estado exitoso y los datos del tratamiento modificado
                 return Ok(new Data_response<Data_output_manage_spa_treatment>
                 {
                     status = true,
@@ -129,7 +114,6 @@ namespace GymTEC.Controllers
             }
             catch (Exception ex)
             {
-                // En caso de excepción, retorna un error detallado con posible causa interna
                 return BadRequest(new
                 {
                     status = false,
