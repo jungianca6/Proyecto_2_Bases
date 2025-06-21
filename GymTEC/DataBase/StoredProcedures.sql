@@ -1087,3 +1087,135 @@ BEGIN
     );
 END;
 $$ LANGUAGE plpgsql;
+
+------------------ instert store ----------------
+
+
+
+
+
+
+
+
+ -- Procedimiento para insertar una tienda asociada a una sucursal
+CREATE OR REPLACE FUNCTION sp_insert_store(
+    in_branch_name TEXT,
+    in_store_name TEXT,
+    in_is_active BOOLEAN
+)
+RETURNS VOID AS $$
+DECLARE
+    branch_id_found INT;
+BEGIN
+    -- Buscar el ID de la sucursal
+    SELECT branch_id INTO branch_id_found
+    FROM Branch
+    WHERE name = in_branch_name;
+
+    -- Validar si la sucursal existe
+    IF branch_id_found IS NULL THEN
+        RAISE EXCEPTION 'Sucursal con nombre "%" no encontrada', in_branch_name;
+    END IF;
+
+    -- Insertar la tienda con el ID de la sucursal
+    INSERT INTO Store (name, is_active, branch_id)
+    VALUES (in_store_name, in_is_active, branch_id_found);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+------------------ edit store ----------------
+
+-- Procedimiento para editar el estado de una tienda
+CREATE OR REPLACE FUNCTION sp_edit_store(
+    in_branch_name TEXT,
+    in_store_name TEXT,
+    in_is_active BOOLEAN
+)
+RETURNS VOID AS $$
+DECLARE
+    branch_id_found INT;
+    store_id_found INT;
+BEGIN
+    -- Buscar el ID de la sucursal
+    SELECT branch_id INTO branch_id_found
+    FROM Branch
+    WHERE name = in_branch_name;
+
+    IF branch_id_found IS NULL THEN
+        RAISE EXCEPTION 'Sucursal "%" no encontrada', in_branch_name;
+    END IF;
+
+    -- Buscar el ID de la tienda dentro de esa sucursal
+    SELECT store_id INTO store_id_found
+    FROM Store
+    WHERE name = in_store_name AND branch_id = branch_id_found;
+
+    IF store_id_found IS NULL THEN
+        RAISE EXCEPTION 'Tienda "%" no encontrada en la sucursal "%"', in_store_name, in_branch_name;
+    END IF;
+
+    -- Actualizar el estado de la tienda
+    UPDATE Store
+    SET is_active = in_is_active
+    WHERE store_id = store_id_found;
+END;
+$$ LANGUAGE plpgsql;  
+
+
+
+
+
+------------------ get stores ----------------
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION sp_get_stores_by_branch_name(in_branch_name TEXT)
+RETURNS TABLE (
+    store_id INT,
+    name TEXT,
+    is_active BOOLEAN,
+    branch_name TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        s.store_id::INT,
+        s.name::TEXT,
+        s.is_active::BOOLEAN,
+        b.name::TEXT
+    FROM Store s
+    JOIN Branch b ON s.branch_id = b.branch_id
+    WHERE b.name = in_branch_name;
+END;
+$$ LANGUAGE plpgsql;
+
+------------------ delete stores ----------------
+
+
+
+CREATE OR REPLACE FUNCTION sp_delete_store_by_name(in_store_name TEXT)
+RETURNS BOOLEAN AS $$
+DECLARE
+    rows_affected INT;
+BEGIN
+    -- 1. Obtener el ID de la tienda
+    DELETE FROM product_store
+    WHERE store_id IN (
+        SELECT store_id FROM Store WHERE name = in_store_name
+    );
+
+    -- 2. Luego eliminar la tienda
+    DELETE FROM Store
+    WHERE name = in_store_name;
+
+    GET DIAGNOSTICS rows_affected = ROW_COUNT;
+    RETURN rows_affected > 0;
+END;
+$$ LANGUAGE plpgsql;

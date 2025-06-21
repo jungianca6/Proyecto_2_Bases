@@ -90,5 +90,145 @@ namespace GymTEC.Controllers
             }
         }
 
+
+        [HttpPost("insert_store")]
+        public ActionResult<Data_response<string>> InsertStore([FromBody] Data_input_store input)
+        {
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_branch_name", input.branch_name },
+        { "in_store_name", input.store_name },
+        { "in_is_active", input.is_active }
+    };
+
+            try
+            {
+                _databaseService.ExecuteFunction("SELECT sp_insert_store(@in_branch_name, @in_store_name, @in_is_active)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Tienda insertada correctamente."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
+        }
+
+        [HttpPost("edit_store")]
+        public ActionResult<Data_response<string>> EditStore([FromBody] Data_input_store input)
+        {
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_branch_name", input.branch_name },
+        { "in_store_name", input.store_name },
+        { "in_is_active", input.is_active }
+    };
+
+            try
+            {
+                _databaseService.ExecuteFunction("SELECT sp_edit_store(@in_branch_name, @in_store_name, @in_is_active)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Tienda actualizada correctamente."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
+        }
+        [HttpPost("get/stores")]
+        public ActionResult<Data_response<List<Data_output_stores>>> GetStoresByBranch([FromBody] Data_input_get_store input)
+        {
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_branch_name", input.branch_name }
+    };
+
+            try
+            {
+                var resultRaw = _databaseService.Query("SELECT * FROM sp_get_stores_by_branch_name(@in_branch_name)", parameters);
+
+                var result = resultRaw.Select(r => new Data_output_stores
+                {
+                    store_id = r.store_id,
+                    name = r.name,
+                    is_active = r.is_active,
+                    branch_name = r.branch_name
+                }).ToList();
+
+                return Ok(new Data_response<List<Data_output_stores>>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
+        }
+
+
+
+        [HttpPost("delete/store")]
+        public ActionResult<Data_response<bool>> DeleteStore([FromBody] Data_input_delete_store input)
+        {
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_store_name", input.store_name }
+    };
+
+            try
+            {
+                // IMPORTANTE: especificar tipo <bool>
+                var result = _databaseService.QuerySingle<bool>(
+                    "SELECT * FROM sp_delete_store_by_name(@in_store_name)",
+                    parameters
+                );
+
+                return Ok(new Data_response<bool>
+                {
+                    status = result,
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
+        }
+
+
+
+
+
+
+
     }
 }
