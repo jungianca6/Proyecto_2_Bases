@@ -11,8 +11,6 @@ namespace GymTEC.Controllers
     [Route("[controller]")]
     public class TrainerController : ControllerBase
     {
-
-        
         private readonly DatabaseService _databaseService;
 
         public TrainerController(DatabaseService databaseService)
@@ -20,36 +18,75 @@ namespace GymTEC.Controllers
             _databaseService = databaseService;
         }
 
+
+        /// <summary>
+        /// Asigna un instructor a un cliente mediante sus identificadores.
+        /// </summary>
+        /// <param name="input">Objeto que contiene el ID del cliente y del instructor a asignar.</param>
+        /// <returns>
+        /// Respuesta con estado de la operación y un mensaje de confirmación.
+        /// </returns>
         [HttpPost("assign_trainer")]
         public ActionResult<Data_response<string>> AssignTrainer([FromBody] Data_input_assign_trainer_to_client input)
         {
-            string msg = $"Instructor con cédula {input.trainer_id} asignado al cliente {input.client_id}.";
-
-            return Ok(new Data_response<string>
+            // Diccionario con parámetros esperados por el stored procedure
+            var parameters = new Dictionary<string, object>
             {
-                status = true,
-                data = msg
-            });
+                { "in_client_id", input.client_id },     // ID del cliente
+                { "in_trainer_id", input.trainer_id }    // ID del entrenador (instructor)
+            };
+
+            try
+            {
+                // Ejecuta la función almacenada que asigna el instructor al cliente
+                _databaseService.ExecuteFunction("SELECT sp_assign_trainer_to_client(@in_client_id, @in_trainer_id)", parameters);
+
+                // Construye el mensaje de éxito
+                var msg = $"Instructor con cédula {input.trainer_id} asignado al cliente {input.client_id}.";
+
+                // Retorna respuesta exitosa con mensaje
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = msg
+                });
+            }
+            catch (Exception ex)
+            {
+                // En caso de excepción, retorna detalles del error y causa interna si existe
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpGet("clients_without_trainer")]
-        public ActionResult<Data_response<Data_output_get_clients_without_trainer>> GetClientsWithoutTrainer()
+        public ActionResult<Data_response<IEnumerable<ClientModel>>> GetClientsWithoutTrainer()
         {
-            var clients = new Data_output_get_clients_without_trainer
+            try
             {
-                clients = new List<ClientModel>
-                {
-                    new ClientModel { full_name = "Carlos Jiménez Solís", id_number = "115230456" },
-                    new ClientModel { full_name = "María Rodríguez Vargas", id_number = "208740122" },
-                    new ClientModel { full_name = "Luis Felipe Sánchez", id_number = "114560983" }
-                }
-            };
+                var clients = _databaseService.QueryList<ClientModel>(
+                    "SELECT * FROM sp_get_clients_without_trainer()",
+                    new Dictionary<string, object>());
 
-            return Ok(new Data_response<Data_output_get_clients_without_trainer>
+                return Ok(new Data_response<IEnumerable<ClientModel>>
+                {
+                    status = true,
+                    data = clients
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = clients
-            });
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpPost("register_class")]
