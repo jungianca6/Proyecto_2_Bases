@@ -34,29 +34,35 @@ namespace GymTEC.Controllers
         /// - data (Data_output_manage_spa_treatment): información del tratamiento registrado o editado.
         /// En caso de error, se retorna un objeto con detalles del error y su causa.
         /// </returns>
+        /// <summary>
+        /// Inserta un nuevo tratamiento spa con nombre único.
+        /// </summary>
+        /// <param name="input">Datos de entrada que contienen únicamente el nombre del tratamiento spa.</param>
+        /// <returns>
+        /// Respuesta con estado y datos del tratamiento insertado:
+        /// - status: true si fue exitoso.
+        /// - data: objeto con ID generado y nombre.
+        /// </returns>
         [HttpPost("insert_spa_treatment")]
         public ActionResult<Data_response<Data_output_manage_spa_treatment>> InsertSpaTreatment([FromBody] Data_input_manage_spa_treatment input)
         {
-            // Diccionario con los parámetros esperados por el stored procedure de PostgreSQL
             var parameters = new Dictionary<string, object>
             {
-                { "in_id", input.treatment_id },       // ID del tratamiento a editar o 0 si es nuevo
-                { "in_name", input.treatment_name }    // Nombre del tratamiento spa
+                { "in_name", input.treatment_name }
             };
 
             try
             {
-                // Ejecuta la función almacenada que inserta o edita el tratamiento spa
-                _databaseService.ExecuteFunction("SELECT sp_insert_or_edit_spa_treatment(@in_id, @in_name)", parameters);
+                // Ejecuta el stored procedure que retorna el ID generado
+                int generatedId = _databaseService.QuerySingle<int>(
+                    "SELECT sp_insert_or_edit_spa_treatment(@in_name)", parameters);
 
-                // Construye el objeto de salida con los mismos datos de entrada (confirmación)
                 var data_output = new Data_output_manage_spa_treatment
                 {
-                    treatment_id = input.treatment_id,
+                    treatment_id = generatedId,
                     treatment_name = input.treatment_name
                 };
 
-                // Retorna una respuesta exitosa con los datos del tratamiento
                 return Ok(new Data_response<Data_output_manage_spa_treatment>
                 {
                     status = true,
@@ -65,7 +71,6 @@ namespace GymTEC.Controllers
             }
             catch (Exception ex)
             {
-                // En caso de error, retorna un BadRequest con detalles del error y excepción interna
                 return BadRequest(new
                 {
                     status = false,
