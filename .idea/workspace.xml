@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7124ebcb-41d3-4647-af49-6c241eba8589" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminTienda.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/GymTEC/DesignTimeBuild/.dtbcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/DesignTimeBuild/.dtbcache.v2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/.suo" afterDir="false" />
@@ -35,7 +34,7 @@
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminPg.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminPg.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECApp/gymtecapp/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECApp/gymtecapp/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +102,7 @@
       <workItem from="1750040442629" duration="4105000" />
       <workItem from="1750125792959" duration="163000" />
       <workItem from="1750126113477" duration="657000" />
-      <workItem from="1750481381982" duration="7814000" />
+      <workItem from="1750481381982" duration="9788000" />
     </task>
     <servers />
   </component>
