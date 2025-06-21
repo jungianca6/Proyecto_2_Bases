@@ -135,45 +135,36 @@ namespace GymTEC.Controllers
         }
 
         /// <summary>
-        /// ----------------------  delete_spa_treatment ----------------------
-        /// Elimina un tratamiento spa de la base de datos según su identificador.
-        /// Esta operación se realiza mediante un procedimiento almacenado que
-        /// borra la fila correspondiente en la tabla `Spa_Treatment`.
+        /// Elimina un tratamiento spa dado su nombre.
         /// </summary>
-        /// <param name="input">
-        /// Objeto que contiene los datos requeridos para la eliminación:
-        /// - treatment_id (int): identificador del tratamiento spa a eliminar.
-        /// </param>
+        /// <param name="input">Datos que contienen el nombre del tratamiento a eliminar.</param>
         /// <returns>
-        /// Retorna un objeto <see cref="Data_response{T}"/> con:
-        /// - status (bool): true si la eliminación fue exitosa; false si hubo un error.
-        /// - data (string): mensaje de confirmación "Treatment deleted successfully".
-        /// En caso de error, también se incluye el mensaje de la excepción y detalles internos si existen.
+        /// Respuesta con estado y mensaje de confirmación de eliminación.
         /// </returns>
+        /// <remarks>
+        /// - Se usa el nombre del tratamiento como criterio de eliminación.
+        /// - El nombre debe coincidir exactamente con el registrado.
+        /// </remarks>
         [HttpPost("delete_spa_treatment")]
         public ActionResult<Data_response<string>> DeleteSpaTreatment([FromBody] Data_input_delete_spa_treatment input)
         {
-            // Prepara los parámetros requeridos por el stored procedure
             var parameters = new Dictionary<string, object>
             {
-                { "in_id", input.treatment_id } // ID del tratamiento a eliminar
+                { "in_name", input.treatment_name }
             };
 
             try
             {
-                // Llama al stored procedure para eliminar el tratamiento spa
-                _databaseService.ExecuteFunction("SELECT sp_delete_spa_treatment(@in_id)", parameters);
+                _databaseService.ExecuteFunction("SELECT sp_delete_spa_treatment(@in_name)", parameters);
 
-                // Retorna confirmación de eliminación
                 return Ok(new Data_response<string>
                 {
                     status = true,
-                    data = "Treatment deleted successfully"
+                    data = "Tratamiento eliminado exitosamente"
                 });
             }
             catch (Exception ex)
             {
-                // Retorna mensaje de error y detalles si la operación falla
                 return BadRequest(new
                 {
                     status = false,

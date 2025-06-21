@@ -2,6 +2,6 @@
 {
     public class Data_input_delete_spa_treatment
     {
-        public int treatment_id { get; set; }
+        public string treatment_name { get; set; }
     }
 }
