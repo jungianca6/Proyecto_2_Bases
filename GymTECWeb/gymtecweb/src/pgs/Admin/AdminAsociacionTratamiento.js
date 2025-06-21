@@ -23,7 +23,7 @@ function AdminAsociacionTratamiento() {
                 branch_name: formData.nombreSucursal
             };
 
-            axios.post("http://TU_BACKEND/asociacion_tratamiento/agregar", data)
+            axios.post("https://localhost:7155/SpaTreatment/associate_spa_treatment", data)
                 .then(res => {
                     alert("Tratamiento agregado correctamente");
                 })
@@ -35,7 +35,7 @@ function AdminAsociacionTratamiento() {
         } else if (accion === "Ver tratamientos") {
             const data = { branch_name: formData.nombreSucursal };
 
-            axios.post("http://TU_BACKEND/asociacion_tratamiento/consultar", data)
+            axios.post("https://localhost:7155/SpaTreatment/consult_spa_treatments", data)
                 .then(res => {
                     if (res.data.status && res.data.data) {
                         setAsociados(res.data.data.associated || []);

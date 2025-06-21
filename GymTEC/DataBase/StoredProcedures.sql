@@ -25,11 +25,11 @@ BEGIN
     IF NOT FOUND THEN
         RETURN QUERY
         SELECT 
-            e.id_number::TEXT,
+            e.username::TEXT,
             'Instructor'::TEXT,
             e.employee_id::TEXT
         FROM Employee e
-        WHERE e.id_number = in_username AND e.password = in_password;
+        WHERE e.username = in_username AND e.password = in_password;
     END IF;
 
     -- Si tampoco encontró en Employee, buscar en Admin
@@ -37,7 +37,7 @@ BEGIN
         RETURN QUERY
         SELECT 
             a.username::TEXT,
-            'Administrador'::TEXT,
+            'Admin'::TEXT,
             a.admin_id::TEXT
         FROM Admin a
         WHERE a.username = in_username AND a.password = in_password;
@@ -85,7 +85,7 @@ CREATE OR REPLACE FUNCTION sp_insert_branch(
     in_email TEXT,
     in_phone1 TEXT,
     in_phone2 TEXT,
-    in_opening_date TIMESTAMP,
+    in_opening_date TEXT, -- CAMBIO AQUÍ
     in_opening_hours TEXT,
     in_spa BOOLEAN,
     in_store BOOLEAN
@@ -95,7 +95,12 @@ DECLARE
     new_branch_id INT;
 BEGIN
     INSERT INTO Branch(name, province, canton, district, email, phone1, phone2, opening_date, opening_hours)
-    VALUES (in_name, in_province, in_canton, in_district, in_email, in_phone1, in_phone2, in_opening_date, in_opening_hours)
+    VALUES (
+        in_name, in_province, in_canton, in_district, in_email,
+        in_phone1, in_phone2,
+        CAST(in_opening_date AS DATE), -- CONVERSIÓN AQUÍ
+        in_opening_hours
+    )
     RETURNING branch_id INTO new_branch_id;
 
     IF in_spa THEN
@@ -230,42 +235,99 @@ $$ LANGUAGE plpgsql;
 
 ---------------------- Para registrar Clases ----------------------
 CREATE OR REPLACE FUNCTION sp_register_class(
-    in_class_date DATE,
+    in_client_id TEXT,
+    in_class_date TEXT,
     in_start TEXT,
     in_end TEXT,
     in_instructor_name TEXT,
-    in_available_spots INT
+    in_available_spots TEXT
 )
 RETURNS VOID AS
 $$
 DECLARE
     emp_id INT;
-    plan_id INT;
+    work_plan_id INT;
+    new_class_id INT;  -- <- cambio aquí
+    client_id_int INT;
 BEGIN
-    -- Buscar el ID del instructor
+    client_id_int := in_client_id::INT;
+
     SELECT employee_id INTO emp_id
-    FROM Employee
+    FROM Employee 
     WHERE name = in_instructor_name;
 
     IF emp_id IS NULL THEN
         RAISE EXCEPTION 'Instructor no encontrado';
     END IF;
 
-    -- Obtener plan de trabajo del instructor (ejemplo: usar el primero)
-    SELECT plan_id INTO plan_id
+    SELECT plan_id INTO work_plan_id
     FROM Work_Plan
-    WHERE employee_id = emp_id
+    WHERE client_id = client_id_int
     LIMIT 1;
 
-    IF plan_id IS NULL THEN
+    IF work_plan_id IS NULL THEN
         RAISE EXCEPTION 'No hay plan de trabajo asignado';
     END IF;
 
-    -- Insertar en la tabla Class
-    INSERT INTO Class (type, is_group, max_capacity, date, start_time, end_time, plan_id, employee_id)
-    VALUES ('General', TRUE, in_available_spots, in_class_date, in_start, in_end, plan_id, emp_id);
+    INSERT INTO Class (
+        type, is_group, max_capacity, date, start_time, end_time, plan_id, employee_id
+    )
+    VALUES (
+        'General',
+        TRUE,
+        in_available_spots::INT,
+        TO_DATE(in_class_date, 'YYYY-MM-DD'),
+        in_start::TIME,
+        in_end::TIME,
+        work_plan_id,
+        emp_id
+    )
+    RETURNING class_id INTO new_class_id;
+
+    INSERT INTO Class_Attendance (client_id, class_id, date, time)
+    VALUES (
+        client_id_int,
+        new_class_id,
+        TO_DATE(in_class_date, 'YYYY-MM-DD'),
+        in_start::TIME
+    );
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+
+---------------------- Para search Clases ----------------------
+CREATE OR REPLACE FUNCTION sp_search_class(
+    in_type TEXT,
+    in_start_date TEXT,
+    in_end_date TEXT
+)
+RETURNS TABLE (
+    class_date DATE,
+    start_time TIME,
+    end_time TIME,
+    instructor TEXT,
+    available_spots INT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.date AS class_date,
+        c.start_time,
+        c.end_time,
+        e.name::TEXT AS instructor,
+        (c.max_capacity - COUNT(a.client_id))::INTEGER AS available_spots 
+    FROM Class c
+    JOIN Employee e ON c.employee_id = e.employee_id
+    LEFT JOIN Class_Attendance a ON c.class_id = a.class_id AND a.date = c.date
+    WHERE c.type = in_type
+      AND c.date BETWEEN in_start_date::DATE AND in_end_date::DATE
+    GROUP BY c.class_id, c.date, c.start_time, c.end_time, e.name, c.max_capacity;
+END;
+$$ LANGUAGE plpgsql;
+
+
 
 ---------------------- Para registrar equipment_type ----------------------
 CREATE OR REPLACE FUNCTION sp_insert_or_edit_equipment_type(
@@ -451,12 +513,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
----------------------- Para insertar o editar employee ----------------------
+----------------------  insertar employee ----------------------
 CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
-    in_employee_id TEXT,
+    in_employee_id TEXT,         
     in_full_name TEXT,
     in_province TEXT,
     in_canton TEXT,
@@ -466,101 +525,82 @@ CREATE OR REPLACE FUNCTION sp_insert_or_edit_employee(
     in_payroll_id INT,
     in_salary INT,
     in_email TEXT,
+    in_username TEXT,
     in_password TEXT
 )
 RETURNS VOID AS $$
 DECLARE
-    v_existing_employee_id INT;
-    v_branch_id INT;
-    v_position_id INT;
-    v_spreadsheet_exists BOOLEAN;
+    exists_flag TEXT;
+    branch_id INT;
+    position_id INT;
 BEGIN
-    -- Validar sucursal
-    SELECT branch_id INTO v_branch_id FROM Branch WHERE name = in_branch;
-    IF v_branch_id IS NULL THEN
+    SELECT b.branch_id INTO branch_id FROM Branch b WHERE b.name = in_branch;
+    IF branch_id IS NULL THEN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    -- Validar puesto
-    SELECT position_id INTO v_position_id FROM Position WHERE name = in_position;
-    IF v_position_id IS NULL THEN
+    SELECT p.position_id INTO position_id FROM Position p WHERE p.name = in_position;
+    IF position_id IS NULL THEN
         RAISE EXCEPTION 'Puesto no encontrado';
     END IF;
 
-    -- Validar existencia de planilla
-    SELECT EXISTS (SELECT 1 FROM Spreadsheet WHERE spreadsheet_id = in_payroll_id) INTO v_spreadsheet_exists;
-    IF NOT v_spreadsheet_exists THEN
-        RAISE EXCEPTION 'Planilla no encontrada';
-    END IF;
+    SELECT e.employee_id INTO exists_flag FROM Employee e WHERE e.employee_id = in_employee_id;
 
-    -- Verificar si ya existe el empleado
-    SELECT employee_id INTO v_existing_employee_id FROM Employee WHERE id_number = in_employee_id;
-
-    IF v_existing_employee_id IS NULL THEN
+    IF exists_flag IS NULL THEN
         INSERT INTO Employee (
-            name, province, canton, district,
-            email, id_number, password, salary,
+            employee_id, name, province, canton, district,
+            email, username, password, salary,
             bank_account, position_id, spreadsheet_id, branch_id
-        )
-        VALUES (
-            in_full_name, in_province, in_canton, in_district,
-            in_email, in_employee_id, in_password, in_salary,
-            'TEMP',
-            v_position_id,
-            in_payroll_id,
-            v_branch_id
+        ) VALUES (
+            in_employee_id, in_full_name, in_province, in_canton, in_district,
+            in_email, in_username, in_password, in_salary,
+            'TEMP', position_id, in_payroll_id, branch_id
         );
     END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 
+
 ----------------------  editar employee ----------------------
 CREATE OR REPLACE FUNCTION sp_edit_employee(
-    in_id_number TEXT,
+    in_employee_id TEXT,
     in_full_name TEXT,
     in_province TEXT,
     in_canton TEXT,
     in_district TEXT,
     in_position TEXT,
     in_branch TEXT,
-    in_payroll_id INT,
+    in_payroll_id INTEGER,
     in_salary INTEGER,
     in_email TEXT,
     in_password TEXT
 )
 RETURNS VOID AS $$
 DECLARE
-    emp_id INT;
+    exists_flag TEXT;
     pos_id INT;
     br_id INT;
-    spreadsheet_exists BOOLEAN;
 BEGIN
-    -- Validar existencia del empleado
-    SELECT employee_id INTO emp_id FROM Employee WHERE id_number = in_id_number;
-    IF emp_id IS NULL THEN
+    -- Verificar si el empleado existe (por cédula)
+    SELECT employee_id INTO exists_flag FROM Employee WHERE employee_id = in_employee_id;
+    IF exists_flag IS NULL THEN
         RAISE EXCEPTION 'Empleado no existe con la cédula proporcionada';
     END IF;
 
-    -- Validar existencia del puesto
+    -- Obtener ID del puesto
     SELECT position_id INTO pos_id FROM Position WHERE name = in_position;
     IF pos_id IS NULL THEN
         RAISE EXCEPTION 'Puesto no encontrado';
     END IF;
 
-    -- Validar existencia de la sucursal
+    -- Obtener ID de la sucursal
     SELECT branch_id INTO br_id FROM Branch WHERE name = in_branch;
     IF br_id IS NULL THEN
         RAISE EXCEPTION 'Sucursal no encontrada';
     END IF;
 
-    -- Validar existencia de la planilla
-    SELECT EXISTS (SELECT 1 FROM Spreadsheet WHERE spreadsheet_id = in_payroll_id) INTO spreadsheet_exists;
-    IF NOT spreadsheet_exists THEN
-        RAISE EXCEPTION 'Planilla no encontrada';
-    END IF;
-
-    -- Actualizar datos del empleado
+    -- Actualizar los datos del empleado
     UPDATE Employee
     SET
         name = in_full_name,
@@ -572,8 +612,68 @@ BEGIN
         salary = in_salary,
         position_id = pos_id,
         branch_id = br_id,
-        spreadsheet_id = in_payroll_id
-    WHERE id_number = in_id_number;
+        spreadsheet_id = in_payroll_id -- actualizar planilla también
+    WHERE employee_id = in_employee_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+----------------------  delete employee ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_employee(
+    in_employee_id TEXT
+)
+RETURNS VOID AS $$
+BEGIN
+    -- Verifica existencia
+    IF NOT EXISTS (SELECT 1 FROM Employee WHERE employee_id = in_employee_id) THEN
+        RAISE EXCEPTION 'Empleado con cédula % no existe.', in_employee_id;
+    END IF;
+
+    -- Elimina
+    DELETE FROM Employee WHERE employee_id = in_employee_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+----------------------  delete employee ----------------------
+CREATE OR REPLACE FUNCTION sp_get_employee(
+    in_employee_id TEXT
+)
+RETURNS TABLE (
+    employee_id TEXT,
+    full_name TEXT,
+    province TEXT,
+    canton TEXT,
+    district TEXT,
+    "position" TEXT,
+    "branch" TEXT,
+    payroll_id INT,
+    salary INT,
+    email TEXT,
+    username TEXT,
+    password TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        e.employee_id,
+        e.name::TEXT,          
+        e.province::TEXT,
+        e.canton::TEXT,
+        e.district::TEXT,
+        p.name::TEXT AS "position",
+        b.name::TEXT AS "branch",
+        e.spreadsheet_id,
+        e.salary,
+        e.email::TEXT,
+        e.username::TEXT,
+        e.password::TEXT
+    FROM Employee e
+    JOIN Position p ON p.position_id = e.position_id
+    JOIN Branch b ON b.branch_id = e.branch_id
+    WHERE e.employee_id = in_employee_id;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -582,7 +682,7 @@ $$ LANGUAGE plpgsql;
 ----------------------  Generar planilla(spreadsheet/payroll) ----------------------
 CREATE OR REPLACE FUNCTION sp_generate_payroll(in_branch_name TEXT)
 RETURNS TABLE (
-    id_number TEXT,
+    employee_id TEXT,
     full_name TEXT,
     classes_or_hours INTEGER,
     amount_to_pay NUMERIC(10,2),
@@ -591,7 +691,7 @@ RETURNS TABLE (
 BEGIN
     RETURN QUERY
     SELECT 
-        e.id_number::TEXT,
+        e.employee_id::TEXT,
         e.name::TEXT AS full_name,
         COUNT(c.class_id)::INTEGER AS classes_or_hours,
         COUNT(c.class_id)::NUMERIC * COALESCE(s.class_rate, 0) AS amount_to_pay,
@@ -601,7 +701,7 @@ BEGIN
     JOIN Class c ON e.employee_id = c.employee_id
     LEFT JOIN Spreadsheet s ON e.position_id = s.position_id
     WHERE b.name = in_branch_name
-    GROUP BY e.id_number, e.name, s.class_rate;
+    GROUP BY e.employee_id, e.name, s.class_rate;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -635,6 +735,103 @@ BEGIN
 
     RETURN new_id;
 END;
+$$ LANGUAGE plpgsql;
+
+----------------------  edit Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_edit_position(
+    in_position_id INT,
+    in_name TEXT,
+    in_description TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    existing_id INT;
+BEGIN
+    -- Verifica si el puesto existe
+    IF NOT EXISTS (SELECT 1 FROM Position WHERE position_id = in_position_id) THEN
+        RAISE EXCEPTION 'No existe un puesto con ese ID';
+    END IF;
+
+    -- Verifica que no exista otro puesto con el mismo nombre
+    SELECT position_id INTO existing_id
+    FROM Position
+    WHERE LOWER(name) = LOWER(in_name)
+      AND position_id != in_position_id;
+
+    IF FOUND THEN
+        RAISE EXCEPTION 'Ya existe otro puesto con ese nombre';
+    END IF;
+
+    -- Actualiza los datos
+    UPDATE Position
+    SET name = in_name,
+        description = in_description
+    WHERE position_id = in_position_id;
+END;
+$$ LANGUAGE plpgsql;   
+
+
+----------------------  consult Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_consult_position(in_name TEXT)
+RETURNS TABLE (
+    position_id INT,
+    position_name TEXT,
+    description TEXT
+) AS $$
+BEGIN
+    -- Verifica existencia
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM Position p
+        WHERE LOWER(p.name) = LOWER(in_name)
+    ) THEN
+        RAISE EXCEPTION 'No existe un puesto con ese nombre';
+    END IF;
+
+    -- Devuelve la fila con casts explícitos a TEXT
+    RETURN QUERY
+    SELECT
+        p.position_id,
+        p.name::TEXT         AS position_name,
+        p.description::TEXT  AS description
+    FROM Position p
+    WHERE LOWER(p.name) = LOWER(in_name);
+END;
+$$ LANGUAGE plpgsql;
+----------------------  delete Position ----------------------
+
+CREATE OR REPLACE FUNCTION sp_delete_position(in_name TEXT)
+RETURNS VOID AS $$
+DECLARE
+    pos_id   INT;
+    emp_count INT;
+BEGIN
+    -- 1. Verificar que el puesto exista
+    SELECT position_id
+      INTO pos_id
+      FROM Position p
+     WHERE LOWER(p.name) = LOWER(in_name);
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No existe un puesto con ese nombre';
+    END IF;
+
+    -- 2. Verificar que no haya empleados asignados
+    SELECT COUNT(*) 
+      INTO emp_count
+      FROM Employee e
+     WHERE e.position_id = pos_id;
+
+    IF emp_count > 0 THEN
+        RAISE EXCEPTION 'No se puede eliminar: hay % asignado(s) a este puesto', emp_count;
+    END IF;
+
+    -- 3. Borrar el puesto
+    DELETE FROM Position
+     WHERE position_id = pos_id;
+END;	
 $$ LANGUAGE plpgsql;
 
 ----------------------  Product insert or edit ----------------------
@@ -698,6 +895,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+
 ----------------------  insert_or_edit_spa_treatment ----------------------
 CREATE OR REPLACE FUNCTION sp_insert_or_edit_spa_treatment(
     in_id INT,
@@ -731,21 +930,20 @@ $$ LANGUAGE plpgsql;
 
 ----------------------  consult_spa_treatment ----------------------
 
-DROP FUNCTION IF EXISTS sp_get_spa_treatment_by_name(p_name TEXT);
+DROP FUNCTION IF EXISTS sp_get_spa_treatment(INT);
 
-CREATE OR REPLACE FUNCTION sp_get_spa_treatment_by_name(
-    p_name TEXT
+CREATE OR REPLACE FUNCTION sp_get_spa_treatment(
+    in_id INT
 )
 RETURNS TABLE (
     treatment_id INT,
-    treatment_name VARCHAR(100),
-    description VARCHAR(200)
+    treatment_name VARCHAR(100)  -- Cambiar TEXT por VARCHAR(100)
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT st.treatment_id, st.name AS treatment_name, st.description
-    FROM Spa_Treatment st
-    WHERE st.name = p_name;
+    SELECT st.treatment_id, st.name
+    FROM Spa_Treatment AS st
+    WHERE st.treatment_id = in_id;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -776,46 +974,259 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- ----------------------  sp_search_spa_treatments_by_name ----------------------
 
--- Asociados
-DROP FUNCTION IF EXISTS sp_get_associated_spa_treatments(TEXT);
-
-CREATE OR REPLACE FUNCTION sp_get_associated_spa_treatments(p_branch_name TEXT)
-RETURNS TABLE(treatment_id INT, treatment_name VARCHAR(100)) AS $$
+----------------------  insertar payroll planilla spreadsheet----------------------
+CREATE OR REPLACE FUNCTION sp_manage_payroll_type(
+    in_description TEXT,
+    in_puesto TEXT,
+    in_hourly_rate NUMERIC,
+    in_class_rate NUMERIC
+)
+RETURNS VOID AS $$
+DECLARE
+    pos_id INT;
+    total_hours INT := 0;
+    total_classes INT := 0;
 BEGIN
-    RETURN QUERY
-    SELECT st.treatment_id, st.name
-    FROM Spa_Treatment st
-    JOIN Spa_Treatment_Branch stb ON st.treatment_id = stb.treatment_id
-    JOIN Branch b ON b.branch_id = stb.branch_id
-    WHERE b.name = p_branch_name;
+    -- Buscar o crear posición
+    SELECT position_id INTO pos_id FROM Position WHERE name = in_puesto;
+
+    IF pos_id IS NULL THEN
+        INSERT INTO Position (name, description)
+        VALUES (in_puesto, in_description)
+        RETURNING position_id INTO pos_id;
+    END IF;
+
+    -- Calcular clases y horas trabajadas de empleados con ese puesto
+    SELECT 
+        COUNT(c.class_id),
+        SUM(EXTRACT(EPOCH FROM (c.end_time - c.start_time)) / 3600)::INT
+    INTO total_classes, total_hours
+    FROM Employee e
+    JOIN Class c ON e.employee_id = c.employee_id
+    WHERE e.position_id = pos_id;
+
+    -- Insertar o actualizar planilla para esa posición
+    IF EXISTS (SELECT 1 FROM Spreadsheet WHERE position_id = pos_id) THEN
+        UPDATE Spreadsheet
+        SET hourly_rate = in_hourly_rate,
+            class_rate = in_class_rate,
+            classes_taught = total_classes,
+            hours_worked = total_hours
+        WHERE position_id = pos_id;
+    ELSE
+        INSERT INTO Spreadsheet (position_id, hourly_rate, class_rate, classes_taught, hours_worked)
+        VALUES (pos_id, in_hourly_rate, in_class_rate, total_classes, total_hours);
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
--- No asociados
-DROP FUNCTION IF EXISTS sp_get_not_associated_spa_treatments(TEXT);
+----------------------  delete payroll planilla spreadsheet----------------------
+CREATE OR REPLACE FUNCTION sp_delete_payroll_type(in_puesto TEXT)
+RETURNS VOID AS $$
+DECLARE
+    pos_id INT;
+BEGIN
+    SELECT position_id INTO pos_id FROM Position WHERE name = in_puesto;
 
-CREATE OR REPLACE FUNCTION sp_get_not_associated_spa_treatments(p_branch_name TEXT)
-RETURNS TABLE(treatment_id INT, treatment_name VARCHAR(100)) AS $$
+    IF pos_id IS NOT NULL THEN
+        
+		UPDATE Employee
+		SET position_id = 1
+		WHERE position_id = pos_id;
+
+		UPDATE Employee
+		SET position_id = 5
+		WHERE position_id = pos_id;
+		
+		DELETE FROM Spreadsheet
+		WHERE position_id = pos_id;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------  Copiar schedule ----------------------
+CREATE OR REPLACE FUNCTION sp_copy_schedule(
+    in_branch_name TEXT,
+    in_start_week TEXT,
+    in_end_week TEXT
+)
+RETURNS TABLE (
+    activity_name TEXT,
+    date TEXT,
+    start_time TEXT,
+    end_time TEXT
+) AS $$
+DECLARE
+    offset_days INT := 7;
+    r RECORD;
+BEGIN
+    FOR r IN
+        SELECT c.type, c.date, c.start_time, c.end_time, c.is_group, 
+               c.max_capacity, c.plan_id, c.employee_id
+        FROM Class c
+        JOIN Work_Plan wp ON c.plan_id = wp.plan_id
+        JOIN Branch b ON wp.branch_id = b.branch_id
+        WHERE b.name = in_branch_name
+          AND c.date BETWEEN CAST(in_start_week AS DATE) AND CAST(in_end_week AS DATE)
+    LOOP
+        -- Insertar nueva clase en la semana siguiente
+        INSERT INTO Class (type, is_group, max_capacity, date, start_time, end_time, plan_id, employee_id)
+        VALUES (
+            r.type,
+            r.is_group,
+            r.max_capacity,
+            r.date + offset_days,
+            r.start_time,
+            r.end_time,
+            r.plan_id,
+            r.employee_id
+        );
+
+        -- Retornar info copiada
+        activity_name := r.type;
+        date := TO_CHAR(r.date + offset_days, 'YYYY-MM-DD');
+        start_time := TO_CHAR(r.start_time, 'HH24:MI');
+        end_time := TO_CHAR(r.end_time, 'HH24:MI');
+        RETURN NEXT;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  ver workout plan ----------------------
+CREATE OR REPLACE FUNCTION sp_view_workout_plan(in_client_id INT)
+RETURNS TABLE (
+    day TEXT,
+    exercise_name TEXT,
+    sets INT,
+    repetitions INT,
+    notes TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        wp.period::TEXT AS day,
+        wp.description::TEXT AS exercise_name,
+        3::INT AS sets,
+        12::INT AS repetitions,
+        'Ejercicio general'::TEXT AS notes
+    FROM Work_Plan wp
+    WHERE wp.client_id = in_client_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  create workout plan ----------------------
+CREATE OR REPLACE FUNCTION sp_create_workout_plan(
+    in_client_id TEXT,
+    in_description TEXT,
+    in_period TEXT,
+    in_branch_name TEXT,
+    in_day TEXT,
+    in_exercise_name TEXT,
+    in_sets INTEGER,
+    in_repetitions INTEGER,
+    in_notes TEXT
+) RETURNS VOID AS $$
 DECLARE
     v_branch_id INT;
 BEGIN
     SELECT branch_id INTO v_branch_id
     FROM Branch
-    WHERE name = p_branch_name;
+    WHERE name = in_branch_name;
 
     IF v_branch_id IS NULL THEN
-        RAISE EXCEPTION 'Branch name % not found', p_branch_name;
+        RAISE EXCEPTION 'Sucursal no encontrada: %', in_branch_name;
     END IF;
 
-    RETURN QUERY
-    SELECT st.treatment_id, st.name
-    FROM Spa_Treatment st
-    WHERE st.treatment_id NOT IN (
-        SELECT stb.treatment_id
-        FROM Spa_Treatment_Branch stb
-        WHERE stb.branch_id = v_branch_id
+    INSERT INTO Work_Plan(
+        description, period, branch_id, client_id, day, exercise_name, sets, repetitions, notes
+    )
+    VALUES (
+        in_description,
+        in_period,
+        v_branch_id,
+        CAST(in_client_id AS INT),
+        in_day,
+        in_exercise_name,
+        in_sets,
+        in_repetitions,
+        in_notes
     );
 END;
 $$ LANGUAGE plpgsql;
+
+
+----------------------  create or edit Servicio ----------------------
+CREATE OR REPLACE FUNCTION sp_insert_or_edit_service(
+    in_service_name TEXT,
+    in_description TEXT,
+    in_class_name TEXT
+) RETURNS VOID AS $$
+DECLARE
+    v_class_id INT;
+    existing_id INT;
+BEGIN
+    -- Buscar la clase por su tipo
+    SELECT c.class_id INTO v_class_id
+    FROM Class c
+    WHERE c.type = in_class_name
+    ORDER BY c.date DESC
+    LIMIT 1;
+
+    IF v_class_id IS NULL THEN
+        RAISE EXCEPTION 'Clase no encontrada: %', in_class_name;
+    END IF;
+
+    -- Verificar si ya existe un servicio con ese nombre
+    SELECT service_id INTO existing_id
+    FROM Service
+    WHERE name = in_service_name;
+
+    -- Si existe, actualizar
+    IF existing_id IS NOT NULL THEN
+        UPDATE Service
+        SET description = in_description,
+            class_id = v_class_id
+        WHERE service_id = existing_id;
+    ELSE
+        -- Si no existe, insertar
+        INSERT INTO Service(name, description, class_id)
+        VALUES (in_service_name, in_description, v_class_id);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  eliminar Servicio ----------------------
+CREATE OR REPLACE FUNCTION sp_delete_service_by_name(in_name TEXT)
+RETURNS VOID AS $$
+BEGIN
+    DELETE FROM Service
+    WHERE name = in_name;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No se encontró un servicio con el nombre: %', in_name;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------  get Servicio ----------------------
+CREATE OR REPLACE FUNCTION sp_get_service_by_name(in_name TEXT)
+RETURNS TABLE (
+    service_name TEXT,
+    description TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.type::TEXT AS service_name,
+        s.description::TEXT
+    FROM Service s
+    JOIN Class c ON s.class_id = c.class_id
+    WHERE s.name = in_name
+    LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
+

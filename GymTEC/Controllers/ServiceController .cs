@@ -6,6 +6,7 @@ using GymTEC.Data_output_models.manage_branch;
 using GymTEC.Data_output_models.manage_services;
 using GymTEC.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GymTEC.Controllers
 {
@@ -36,22 +37,40 @@ namespace GymTEC.Controllers
         [HttpPost("insert_or_edit")]
         public ActionResult<Data_response<Data_output_service>> InsertOrEditService([FromBody] Data_input_service input)
         {
-            // Aquí se implementaría la lógica para insertar o actualizar el servicio en la base de datos
-            // Validar input.service_id y input.description según reglas de negocio
+            var parameters = new Dictionary<string, object>
+                {
+                    { "in_service_name", input.service_name },
+                    { "in_description", input.description },
+                    { "in_class_name", input.class_name }
+                };
 
-            var data_output = new Data_output_service
+            try
             {
-                service_id = input.service_id,
-                description = input.description
-            };
+                _databaseService.ExecuteFunction(
+                    "SELECT sp_insert_or_edit_service(@in_service_name, @in_description, @in_class_name)",
+                    parameters);
 
-            var response = new Data_response<Data_output_service>
+                var data_output = new Data_output_service
+                {
+                    service_name = input.service_name,
+                    description = input.description
+                };
+
+                return Ok(new Data_response<Data_output_service>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = data_output
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         /// <summary>
@@ -70,15 +89,33 @@ namespace GymTEC.Controllers
         [HttpPost("delete")]
         public ActionResult<Data_response<string>> DeleteService([FromBody] Data_input_service input)
         {
-            // Aquí se implementaría la lógica para eliminar el servicio identificado por input.service_id
+            var parameters = new Dictionary<string, object>
+                {
+                    { "in_name", input.service_name }
+                };
 
-            var response = new Data_response<string>
+            try
             {
-                status = true,
-                data = "Servicio eliminado exitosamente"
-            };
+                _databaseService.ExecuteFunction(
+                    "SELECT sp_delete_service_by_name(@in_name)",
+                    parameters
+                );
 
-            return Ok(response);
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = "Servicio eliminado exitosamente."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         /// <summary>
@@ -97,22 +134,49 @@ namespace GymTEC.Controllers
         [HttpPost("get")]
         public ActionResult<Data_response<Data_output_service>> GetService([FromBody] Data_input_service input)
         {
-            // Aquí se implementaría la lógica para consultar la información del servicio
-            // Para el ejemplo, se devuelve una respuesta estática simulada
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_name", input.service_name }
+    };
 
-            var data_output = new Data_output_service
+            try
             {
-                service_id = input.service_id,
-                description = "Descripción del servicio ejemplo"
-            };
+                DataTable result = _databaseService.ExecuteFunction(
+                    "SELECT * FROM sp_get_service_by_name(@in_name)",
+                    parameters
+                );
 
-            var response = new Data_response<Data_output_service>
+                if (result.Rows.Count == 0)
+                {
+                    return NotFound(new
+                    {
+                        status = false,
+                        error = "No se encontró un servicio con esa descripción."
+                    });
+                }
+
+                var row = result.Rows[0];
+                var data_output = new Data_output_service
+                {
+                    service_name = row["service_name"].ToString(),
+                    description = row["description"].ToString()
+                };
+
+                return Ok(new Data_response<Data_output_service>
+                {
+                    status = true,
+                    data = data_output
+                });
+            }
+            catch (Exception ex)
             {
-                status = true,
-                data = data_output
-            };
-
-            return Ok(response);
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
     }
 }

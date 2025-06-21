@@ -2,6 +2,7 @@
 using GymTEC.Data_output_models.manage_schedule;
 using GymTEC.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GymTEC.Controllers
 {
@@ -19,35 +20,50 @@ namespace GymTEC.Controllers
         [HttpPost("copy_schedule")]
         public ActionResult<Data_response<Data_output_copy_schedule>> CopySchedule([FromBody] Data_input_copy_schedule input)
         {
-            // Simulamos la copia de actividades con datos ficticios
-            var copiedActivities = new Data_output_copy_schedule
-            {
-                copied_activities = new List<ActivityInfo>
+            var parameters = new Dictionary<string, object>
                 {
-                    new ActivityInfo
-                    {
-                        activity_name = "Yoga",
-                        date = "2025-06-08", // siguiente semana
-                        start_time = "09:00",
-                        end_time = "10:00"
-                    },
-                    new ActivityInfo
-                    {
-                        activity_name = "Pilates",
-                        date = "2025-06-09",
-                        start_time = "10:00",
-                        end_time = "11:00"
-                    }
-                }
-            };
+                    { "in_branch_name", input.branch_name },
+                    { "in_start_week", input.start_week_date }, // string
+                    { "in_end_week", input.end_week_date }      // string
+                };
 
-            var response = new Data_response<Data_output_copy_schedule>
+            try
             {
-                status = true,
-                data = copiedActivities
-            };
+                DataTable result = _databaseService.ExecuteFunction(
+                    "SELECT * FROM sp_copy_schedule(@in_branch_name, @in_start_week, @in_end_week)",
+                    parameters
+                );
 
-            return Ok(response);
+                var copiedActivities = new List<ActivityInfo>();
+                foreach (DataRow row in result.Rows)
+                {
+                    copiedActivities.Add(new ActivityInfo
+                    {
+                        activity_name = row["activity_name"].ToString(),
+                        date = row["date"].ToString(),
+                        start_time = row["start_time"].ToString(),
+                        end_time = row["end_time"].ToString()
+                    });
+                }
+
+                return Ok(new Data_response<Data_output_copy_schedule>
+                {
+                    status = true,
+                    data = new Data_output_copy_schedule
+                    {
+                        copied_activities = copiedActivities
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
 

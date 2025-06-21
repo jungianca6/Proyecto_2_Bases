@@ -21,32 +21,19 @@ namespace GymTEC.Controllers
         public ActionResult<Data_response<Data_output_generate_payroll>> GeneratePayroll([FromBody] Data_input_generate_payroll input)
         {
             var parameters = new Dictionary<string, object>
-    {
-        { "in_branch_name", input.branch_name }
-    };
+                {
+                    { "in_branch_name", input.branch_name },
+                    { "in_description", input.description } // aunque no se devuelva, puede usarse internamente
+                };
 
             try
             {
-                // Ejecuta la función y obtiene los resultados
-                var results = _databaseService.ExecuteFunction("SELECT sp_generate_payroll(@in_branch_name)", parameters);
-
-                // Construir lista de empleados a partir de los resultados
-                var employees = new List<EmployeePayrollInfo>();
-                foreach (DataRow row in results.Rows)
-                {
-                    employees.Add(new EmployeePayrollInfo
-                    {
-                        employee_id = row["employee_id"].ToString(),
-                        full_name = row["full_name"].ToString(),
-                        classes_or_hours = Convert.ToInt32(row["classes_or_hours"]),
-                        amount_to_pay = Convert.ToDecimal(row["amount_to_pay"]),
-                        type = row["type"].ToString()
-                    });
-                }
+                var result = _databaseService.Query2<EmployeePayrollInfo>(
+                    "SELECT * FROM sp_generate_payroll(@in_branch_name, @in_description)", parameters);
 
                 var data_output = new Data_output_generate_payroll
                 {
-                    employees = employees
+                    employees = result.ToList()
                 };
 
                 return Ok(new Data_response<Data_output_generate_payroll>
@@ -69,45 +56,100 @@ namespace GymTEC.Controllers
         [HttpPost("manage_payroll_type")]
         public ActionResult<Data_response<string>> ManagePayrollType([FromBody] Data_input_manage_payroll_type input)
         {
-            // Aquí la lógica para insertar o editar el tipo de planilla (simulación)
-            string msg = $"Tipo de planilla '{input.description}' con ID '{input.identifier}' guardado correctamente.";
+            var parameters = new Dictionary<string, object>
+                {
+                    { "in_description", input.description },
+                    { "in_puesto", input.puesto },
+                    { "in_hourly_rate", input.hourly_payment },
+                    { "in_class_rate", input.group_class_payment },
+                    { "in_monthly_payment", input.monthly_payment }
+                };
 
-            return Ok(new Data_response<string>
+            try
             {
-                status = true,
-                data = msg
-            });
+                _databaseService.ExecuteFunction("SELECT sp_manage_payroll_type(@in_description, @in_puesto, @in_hourly_rate, @in_class_rate, @in_monthly_payment)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = $"Tipo de planilla '{input.puesto}' gestionado correctamente."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpPost("delete_payroll_type")]
         public ActionResult<Data_response<string>> DeletePayrollType([FromBody] Data_input_delete_payroll_type input)
         {
-            // Aquí iría la lógica real de eliminación en base al identificador
-
-            string msg = $"Tipo de planilla con ID '{input.identifier}' eliminado correctamente.";
-
-            return Ok(new Data_response<string>
+            try
             {
-                status = true,
-                data = msg
-            });
+                var parameters = new Dictionary<string, object>
+        {
+            { "in_puesto", input.puesto }
+        };
+
+                _databaseService.ExecuteFunction("SELECT sp_delete_payroll_type(@in_puesto)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = $"Tipo de planilla con puesto '{input.puesto}' eliminado correctamente."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
 
         [HttpPost("get_payroll_type")]
         public ActionResult<Data_response<Data_output_get_payroll_type>> GetPayrollType([FromBody] Data_input_get_payroll_type input)
         {
-            // Simulación de búsqueda (en la práctica, consultar en base de datos)
-            var result = new Data_output_get_payroll_type
-            {
-                identifier = input.identifier,
-                description = "Planilla de Entrenadores"
-            };
+            var parameters = new Dictionary<string, object>
+    {
+        { "in_position_name", input.puesto }
+    };
 
-            return Ok(new Data_response<Data_output_get_payroll_type>
+            try
             {
-                status = true,
-                data = result
-            });
+                var result = _databaseService.QuerySingle<Data_output_get_payroll_type>(
+                    @"SELECT 
+                p.name AS puesto,
+                s.description
+              FROM Position p
+              LEFT JOIN Spreadsheet s ON p.position_id = s.position_id
+              WHERE p.name = @in_position_name",
+                    parameters
+                );
+
+                return Ok(new Data_response<Data_output_get_payroll_type>
+                {
+                    status = true,
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
     }
 }
