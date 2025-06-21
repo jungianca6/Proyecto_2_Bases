@@ -287,5 +287,36 @@ namespace GymTEC.Controllers
             }
         }
 
+        [HttpPost("associate_spa_treatment")]
+        public ActionResult<Data_response<string>> AssociateSpaTreatment([FromBody] Data_input_associate_spa_treatment input)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "in_treatment_name", input.treatment_name },
+                { "in_branch_name", input.branch_name }
+            };
+
+            try
+            {
+                // Ejecuta el stored procedure para asociar por nombre
+                _databaseService.ExecuteFunction("SELECT sp_associate_spa_treatment_by_name(@in_treatment_name, @in_branch_name)", parameters);
+
+                return Ok(new Data_response<string>
+                {
+                    status = true,
+                    data = $"Tratamiento '{input.treatment_name}' asociado correctamente a la sucursal '{input.branch_name}'."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    error = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
+        }
+
     }
 }

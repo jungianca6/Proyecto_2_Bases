@@ -2,7 +2,10 @@
 {
     public class Data_input_associate_spa_treatment
     {
-        public int treatment_id { get; set; }
+        // Nombre del tratamiento spa
+        public string treatment_name { get; set; }
+
+        // Nombre de la sucursal
         public string branch_name { get; set; }
     }
 
