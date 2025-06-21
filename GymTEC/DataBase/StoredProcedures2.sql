@@ -109,3 +109,54 @@ BEGIN
     WHERE position_id = pos_id;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+----------------------  Ver workout plan ----------------------Add commentMore actions
+CREATE OR REPLACE FUNCTION sp_view_workout_plan(in_client_id INT)
+RETURNS TABLE (
+    day TEXT,
+    exercise_name TEXT,
+    sets INT,
+    repetitions INT,
+    notes TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        wp.period::TEXT AS day,
+        wp.description::TEXT AS exercise_name,
+        3::INT AS sets,
+        12::INT AS repetitions,
+        'Ejercicio general'::TEXT AS notes
+    FROM Work_Plan wp
+    WHERE wp.client_id = in_client_id;Add commentMore actions
+END;
+$$ LANGUAGE plpgsql;
+
+
+----------------------  create workout plan ----------------------
+CREATE OR REPLACE FUNCTION sp_create_workout_plan(
+    in_client_id TEXT,
+    in_period TEXT,
+    in_day TEXT,
+    in_exercise_name TEXT,
+    in_sets INTEGER,
+    in_repetitions INTEGER,
+    in_notes TEXT
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO Work_Plan(
+        period, client_id, day, exercise_name, sets, repetitions, notes
+    )
+    VALUES (
+        in_period,
+        CAST(in_client_id AS INT),
+        in_day,
+        in_exercise_name,
+        in_sets,
+        in_repetitions,
+        in_notes
+    );
+END;
+$$ LANGUAGE plpgsql;
