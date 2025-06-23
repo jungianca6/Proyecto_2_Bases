@@ -5,19 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7124ebcb-41d3-4647-af49-6c241eba8589" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/GymTEC/DesignTimeBuild/.dtbcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/DesignTimeBuild/.dtbcache.v2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/.futdcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/.futdcache.v2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/.suo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/DocumentLayout.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/DocumentLayout.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.metadata.v8.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.projects.v8.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.strings.v8.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/GymTEC.csproj.user" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/GymTEC.csproj.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.exe" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.AssemblyInfoInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.MvcApplicationPartsAssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.MvcApplicationPartsAssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.assets.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.CoreCompileInputs.cache" afterDir="false" />
@@ -29,12 +33,11 @@
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/apphost.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/ref/GymTEC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/ref/GymTEC.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/refint/GymTEC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/refint/GymTEC.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/staticwebassets.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/staticwebassets.build.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.dgspec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminTienda.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminTienda.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClientePg.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClientePg.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,24 +62,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "Frontend",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "show.migrate.to.gradle.popup": "false",
-    "ts.external.directory.path": "C:\\Users\\PC\\Desktop\\Proyecto_2_Bases\\GymTECApp\\gymtecapp\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Frontend&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\PC\\Desktop\\Proyecto_2_Bases\\GymTECApp\\gymtecapp\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\PC\Desktop\Proyecto_2_Bases\GymTECWeb\gymtecweb\src\pgs\Admin" />
@@ -103,22 +106,11 @@
       <workItem from="1750125792959" duration="163000" />
       <workItem from="1750126113477" duration="657000" />
       <workItem from="1750481381982" duration="12876000" />
+      <workItem from="1750645682212" duration="2281000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/GymTECApp/gymtecapp/app/index.js</url>
-          <line>93</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
