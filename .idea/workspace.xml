@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7124ebcb-41d3-4647-af49-6c241eba8589" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.vs/GymTEC/DesignTimeBuild/.dtbcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/DesignTimeBuild/.dtbcache.v2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/.futdcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/.futdcache.v2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/.suo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/DocumentLayout.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/DocumentLayout.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.metadata.v8.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.projects.v8.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.strings.v8.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.exe" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.MvcApplicationPartsAssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.MvcApplicationPartsAssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.genruntimeconfig.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/GymTEC.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/apphost.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/ref/GymTEC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/ref/GymTEC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/refint/GymTEC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/Debug/net8.0/refint/GymTEC.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2y7RbcFCCMwwamVPn0gg4Em0KZ6" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Frontend&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\PC\\Desktop\\Proyecto_2_Bases\\GymTECApp\\gymtecapp\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\PC\Desktop\Proyecto_2_Bases\GymTECWeb\gymtecweb\src\pgs\Admin" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26094.121" />
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-IU-251.26094.121" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7124ebcb-41d3-4647-af49-6c241eba8589" name="Changes" comment="" />
+      <created>1749183702745</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1749183702745</updated>
+      <workItem from="1749183723181" duration="1633000" />
+      <workItem from="1750040074389" duration="229000" />
+      <workItem from="1750040442629" duration="4105000" />
+      <workItem from="1750125792959" duration="163000" />
+      <workItem from="1750126113477" duration="657000" />
+      <workItem from="1750481381982" duration="12876000" />
+      <workItem from="1750645682212" duration="4539000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

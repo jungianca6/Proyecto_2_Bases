@@ -1,0 +1,1241 @@
+Log In: 
+	Yo mando: Usuario, contraseña
+	
+	Ud manda: Usuario, rol (Admin, Cliente, Instructor), número de cédula
+
+###
+Ejemplo de entrada:
+
+{
+  "user_name": "juan_perez",
+  "password": "1234abcd"
+}
+
+
+###
+Ejemplo de Salida:
+
+{
+  "status": true,
+  "data": {
+    "user_name": "juan_perez",
+    "role": "Admin",
+    "id_number": "123456789"
+  }
+}
+
+
+#################################### ----------------------- ####################################
+
+Registro (SOLO DE CLIENTES):
+
+				Yo mando:  número de cédula, nombre, usuario, apellido1, apellido2, edad, fecha de nacimiento, peso, IMC, dirección, correo electrónico, contraseña y rol = "Cliente".
+		
+###
+Ejemplo de entrada:
+{
+    "id_number": "123456789",
+    "first_name": "Juan",
+    "user_name": "juan_perez",
+    "last_name_1": "Perez",
+    "last_name_2": "Gomez",
+    "age": 30,
+    "birth_date": "08/06/1995 00:00",
+    "weight": 70.5,
+    "imc": 22.5,
+    "address": "San José, Costa Rica",
+    "email": "juan.perez@example.com",
+    "password": "mypassword123",
+    "role": "Cliente"
+}
+
+###
+Ejemplo de Salida:
+
+{
+    "status": true,
+    "data": {
+        "id_number": "123456789",
+        "first_name": "Juan",
+        "user_name": "juan_perez",
+        "last_name_1": "Perez",
+        "last_name_2": "Gomez",
+        "age": 30,
+        "birth_date": "08/06/1995 00:00",
+        "weight": 70.5,
+        "imc": 22.5,
+        "address": "San José, Costa Rica",
+        "email": "juan.perez@example.com",
+        "role": "Cliente"
+    }
+}
+
+
+
+
+#################################### ----------------------- ####################################
+
+Administrador: 
+	
+	Gestión de sucursales: (No se pueden repetir los nombres de sucursales para que lo regulen)
+				
+				Insertar y editar:
+				
+					Yo mando: nombre, dirección (Provincia, Cantón, Distrito), fecha de apertura, horario de
+					atención, empleado administrador, capacidad máxima, números de teléfono, Spa (desactivado por default entonces es un false), Tienda (desactivado por default entonces es un false) 
+
+
+				###
+				Ejemplo de entrada:
+				{
+					"name": "Sucursal Central",
+					"province": "San José",
+					"canton": "Central",
+					"district": "Carmen",
+					"opening_date": "08/06/2025 09:00",
+					"attention_schedule": "08:00-18:00",
+					"admin_employee": "Carlos López",
+					"max_capacity": 150,
+					"phone_numbers": ["2222-3333", "8888-9999"],
+					"spa": false,
+					"store": false
+				}
+
+
+				###
+				Ejemplo de salida:
+
+				{
+					"status": true,
+					"data": {
+						"name": "Sucursal Central",
+						"province": "San José",
+						"canton": "Central",
+						"district": "Carmen",
+						"opening_date": "08/06/2025 09:00",
+						"attention_schedule": "08:00-18:00",
+						"admin_employee": "Carlos López",
+						"max_capacity": 150,
+						"phone_numbers": ["2222-3333", "8888-9999"],
+						"spa": false,
+						"store": false
+					}
+				}
+
+				##### ----------------------- ######
+
+				Eliminar: 
+		
+					Yo mando: nombre 
+
+				###
+				Ejemplo de entrada:
+					{
+						"name": "Sucursal Central"
+					}
+				###
+				Ejemplo de salida:
+				{
+					"status": true,
+					"data": "Branch deleted successfully"
+				}
+
+				##### ----------------------- ######
+
+				###
+				Ejemplo de entrada:
+
+				###
+				Consultar: 
+
+					Yo mando: nombre
+
+					Ud manda: nombre, dirección (Provincia, Cantón, Distrito), fecha de apertura, horario de
+					atención, empleado administrador, capacidad máxima, números de teléfono, Spa (desactivado por default entonces es un false), Tienda (desactivado por default entonces es un false)
+
+				###
+				Ejemplo de entrada:
+					{
+						"name": "Sucursal Central"
+					}
+				###
+				Ejemplo de salida:
+				{
+					"status": true,
+					"data": {
+						"name": "Sucursal Central",
+						"province": "San José",
+						"canton": "Central",
+						"district": "Carmen",
+						"opening_date": "08/06/2025 09:00",
+						"attention_schedule": "08:00-18:00",
+						"admin_employee": "Carlos López",
+						"max_capacity": 150,
+						"phone_numbers": ["2222-3333", "8888-9999"],
+						"spa": false,
+						"store": false
+					}
+				}
+
+	##### ----------------------- ######
+
+	Gestión de tratamientos de Spa: 
+	
+					Insertar y editar:
+				
+						Yo mando: nombre del tratamiento a añadir, identificador del tratamiento
+
+					###
+					Ejemplo de entrada:
+					{
+						"treatment_name": "Masaje relajante",
+						"treatment_id": "SPA123"
+					}
+
+					###
+					Ejemplo de salida:
+
+					{
+						"status": true,
+						"data": {
+							"treatment_name": "Masaje relajante",
+							"treatment_id": "SPA123"
+						}
+					}
+
+					Eliminar: 
+		
+						Yo mando: identificador del tratamiento
+
+					###
+					Ejemplo de entrada:
+					{
+						"treatment_id": "SPA123"
+					}
+
+					###
+					Ejemplo de salida:
+					{
+						"status": true,
+						"data": "Treatment deleted successfully"
+					}
+
+					Consultar: 
+
+						Yo mando: identificador del tratamiento
+
+						Ud manda: nombre del tratamiento, identificador del tratamiento
+
+					###
+					Ejemplo de entrada:
+					{
+						"treatment_id": "SPA123"
+					}
+
+					###
+					Ejemplo de salida:
+
+					{
+						"status": true,
+						"data": {
+							"treatment_name": "Masaje relajante",
+							"treatment_id": "SPA123"
+						}
+					}
+
+			##### ----------------------- ######
+
+			Gestión de puestos:
+
+			Insertar y editar:  
+			Yo mando: nombre del puesto, descripción, identificador único
+
+			###  
+			Ejemplo de entrada:  
+			{
+			  "position_name": "Entrenador Personal",
+			  "description": "Responsable de guiar a los clientes en sus rutinas",
+			  "position_id": "POS001"
+			}
+
+			###  
+			Ejemplo de salida:  
+			{
+			  "status": true,
+			  "data": {
+				"position_name": "Entrenador Personal",
+				"description": "Responsable de guiar a los clientes en sus rutinas",
+				"position_id": "POS001"
+			  }
+			}
+
+			Eliminar:  
+			Yo mando: identificador único
+
+			###  
+			Ejemplo de entrada:  
+			{
+			  "position_id": "POS001"
+			}
+
+			###  
+			Ejemplo de salida:  
+			{
+			  "status": true,
+			  "data": "Position deleted successfully"
+			}
+
+			Consultar:  
+			Yo mando: identificador único
+
+			Ud manda: nombre del puesto, descripción, identificador único
+
+			###  
+			Ejemplo de entrada:  
+			{
+			  "position_id": "POS001"
+			}
+
+			###  
+			Ejemplo de salida:  
+			{
+			  "status": true,
+			  "data": {
+				"position_name": "Entrenador Personal",
+				"description": "Responsable de guiar a los clientes en sus rutinas",
+				"position_id": "POS001"
+			  }
+			}
+
+			##### ----------------------- ######
+
+			Gestión de empleados:
+
+			Insertar y editar:
+
+			Yo mando: número de cedula, nombre completo, dirección (Provincia, Cantón, Distrito), puesto que desempeña, 
+			sucursal en la que trabaja (si ha sido asignado a un gimnasio), tipo de planilla, salario, correo electrónico y contraseña
+
+			###
+			Ejemplo de entrada:
+			{
+				"employee_id": "123456789",
+				"full_name": "Juan Pérez González",
+				"province": "San José",
+				"canton": "Escazú",
+				"district": "San Rafael"
+				"position": "Entrenador Personal",
+				"branch": "Sucursal Escazú",
+				"payroll_type": "Mensual",
+				"salary": 650000,
+				"email": "juan.perez@example.com",
+				"password": "contraseñaSegura123"
+			}
+
+			###
+			Ejemplo de salida:
+			{
+			  "status": true,
+			  "data": {
+				"employee_id": "123456789",
+				"full_name": "Juan Pérez González",
+				"province": "San José",
+				"canton": "Escazú",
+				"district": "San Rafael"
+				"position": "Entrenador Personal",
+				"branch": "Sucursal Escazú",
+				"payroll_type": "Mensual",
+				"salary": 650000,
+				"email": "juan.perez@example.com",
+				"password": "contraseñaSegura123"
+			  }
+			}
+
+			Eliminar:
+
+			Yo mando: número de cedula
+
+			###
+			Ejemplo de entrada:
+			{
+			  "employee_id": "123456789"
+			}
+
+			###
+			Ejemplo de salida:
+			{
+			  "status": true,
+			  "data": "Empleado eliminado exitosamente"
+			}
+
+			Consultar:
+
+			Yo mando: número de cedula
+
+			Ud manda: número de cedula, nombre completo, dirección (Provincia, Cantón, Distrito), puesto que desempeña, 
+			sucursal en la que trabaja (si ha sido asignado a un gimnasio), tipo de planilla, salario, correo electrónico y contraseña
+
+			###
+			Ejemplo de entrada:
+			{
+			  "employee_id": "123456789"
+			}
+
+			###
+			Ejemplo de salida:
+			{
+			  "status": true,
+			  "data": {
+				"employee_id": "123456789",
+				"full_name": "Juan Pérez González",
+				"address": {
+				  "province": "San José",
+				  "canton": "Escazú",
+				  "district": "San Rafael"
+				},
+				"position": "Entrenador Personal",
+				"branch": "Sucursal Escazú",
+				"payroll_type": "Mensual",
+				"salary": 650000,
+				"email": "juan.perez@example.com",
+				"password": "contraseñaSegura123"
+			  }
+			}
+##### ----------------------- ######
+
+Gestión de Servicios:
+
+        Insertar y editar:
+
+                Yo mando: identificador único y descripción
+
+        ###
+        Ejemplo de entrada:
+        {
+            "service_id": "SERV001",
+            "description": "Servicio de limpieza y mantenimiento"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "service_id": "SERV001",
+                "description": "Servicio de limpieza y mantenimiento"
+            }
+        }
+
+        Eliminar:
+
+                Yo mando: identificador único
+
+        ###
+        Ejemplo de entrada:
+        {
+            "service_id": "SERV001"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Servicio eliminado exitosamente"
+        }
+
+        Consultar:
+
+                Yo mando: identificador único
+
+                Ud manda: identificador único y descripción
+
+        ###
+        Ejemplo de entrada:
+        {
+            "service_id": "SERV001"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "service_id": "SERV001",
+                "description": "Servicio de limpieza y mantenimiento"
+            }
+        }
+
+
+##### ----------------------- ######
+
+Gestión de Tipos planilla:
+
+        Insertar y editar:
+
+                Yo mando: identificador único y descripción del tipo
+
+		### Ejemplo de entrada:
+		{
+			"description": "Planilla de Entrenadores",
+			"identifier": "ENT-001",
+			"monthly_payment": 500000.00,
+			"hourly_payment": 15000.00,
+			"group_class_payment": 20000.00
+		}
+
+		### Ejemplo de salida:
+		{
+			"status": true,
+			"data": "Tipo de planilla 'Planilla de Entrenadores' con ID 'ENT-001' guardado correctamente."
+		}
+
+        Eliminar:
+
+                ### Ejemplo de entrada:
+				{
+					"identifier": "ENT-001"
+				}
+
+				### Ejemplo de salida:
+				{
+					"status": true,
+					"data": "Tipo de planilla con ID 'ENT-001' eliminado correctamente."
+				}
+
+
+        Consultar:
+
+                Yo mando: identificador único
+
+                Ud manda: identificador único y descripción del tipo
+
+				### Ejemplo de entrada:
+				{
+					"identifier": "ENT-001"
+				}
+
+				### Ejemplo de salida:
+				{
+					"status": true,
+					"data": {
+						"identifier": "ENT-001",
+						"description": "Planilla de Entrenadores"
+					}
+				}
+
+	##### ----------------------- ######
+
+Gestión de Tipos Equipo:
+
+        Insertar y editar:
+
+                Yo mando: identificador único y descripción del tipo
+
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type_id": "EQTYPE001",
+            "description": "Equipo de cardio"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "equipment_type_id": "EQTYPE001",
+                "description": "Equipo de cardio"
+            }
+        }
+
+        Eliminar:
+
+                Yo mando: identificador único
+
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type_id": "EQTYPE001"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Tipo de equipo eliminado exitosamente"
+        }
+
+        Consultar:
+
+                Yo mando: identificador único
+
+                Ud manda: identificador único y descripción del tipo
+
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type_id": "EQTYPE001"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "equipment_type_id": "EQTYPE001",
+                "description": "Equipo de cardio"
+            }
+        }
+
+
+	##### ----------------------- ######
+
+Gestión de inventario:
+
+        Insertar y editar:
+
+                Yo mando: tipo de equipo, marca, número de serie, costo, nombre de sucursal
+
+        ###
+        Ejemplo de entrada:
+        {
+            "equipment_type": "Equipo de pesas",
+            "brand": "BrandX",
+            "serial_number": "SN123456",
+            "cost": 2500.00,
+            "branch_name": "Sucursal Central"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "equipment_type": "Equipo de pesas",
+                "brand": "BrandX",
+                "serial_number": "SN123456",
+                "cost": 2500.00,
+                "branch_name": "Sucursal Central"
+            }
+        }
+
+        Eliminar:
+
+                Yo mando: número de serie
+
+        ###
+        Ejemplo de entrada:
+        {
+            "serial_number": "SN123456"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Equipo eliminado exitosamente del inventario"
+        }
+
+        Consultar:
+
+                Yo mando: número de serie
+
+                Ud manda: tipo de equipo, marca, número de serie, costo, nombre de sucursal
+
+        ###
+        Ejemplo de entrada:
+        {
+            "serial_number": "SN123456"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "equipment_type": "Equipo de pesas",
+                "brand": "BrandX",
+                "serial_number": "SN123456",
+                "cost": 2500.00,
+                "branch_name": "Sucursal Central"
+            }
+        }
+
+##### ----------------------- ######
+
+Gestión de productos:
+
+        Insertar y editar:
+
+                Yo mando: nombre, código de barras, descripción y costo
+
+        ###
+        Ejemplo de entrada:
+        {
+            "product_name": "Proteína Whey",
+            "barcode": "BARC123456",
+            "description": "Suplemento alimenticio para ganancia muscular",
+            "cost": 45000.00
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "product_name": "Proteína Whey",
+                "barcode": "BARC123456",
+                "description": "Suplemento alimenticio para ganancia muscular",
+                "cost": 45000.00
+            }
+        }
+
+        Eliminar:
+
+                Yo mando: código de barras
+
+        ###
+        Ejemplo de entrada:
+        {
+            "barcode": "BARC123456"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": "Producto eliminado exitosamente"
+        }
+
+        Consultar:
+
+                Yo mando: código de barras
+
+                Ud manda: nombre, código de barras, descripción y costo
+
+        ###
+        Ejemplo de entrada:
+        {
+            "barcode": "BARC123456"
+        }
+
+        ###
+        Ejemplo de salida:
+
+        {
+            "status": true,
+            "data": {
+                "product_name": "Proteína Whey",
+                "barcode": "BARC123456",
+                "description": "Suplemento alimenticio para ganancia muscular",
+                "cost": 45000.00
+            }
+        }
+
+	#################################### ----------------------- ####################################
+
+	Configuración de gimnasio:
+
+        Asociación de tratamientos al Spa del gimnasio:
+
+                Agregar tratamiento:
+                        Yo mando: identificador del tratamiento, nombre de sucursal
+
+        ###
+        Ejemplo de entrada:
+        {
+            "treatment_id": 101,
+            "branch_name": "Sucursal Central"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": {
+                "treatment_id": 101,
+                "treatment_name": "Masaje relajante"
+            }
+        }
+
+        Ver tratamientos disponibles y ya asociados:
+                Yo mando: nombre de sucursal
+
+                Ud manda: tratamientos ya asociados al spa y los no asociados a spa (por separado)
+
+        ###
+        Ejemplo de entrada:
+        {
+            "branch_name": "Sucursal Central"
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": {
+                "associated": [
+                    {
+                        "treatment_id": 101,
+                        "treatment_name": "Masaje relajante"
+                    }
+                ],
+                "not_associated": [
+                    {
+                        "treatment_id": 102,
+                        "treatment_name": "Tratamiento facial"
+                    }
+                ]
+            }
+        }
+
+					Asociación de productos a la tienda del gimnasio:
+
+												Agregar producto:
+Yo mando: código de barras, nombre de sucursal
+
+									###
+									Ejemplo de entrada:
+									{
+										"barcode": "1234567890123",
+										"branch_name": "Sucursal Central"
+									}
+
+									###
+									Ejemplo de salida:
+									{
+										"status": true,
+										"data": "Producto con código 1234567890123 asociado a la sucursal Sucursal Central exitosamente"
+									}
+
+
+
+									Ver productos disponibles y ya asociados:
+
+									Yo mando: nombre de sucursal
+
+									Ud manda: productos ya asociados a la tienda y los no asociados a la tienda (por separado)
+
+									###
+									Ejemplo de entrada:
+									{
+										"branch_name": "Sucursal Central"
+									}
+
+									###
+									Ejemplo de salida:
+									{
+										"status": true,
+										"data": {
+											"associated_products": [
+												{ "barcode": "1234567890123", "product_name": "Proteína Whey" },
+												{ "barcode": "9876543210987", "product_name": "Aminoácidos" }
+											],
+											"non_associated_products": [
+												{ "barcode": "1928374650912", "product_name": "Creatina" },
+												{ "barcode": "5647382910123", "product_name": "Barra energética" }
+											]
+										}
+									}
+					#############################
+										
+
+					Asociación de inventario:
+
+							Agregar máquina:
+
+							Yo mando: número de serie, nombre de sucursal
+
+							###
+							Ejemplo de entrada:
+							{
+								"serial_number": "SN987654",
+								"branch_name": "Sucursal Centro"
+							}
+
+							###
+							Ejemplo de salida:
+							{
+								"status": true,
+								"data": {
+									"serial_number": "SN987654",
+									"brand": "TechFit",
+									"model": "X2000",
+									"branch_name": "Sucursal Centro"
+								}
+							}
+
+
+									
+							Ver máquinas disponibles y ya asociadas:
+
+							Yo mando: nombre de sucursal
+
+							Ud manda: máquinas ya asociadas a la sucursal y máquinas no asociadas a ningún gimnasio (separadas)
+
+							###
+							Ejemplo de entrada:
+							{
+								"branch_name": "Sucursal Centro"
+							}
+
+							###
+							Ejemplo de salida:
+							{
+								"status": true,
+								"data": {
+									"associated_machines": [
+										{
+											"serial_number": "SN987654",
+											"brand": "TechFit",
+											"model": "X2000",
+											"branch_name": "Sucursal Centro"
+										}
+									],
+									"not_associated_machines": [
+										{
+											"serial_number": "SN123321",
+											"brand": "GymPro",
+											"model": "Alpha5",
+											"branch_name": null
+										}
+									]
+								}
+							}
+
+					#############################
+
+					Crear clases:	
+
+							Agregar clase:
+
+							Yo mando: tipo de clase (Indoor Cycling, Pilates, Yoga, Zumba y Natación), instructor, si es grupal (booleano), capacidad, fecha, hora de inicio y hora de finalización
+
+							###
+							Ejemplo de entrada:
+							{
+								"class_type": "Yoga",
+								"instructor": "María Pérez",
+								"is_group_class": true,
+								"capacity": 20,
+								"date": "2025-06-15",
+								"start_time": "09:00:00",
+								"end_time": "10:00:00"
+							}
+
+							###
+							Ejemplo de salida:
+							{
+								"status": true,
+								"data": {
+									"class_type": "Yoga",
+									"instructor": "María Pérez",
+									"is_group_class": true,
+									"capacity": 20,
+									"date": "2025-06-15T00:00:00",
+									"start_time": "09:00:00",
+									"end_time": "10:00:00"
+								}
+							}
+
+
+	Generación de planilla:	
+
+					Yo mando: nombre de sucursal
+
+					Ud manda: número de cedula, nombre completo del empleado, número de clases impartidas/horas laboradas y monto a pagar
+
+					###
+					Ejemplo de entrada:
+					{
+						"branch_name": "Sucursal Central"
+					}
+
+					###
+					Ejemplo de salida:
+					{
+						"status": true,
+						"data": {
+							"employees": [
+								{
+									"id_number": "123456789",
+									"full_name": "Juan Pérez",
+									"classes_or_hours": 40,
+									"amount_to_pay": 500.00
+								},
+								{
+									"id_number": "987654321",
+									"full_name": "María González",
+									"classes_or_hours": 35,
+									"amount_to_pay": 437.50
+								}
+							]
+						}
+					}
+
+
+
+	Copiar calendario de actividades:
+
+			Yo mando: nombre de sucursal, fecha inicio de semana a copiar, fecha final de semana a copiar
+
+			###
+			Ejemplo de entrada:
+			{
+				"branch_name": "Sucursal Central",
+				"start_week_date": "2025-06-01",
+				"end_week_date": "2025-06-07"
+			}
+
+			###
+			Ejemplo de salida:
+			{
+				"status": true,
+				"data": {
+					"copied_activities": [
+						{
+							"activity_name": "Yoga",
+							"date": "2025-06-08",
+							"start_time": "09:00",
+							"end_time": "10:00"
+						},
+						{
+							"activity_name": "Pilates",
+							"date": "2025-06-09",
+							"start_time": "10:00",
+							"end_time": "11:00"
+						}
+					]
+				}
+			}
+
+
+	Copiar gimnasio:
+
+				Yo mando: Nombre de sucursal a copiar, Nombre de sucursal 
+
+				  "origin_branch_name": "Sucursal Central",
+				  "destination_branch_name": "Sucursal Este"
+				}
+
+
+#################################### ----------------------- ####################################
+
+Cliente:
+
+	
+	Visualización de mi plan de trabajo:
+
+	Yo mando: número de cédula
+
+	Ud manda: plan de trabajo del cliente
+
+	###  
+	Ejemplo de entrada:
+
+	{
+		"client_id": "123456789"
+	}
+
+	###  
+	Ejemplo de salida:
+
+	{
+		"status": true,
+		"data": {
+			"client_id": "123456789",
+			"workout_plan": [
+				{
+					"day": "Lunes",
+					"exercise_name": "Flexiones",
+					"sets": 3,
+					"repetitions": 12,
+					"notes": "Mantener la espalda recta"
+				},
+				{
+					"day": "Miércoles",
+					"exercise_name": "Sentadillas",
+					"sets": 4,
+					"repetitions": 15,
+					"notes": "Sin peso adicional"
+				}
+			]
+		}
+	}
+
+
+		Búsqueda de una clase:
+
+		Yo mando: tipo de clase (Indoor Cycling, Pilates, Yoga, Zumba, Natación), fecha de inicio de búsqueda y fecha de finalización de búsqueda
+
+		Ud manda: Lista de clases que cumpla las fechas puestas. Cada clase tiene: cuando se realizará la clase, fecha de inicio, fecha de finalización, instructor, cupos disponibles.
+
+		###  
+		Ejemplo de entrada:
+
+		{
+			"class_type": "Yoga",
+			"start_date": "2025-06-01",
+			"end_date": "2025-06-30"
+		}
+
+		###  
+		Ejemplo de salida:
+
+		{
+			"status": true,
+			"data": [
+				{
+					"class_date": "2025-06-05",
+					"start_date": "2025-06-01",
+					"end_date": "2025-06-30",
+					"instructor": "María López",
+					"available_spots": 10
+				},
+				{
+					"class_date": "2025-06-12",
+					"start_date": "2025-06-01",
+					"end_date": "2025-06-30",
+					"instructor": "Carlos Pérez",
+					"available_spots": 5
+				}
+			]
+		}
+
+	Registro en una clase:
+						
+		Yo mando: cuando se realizará la clase, fecha de inicio, fecha de finalización, instructor, cupos disponibles
+
+        ###
+        Ejemplo de entrada:
+        {
+            "class_date": "2025-07-01",
+            "start_date": "2025-07-01",
+            "end_date": "2025-07-31",
+            "instructor": "Ana Pérez",
+            "available_spots": 15
+        }
+
+        ###
+        Ejemplo de salida:
+        {
+            "status": true,
+            "data": {
+                "message": "Clase registrada exitosamente"
+            }
+        }
+
+#################################### ----------------------- ####################################
+
+Instructor:
+
+		Búsqueda de clientes sin entrenador: 
+
+		(Es una operacion GET por lo que no tiene parametros de entrada)
+
+
+		###
+		Ejemplo de salida:
+		{
+			"status": true,
+			"data": {
+				"clients": [
+					{
+						"full_name": "Carlos Jiménez Solís",
+						"id_number": "115230456"
+					},
+					{
+						"full_name": "María Rodríguez Vargas",
+						"id_number": "208740122"
+					},
+					{
+						"full_name": "Luis Felipe Sánchez",
+						"id_number": "114560983"
+					}
+				]
+			}
+		}
+		
+		Asignar instructor:
+
+		Yo mando: número de cédula de instructor, número de cédula de cliente
+
+		###
+		Ejemplo de entrada:
+		{
+			"trainer_id": "117890456",
+			"client_id": "208740122"
+		}
+
+		###
+		Ejemplo de salida:
+		{
+			"status": true,
+			"data": {
+				"message": "Instructor asignado correctamente al cliente."
+			}
+		}
+
+
+		Creación de plan de trabajo:
+
+		Yo mando: {
+			client_id: "",
+			day: "Lunes",
+			exercise_name: "",
+			sets: 1,
+			repetitions: 1,
+			notes: ""
+		}
+
+		###
+		Ejemplo de entrada:
+		{
+			"client_id": "208740122",
+			"day": "Lunes",
+			"exercise_name": "Sentadillas con peso corporal",
+			"sets": 3,
+			"repetitions": 15,
+			"notes": "Mantener postura correcta durante el ejercicio"
+		}
+
+		###
+		Ejemplo de salida:
+		{
+			"status": true,
+			"data": {
+				"message": "Ejercicio agregado al plan de trabajo del cliente."
+			}
+		}
+		
+		Registro de clase: 
+
+		Yo mando: cuando se realizará la clase, fecha de inicio, fecha de finalización, instructor, cupos disponibles
+
+		###
+		Ejemplo de entrada:
+		{
+			"class_date": "2025-07-01",
+			"start_date": "2025-07-01",
+			"end_date": "2025-07-31",
+			"instructor": "Ana Pérez",
+			"available_spots": 15
+		}
+
+		###
+		Ejemplo de salida:
+		{
+			"status": true,
+			"data": {
+				"message": "Clase registrada exitosamente"
+			}
+		}
+
+	
