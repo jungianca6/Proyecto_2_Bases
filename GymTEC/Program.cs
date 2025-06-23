@@ -12,7 +12,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactFrontend",
         policy =>
         {
-            policy.WithOrigins("https://localhost:3002") // URL de tu frontend React
+            policy.WithOrigins(
+                    "https://localhost:3002",    // Para desarrollo local
+                    "https://gymtecweb.azurewebsites.net"  // Para producción
+                  )
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
