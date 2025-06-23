@@ -16,7 +16,7 @@ function ClientePlanTrabajo() {
 
     const handleSubmit = async () => {
         try {
-            const res = await axios.post("https://localhost:7155/WorkoutPlan/view_workout_plan", {
+            const res = await axios.post("https://gymtecbackend.azurewebsites.net/WorkoutPlan/view_workout_plan", {
                 client_id: cedula
             });
 

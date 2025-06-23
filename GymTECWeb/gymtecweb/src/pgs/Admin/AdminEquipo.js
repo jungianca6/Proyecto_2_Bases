@@ -32,16 +32,16 @@ function AdminEquipo() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/EquipmentType/insert_or_edit";
+                url = "https://gymtecbackend.azurewebsites.net/EquipmentType/insert_or_edit";
                 break;
             case "editar":
-                url = "https://localhost:7155/EquipmentType/insert_or_edit";
+                url = "https://gymtecbackend.azurewebsites.net/EquipmentType/insert_or_edit";
                 break;
             case "eliminar":
-                url = "https://localhost:7155/EquipmentType/delete";
+                url = "https://gymtecbackend.azurewebsites.net/EquipmentType/delete";
                 break;
             case "consultar":
-                url = "https://localhost:7155/EquipmentType/get";
+                url = "https://gymtecbackend.azurewebsites.net/EquipmentType/get";
                 break;
             default:
                 return;

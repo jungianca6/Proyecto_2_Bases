@@ -30,7 +30,7 @@ function AdminGeneracion() {
             end_date: formatDate(formData.fechaFin)
         };
 
-        axios.post("https://localhost:7155/Payroll/generate_payroll", data)
+        axios.post("https://gymtecbackend.azurewebsites.net/Payroll/generate_payroll", data)
             .then((res) => {
                 if (res.data.status && res.data.data && res.data.data.employees) {
                     setEmpleados(res.data.data.employees);

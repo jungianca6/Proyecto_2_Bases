@@ -37,7 +37,7 @@ function InstructorCrearPlan() {
 
             console.log("Datos que se enviarán al backend:", payload);
 
-            const res = await axios.post("https://localhost:7155/WorkoutPlan/create_workout_plan", payload);
+            const res = await axios.post("https://gymtecbackend.azurewebsites.net/WorkoutPlan/create_workout_plan", payload);
 
             if (res.data.status) {
                 alert("Plan agregado exitosamente.");

@@ -18,7 +18,7 @@ function AdminTratamiento() {
         if (accion === "editar") {
             try {
                 // Paso 1: Consultar el tratamiento actual por nombre
-                const consultaRes = await axios.post("https://localhost:7155/SpaTreatment/consult_spa_treatment", {
+                const consultaRes = await axios.post("https://gymtecbackend.azurewebsites.net/consult_spa_treatment", {
                     treatment_name: formData.nombre
                 });
 
@@ -30,7 +30,7 @@ function AdminTratamiento() {
                 const treatment_id = consultaRes.data.data.treatment_id;
 
                 // Paso 2: Enviar el nuevo nombre con el ID
-                const editarRes = await axios.post("https://localhost:7155/SpaTreatment/edit_spa_treatment", {
+                const editarRes = await axios.post("https://gymtecbackend.azurewebsites.net/SpaTreatment/edit_spa_treatment", {
                     treatment_name: formData.nuevoNombre,
                     treatment_id: treatment_id
                 });
@@ -55,20 +55,20 @@ function AdminTratamiento() {
 
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/SpaTreatment/insert_spa_treatment";
+                url = "https://gymtecbackend.azurewebsites.net/SpaTreatment/insert_spa_treatment";
                 data = {
                     treatment_name: formData.nombre,
                     treatment_id: 0
                 };
                 break;
             case "eliminar":
-                url = "https://localhost:7155/SpaTreatment/delete_spa_treatment";
+                url = "https://gymtecbackend.azurewebsites.net/SpaTreatment/delete_spa_treatment";
                 data = {
                     treatment_name: formData.nombre
                 };
                 break;
             case "consultar":
-                url = "https://localhost:7155/SpaTreatment/consult_spa_treatment";
+                url = "https://gymtecbackend.azurewebsites.net/SpaTreatment/consult_spa_treatment";
                 data = {
                     treatment_name: formData.nombre
                 };

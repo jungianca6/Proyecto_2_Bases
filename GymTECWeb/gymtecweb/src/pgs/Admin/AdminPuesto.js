@@ -34,16 +34,16 @@ function AdminPuesto() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/Position/insert_position";
+                url = "https://gymtecbackend.azurewebsites.net/Position/insert_position";
                 break;
             case "editar":
-                url = "https://localhost:7155/Position/edit_position";
+                url = "https://gymtecbackend.azurewebsites.net/Position/edit_position";
                 break;
             case "eliminar":
-                url = "https://localhost:7155/Position/delete_position";
+                url = "https://gymtecbackend.azurewebsites.net/Position/delete_position";
                 break;
             case "consultar":
-                url = "https://localhost:7155/Position/consult_position";
+                url = "https://gymtecbackend.azurewebsites.net/Position/consult_position";
                 break;
             default:
                 console.error("Acción no válida");

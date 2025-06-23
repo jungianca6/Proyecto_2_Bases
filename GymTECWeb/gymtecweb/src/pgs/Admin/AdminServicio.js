@@ -33,16 +33,16 @@ function AdminServicio() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/Service/insert_or_edit";
+                url = "https://gymtecbackend.azurewebsites.net/Service/insert_or_edit";
                 break;
             case "editar":
-                url = "https://localhost:7155/Service/insert_or_edit";
+                url = "https://gymtecbackend.azurewebsites.net/Service/insert_or_edit";
                 break;
             case "eliminar":
-                url = "https://localhost:7155/Service/delete";
+                url = "https://gymtecbackend.azurewebsites.net/Service/delete";
                 break;
             case "consultar":
-                url = "https://localhost:7155/Service/get";
+                url = "https://gymtecbackend.azurewebsites.net/Service/get";
                 break;
             default:
                 return;

@@ -41,16 +41,16 @@ function AdminInventario() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/Inventory/insert_or_edit";
+                url = "https://gymtecbackend.azurewebsites.net/Inventory/insert_or_edit";
                 break;
             case "editar":
-                url = "https://localhost:7155/Inventory/insert_or_edit";
+                url = "https://gymtecbackend.azurewebsites.net/Inventory/insert_or_edit";
                 break;
             case "eliminar":
-                url = "https://localhost:7155/Inventory/delete";
+                url = "https://gymtecbackend.azurewebsites.net/Inventory/delete";
                 break;
             case "consultar":
-                url = "https://localhost:7155/Inventory/get";
+                url = "https://gymtecbackend.azurewebsites.net/Inventory/get";
                 break;
             default:
                 return;

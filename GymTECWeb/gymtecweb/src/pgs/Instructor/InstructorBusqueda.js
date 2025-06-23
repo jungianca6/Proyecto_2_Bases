@@ -8,7 +8,7 @@ function InstructorBusqueda() {
 
     const handleBuscar = async () => {
         try {
-            const res = await axios.get("https://localhost:7155/Trainer/clients_without_trainer");
+            const res = await axios.get("https://gymtecbackend.azurewebsites.net/Trainer/clients_without_trainer");
 
             if (res.data.status && Array.isArray(res.data.data)) {
                 setClientes(res.data.data);

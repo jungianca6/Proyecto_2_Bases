@@ -49,16 +49,16 @@ function AdminSucursal() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/Branch/insert_branch";
+                url = "https://gymtecbackend.azurewebsites.net/Branch/insert_branch";
                 break;
             case "editar":
-                url = "https://localhost:7155/Branch/edit_branch";
+                url = "https://gymtecbackend.azurewebsites.net/Branch/edit_branch";
                 break;
             case "eliminar":
-                url = "https://localhost:7155/Branch/delete_branch";
+                url = "https://gymtecbackend.azurewebsites.net/Branch/delete_branch";
                 break;
             case "consultar":
-                url = "https://localhost:7155/Branch/consult_branch";
+                url = "https://gymtecbackend.azurewebsites.net/Branch/consult_branch";
                 break;
             default:
                 console.error("Acción no válida");

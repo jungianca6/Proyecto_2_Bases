@@ -34,7 +34,7 @@ function AdminCreacionClases() {
             end_time: formatHora(formData.horaFinalizacion)
         };
 
-        axios.post("https://localhost:7155/Class/add_class", data)
+        axios.post("https://gymtecbackend.azurewebsites.net/Class/add_class", data)
             .then(() => {
                 alert("Clase creada correctamente.");
             })

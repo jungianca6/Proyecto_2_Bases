@@ -26,7 +26,7 @@ function AdminAsociacionProducto() {
                 amaunt: parseInt(formData.amaunt)
             };
 
-            axios.post("https://localhost:7155/StoreProduct/associate_store_product", data)
+            axios.post("https://gymtecbackend.azurewebsites.net/StoreProduct/associate_store_product", data)
                 .then(() => {
                     alert("Producto agregado correctamente.");
                 })
@@ -39,7 +39,7 @@ function AdminAsociacionProducto() {
                 store_name: formData.nombreSucursal
             };
 
-            axios.post("https://localhost:7155/StoreProduct/consult_store_products", data)
+            axios.post("https://gymtecbackend.azurewebsites.net/StoreProduct/consult_store_products", data)
                 .then((res) => {
                     if (res.data.status && res.data.data) {
                         setAsociados(res.data.data.associated_products || []);

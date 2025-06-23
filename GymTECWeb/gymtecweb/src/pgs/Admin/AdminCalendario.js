@@ -21,7 +21,7 @@ function AdminCalendario() {
         };
 
         try {
-            const response = await axios.post("https://localhost:7155/Schedule/copy_schedule", {
+            const response = await axios.post("https://gymtecbackend.azurewebsites.net/Schedule/copy_schedule", {
                 branch_name: formData.nombreSucursal,
                 start_week_date: formatDate(formData.fechaInicio),
                 end_week_date: formatDate(formData.fechaFin)

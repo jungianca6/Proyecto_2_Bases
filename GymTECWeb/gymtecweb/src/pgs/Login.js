@@ -56,7 +56,7 @@ function Login({ setUser }) {
                 password: form.password
             };
 
-            const response = await axios.post("https://localhost:7155/Login/log_in", requestData);
+            const response = await axios.post("https://gymtecbackend.azurewebsites.net/Login/log_in", requestData);
 
             if (response.data.status === true) {
                 console.log("Datos recibidos del backend:", response.data);
@@ -118,7 +118,7 @@ function Login({ setUser }) {
                 phone: form.phone
             };
 
-            const res = await axios.post("https://localhost:7155/Register/register_client", payload);
+            const res = await axios.post("https://gymtecbackend.azurewebsites.net/Register/register_client", payload);
 
             if (res.data.status) {
                 alert("Registro exitoso. Ya puedes iniciar sesión.");

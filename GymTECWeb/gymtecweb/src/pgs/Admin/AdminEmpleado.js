@@ -58,16 +58,16 @@ function AdminEmpleado() {
     let url = "";
     switch (accion) {
       case "insertar":
-        url = "https://localhost:7155/Employee/insert";
+        url = "https://gymtecbackend.azurewebsites.net/Employee/insert";
         break;
       case "editar":
-        url = "https://localhost:7155/Employee/edit_employee";
+        url = "https://gymtecbackend.azurewebsites.net/Employee/edit_employee";
         break;
       case "eliminar":
-        url = "https://localhost:7155/Employee/delete";
+        url = "https://gymtecbackend.azurewebsites.net/Employee/delete";
         break;
       case "consultar":
-        url = "https://localhost:7155/Employee/get";
+        url = "https://gymtecbackend.azurewebsites.net/Employee/get";
         break;
       default:
         return;

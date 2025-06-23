@@ -26,7 +26,7 @@ function ClienteUnionClase() {
         };
 
         try {
-            const res = await axios.post("https://localhost:7155/ClassSearch/search_class", payload);
+            const res = await axios.post("https://gymtecbackend.azurewebsites.net/ClassSearch/search_class", payload);
             console.log("Respuesta del backend:", res.data);
             if (res.data.status) {
                 setClasesEncontradas(res.data.data);
@@ -58,7 +58,7 @@ function ClienteUnionClase() {
         };
 
         try {
-            const res = await axios.post("https://localhost:7155/ClassRegistration/register_class", clasePayload);
+            const res = await axios.post("https://gymtecbackend.azurewebsites.net/ClassRegistration/register_class", clasePayload);
 
             if (res.data.status) {
                 alert("Te has unido a la clase exitosamente.");

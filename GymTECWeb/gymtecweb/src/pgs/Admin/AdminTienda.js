@@ -36,16 +36,16 @@ function AdminTienda() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/StoreProduct/insert_store";
+                url = "https://gymtecbackend.azurewebsites.net/StoreProduct/insert_store";
                 break;
             case "editar":
-                url = "https://localhost:7155/StoreProduct/edit_store";
+                url = "https://gymtecbackend.azurewebsites.net/StoreProduct/edit_store";
                 break;
             case "consultar":
-                url = "https://localhost:7155/StoreProduct/get/stores";
+                url = "https://gymtecbackend.azurewebsites.net/StoreProduct/get/stores";
                 break;
             case "eliminar":
-                url = "https://localhost:7155/StoreProduct/delete/store";
+                url = "https://gymtecbackend.azurewebsites.net/StoreProduct/delete/store";
                 break;
             default:
                 return;

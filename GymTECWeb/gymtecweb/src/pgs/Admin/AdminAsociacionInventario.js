@@ -23,7 +23,7 @@ function AdminAsociacionInventario() {
                 branch_name: formData.nombreSucursal
             };
 
-            axios.post("https://localhost:7155/Inventory/associate_machine", data)
+            axios.post("https://gymtecbackend.azurewebsites.net/Inventory/associate_machine", data)
                 .then(() => {
                     alert("Máquina asociada correctamente.");
                 })
@@ -37,7 +37,7 @@ function AdminAsociacionInventario() {
                 branch_name: formData.nombreSucursal
             };
 
-            axios.post("https://localhost:7155/Inventory/consult_machines_by_branch", data)
+            axios.post("https://gymtecbackend.azurewebsites.net/Inventory/consult_machines_by_branch", data)
                 .then((res) => {
                     if (res.data.status && res.data.data) {
                         setAsociadas(res.data.data.associated_machines || []);

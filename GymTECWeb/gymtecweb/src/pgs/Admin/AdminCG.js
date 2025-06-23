@@ -19,7 +19,7 @@ function AdminCG() {
             new_branch_name: formData.sucursalDestino
         };
 
-        axios.post("https://localhost:7155/Branch/copy_branch", payload)
+        axios.post("https://gymtecbackend.azurewebsites.net/Branch/copy_branch", payload)
             .then((res) => {
                 if (res.data.status) {
                     alert("Copia realizada exitosamente.");

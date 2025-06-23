@@ -37,16 +37,16 @@ function AdminProducto() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/Product/insert_or_edit";
+                url = "https://gymtecbackend.azurewebsites.net/Product/insert_or_edit";
                 break;
             case "editar":
-                url = "https://localhost:7155/Product/insert_or_edit";
+                url = "https://gymtecbackend.azurewebsites.net/Product/insert_or_edit";
                 break;
             case "eliminar":
-                url = "https://localhost:7155/Product/delete";
+                url = "https://gymtecbackend.azurewebsites.net/Product/delete";
                 break;
             case "consultar":
-                url = "https://localhost:7155/Product/get";
+                url = "https://gymtecbackend.azurewebsites.net/Product/get";
                 break;
             default:
                 return;

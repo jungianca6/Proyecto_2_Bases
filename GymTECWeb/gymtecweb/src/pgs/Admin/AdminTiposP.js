@@ -38,16 +38,16 @@ function AdminTiposP() {
         let url = "";
         switch (accion) {
             case "insertar":
-                url = "https://localhost:7155/Payroll/manage_payroll_type";
+                url = "https://gymtecbackend.azurewebsites.net/Payroll/manage_payroll_type";
                 break;
             case "editar":
-                url = "https://localhost:7155/Payroll/manage_payroll_type";
+                url = "https://gymtecbackend.azurewebsites.net/Payroll/manage_payroll_type";
                 break;
             case "eliminar":
-                url = "https://localhost:7155/Payroll/delete_payroll_type";
+                url = "https://gymtecbackend.azurewebsites.net/Payroll/delete_payroll_type";
                 break;
             case "consultar":
-                url = "https://localhost:7155/Payroll/get_payroll_type";
+                url = "https://gymtecbackend.azurewebsites.net/Payroll/get_payroll_type";
                 break;
             default:
                 return;
