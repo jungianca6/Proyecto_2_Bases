@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7124ebcb-41d3-4647-af49-6c241eba8589" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/GymTEC/DesignTimeBuild/.dtbcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/DesignTimeBuild/.dtbcache.v2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/.futdcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/.futdcache.v2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/GymTEC/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/GymTEC/v17/.suo" afterDir="false" />
@@ -13,7 +12,6 @@
       <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.metadata.v8.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.projects.v8.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/ProjectEvaluation/gymtec.strings.v8.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTEC/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.exe" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/bin/Debug/net8.0/GymTEC.pdb" afterDir="false" />
@@ -36,19 +34,6 @@
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/GymTEC.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GymTEC/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminAsociacionInventario.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminAsociacionInventario.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminAsociacionProducto.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminAsociacionProducto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminAsociacionTratamiento.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminAsociacionTratamiento.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminCG.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminCG.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminCalendario.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminCalendario.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminCreacionClases.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminCreacionClases.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminEmpleado.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Admin/AdminEmpleado.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClientePlanTrabajo.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClientePlanTrabajo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClienteUnionClase.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Cliente/ClienteUnionClase.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorAsignarCliente.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorAsignarCliente.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorBusqueda.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorBusqueda.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorCrearPlan.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Instructor/InstructorCrearPlan.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/GymTECWeb/gymtecweb/src/pgs/Login.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +102,7 @@
       <workItem from="1750125792959" duration="163000" />
       <workItem from="1750126113477" duration="657000" />
       <workItem from="1750481381982" duration="12876000" />
-      <workItem from="1750645682212" duration="4120000" />
+      <workItem from="1750645682212" duration="4539000" />
     </task>
     <servers />
   </component>
