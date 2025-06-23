@@ -1,0 +1,6 @@
+@GymTEC_HostAddress = http://localhost:5267
+
+GET {{GymTEC_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
